@@ -376,7 +376,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         true)) {
                                       GoRouter.of(context).prepareAuthEvent();
                                       await authManager.signIn(
-                                        authenticationToken: LoginCall.jwt(
+                                        authenticationToken:
+                                            LoginCall.accessToken(
+                                          (_model.authResponse?.jsonBody ?? ''),
+                                        ),
+                                        refreshToken: LoginCall.refreshToken(
                                           (_model.authResponse?.jsonBody ?? ''),
                                         ),
                                       );
@@ -388,13 +392,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         builder: (alertDialogContext) {
                                           return AlertDialog(
                                             title: const Text('Error'),
-                                            content:
-                                                const Text('Invalid Credentials'),
+                                            content: Text((_model
+                                                    .authResponse?.bodyText ??
+                                                '')),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.pop(
                                                     alertDialogContext),
-                                                child: const Text('Retry'),
+                                                child: const Text('Ok'),
                                               ),
                                             ],
                                           );

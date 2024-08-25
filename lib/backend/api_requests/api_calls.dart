@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -35,10 +36,57 @@ class LoginCall {
     );
   }
 
-  static String? jwt(dynamic response) => castToType<String>(getJsonField(
+  static String? accessToken(dynamic response) =>
+      castToType<String>(getJsonField(
         response,
-        r'''$.token''',
+        r'''$.accessToken''',
       ));
+  static String? refreshToken(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.refreshToken''',
+      ));
+}
+
+class RefreshTokenCall {
+  static Future<ApiCallResponse> call() async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Refresh Token',
+      apiUrl: 'http://localhost:3000/api/v1/refresh-token',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class GetUserCall {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get User',
+      apiUrl: 'http://localhost:3000/api/v1/user',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
 }
 
 class ApiPagingParams {

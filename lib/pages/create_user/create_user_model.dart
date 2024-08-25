@@ -14,7 +14,7 @@ class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
   String? _txtFirstNameTextControllerValidator(
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Please enter an age for the patient.';
+      return 'Please enter the users first name.';
     }
 
     return null;
@@ -24,14 +24,28 @@ class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
   FocusNode? txtLastNameFocusNode;
   TextEditingController? txtLastNameTextController;
   String? Function(BuildContext, String?)? txtLastNameTextControllerValidator;
-  // State field(s) for txtEmail widget.
-  FocusNode? txtEmailFocusNode;
-  TextEditingController? txtEmailTextController;
-  String? Function(BuildContext, String?)? txtEmailTextControllerValidator;
+  String? _txtLastNameTextControllerValidator(
+      BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Please enter the users last name.';
+    }
+
+    return null;
+  }
+
   // State field(s) for phoneNumber widget.
   FocusNode? phoneNumberFocusNode;
   TextEditingController? phoneNumberTextController;
   String? Function(BuildContext, String?)? phoneNumberTextControllerValidator;
+  String? _phoneNumberTextControllerValidator(
+      BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    return null;
+  }
+
   // State field(s) for DropDown widget.
   String? dropDownValue;
   FormFieldController<String>? dropDownValueController;
@@ -39,6 +53,8 @@ class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
   @override
   void initState(BuildContext context) {
     txtFirstNameTextControllerValidator = _txtFirstNameTextControllerValidator;
+    txtLastNameTextControllerValidator = _txtLastNameTextControllerValidator;
+    phoneNumberTextControllerValidator = _phoneNumberTextControllerValidator;
   }
 
   @override
@@ -48,9 +64,6 @@ class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
 
     txtLastNameFocusNode?.dispose();
     txtLastNameTextController?.dispose();
-
-    txtEmailFocusNode?.dispose();
-    txtEmailTextController?.dispose();
 
     phoneNumberFocusNode?.dispose();
     phoneNumberTextController?.dispose();

@@ -32,9 +32,6 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
     _model.txtLastNameTextController ??= TextEditingController();
     _model.txtLastNameFocusNode ??= FocusNode();
     _model.txtLastNameFocusNode!.addListener(() => setState(() {}));
-    _model.txtEmailTextController ??= TextEditingController();
-    _model.txtEmailFocusNode ??= FocusNode();
-    _model.txtEmailFocusNode!.addListener(() => setState(() {}));
     _model.phoneNumberTextController ??= TextEditingController();
     _model.phoneNumberFocusNode ??= FocusNode();
     _model.phoneNumberFocusNode!.addListener(() => setState(() {}));
@@ -314,96 +311,6 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                         .asValidator(context),
                                   ),
                                   TextFormField(
-                                    controller: _model.txtEmailTextController,
-                                    focusNode: _model.txtEmailFocusNode,
-                                    autofocus: false,
-                                    textCapitalization: TextCapitalization.none,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelText: 'Email',
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelLarge
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            letterSpacing: 0.0,
-                                          ),
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            letterSpacing: 0.0,
-                                          ),
-                                      errorStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
-                                            fontSize: 12.0,
-                                            letterSpacing: 0.0,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: (_model.txtEmailFocusNode
-                                                  ?.hasFocus ??
-                                              false)
-                                          ? FlutterFlowTheme.of(context).accent1
-                                          : FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                      contentPadding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              16.0, 20.0, 16.0, 20.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyLarge
-                                        .override(
-                                          fontFamily: 'Manrope',
-                                          letterSpacing: 0.0,
-                                        ),
-                                    keyboardType: TextInputType.emailAddress,
-                                    cursorColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    validator: _model
-                                        .txtEmailTextControllerValidator
-                                        .asValidator(context),
-                                  ),
-                                  TextFormField(
                                     controller:
                                         _model.phoneNumberTextController,
                                     focusNode: _model.phoneNumberFocusNode,
@@ -498,15 +405,6 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                           RegExp('[0-9]'))
                                     ],
                                   ),
-                                  Text(
-                                    'Role',
-                                    style: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                          fontFamily: 'Manrope',
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
                                   FlutterFlowDropDown<String>(
                                     controller:
                                         _model.dropDownValueController ??=
@@ -522,7 +420,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                           fontFamily: 'Manrope',
                                           letterSpacing: 0.0,
                                         ),
-                                    hintText: 'Select a role...',
+                                    hintText: 'Select a user type...',
                                     icon: Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       color: FlutterFlowTheme.of(context)
@@ -559,6 +457,27 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                                   .validate()) {
                                             return;
                                           }
+                                          if (_model.dropDownValue == null) {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (alertDialogContext) {
+                                                return AlertDialog(
+                                                  title: const Text('Error'),
+                                                  content: const Text(
+                                                      'Please select a role for the user.'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              alertDialogContext),
+                                                      child: const Text('Ok'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                            return;
+                                          }
                                         },
                                         text: 'Submit Form',
                                         options: FFButtonOptions(
@@ -571,7 +490,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                               const EdgeInsetsDirectional.fromSTEB(
                                                   0.0, 0.0, 0.0, 0.0),
                                           color: FlutterFlowTheme.of(context)
-                                              .primary,
+                                              .tertiary,
                                           textStyle:
                                               FlutterFlowTheme.of(context)
                                                   .titleSmall

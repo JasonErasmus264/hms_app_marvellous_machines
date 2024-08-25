@@ -1,19 +1,17 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import auth from '../middlewares/authMid.js';
-import pool from '../db.js';
+import pool from '../db.js'; // Adjust the import path if needed
+import verifyToken from '../middleware/verifyToken.js'; // Adjust the import path if needed
 
 const authRouter = express.Router();
 
-authRouter.post("/api/v1/login", async (req, res) => {
+// Login route
+authRouter.post('/api/v1/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const [rows] = await pool.execute(
-      'SELECT * FROM users WHERE username = ?',
-      [username]
-    );
+    const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
 
     if (rows.length === 0) return res.status(400).json({ message: 'Invalid credentials' });
 
@@ -22,51 +20,75 @@ authRouter.post("/api/v1/login", async (req, res) => {
 
     if (!match) return res.status(400).json({ message: 'Invalid credentials' });
 
-    // Generate JWT
-    const token = jwt.sign({ userID: user.userID }, process.env.JWT_SECRET);
-    res.json({ token });
+    // Generate Access Token
+    const accessToken = jwt.sign({ userID: user.userID }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+    // Generate Refresh Token
+    const refreshToken = jwt.sign({ userID: user.userID }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+    // Hash the refresh token before storing it in the database
+    const hashedRefreshToken = await bcryptjs.hash(refreshToken, 10);
+
+    // Store the hashed refresh token in the database
+    await pool.execute('UPDATE users SET refreshToken = ? WHERE userID = ?', [hashedRefreshToken, user.userID]);
+
+    // Return only the tokens
+    res.json({ accessToken, refreshToken });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-authRouter.post("/api/v1/tokenIsValid", async (req, res) => {
+// Refresh Token route
+authRouter.post('/api/v1/refresh-token', async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) return res.sendStatus(401); // Unauthorized if no refresh token is provided
+
   try {
-    const token = req.header("x-auth-token");
-    if (!token) return res.json(false);
+    // Verify the provided refresh token
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    if (!verified) return res.json(false);
+    // Fetch the user and the hashed refresh token from the database
+    const [rows] = await pool.execute('SELECT * FROM users WHERE userID = ?', [decoded.userID]);
 
-    const [rows] = await pool.execute(
-      'SELECT * FROM users WHERE userID = ?',
-      [verified.userID]
-    );
+    if (rows.length === 0) return res.sendStatus(403); // Forbidden if user not found
 
-    if (rows.length === 0) return res.json(false);
+    const user = rows[0];
 
-    res.json(true);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+    // Compare the hashed refresh token with the one provided
+    const match = await bcryptjs.compare(refreshToken, user.refreshToken);
+
+    if (!match) return res.sendStatus(403); // Forbidden if refresh tokens do not match
+
+    // Generate a new access token
+    const newAccessToken = jwt.sign({ userID: decoded.userID }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+    res.json({ accessToken: newAccessToken });
+  } catch (error) {
+    res.status(403).json({ message: 'Invalid or expired refresh token' });
   }
 });
 
-// Get user data
-authRouter.get("/api/v1/auth/user", auth, async (req, res) => {
+// Get current user (protected route)
+authRouter.get('/api/v1/user', verifyToken, async (req, res) => {
   try {
+    const { userID } = req.user;
+
+    // Fetch the user's data based on userID
     const [rows] = await pool.execute(
-      'SELECT * FROM users WHERE userID = ?',
-      [req.user.userID]
+      'SELECT userID, username, firstName, lastName, email, userType FROM users WHERE userID = ?',
+      [userID]
     );
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    const user = rows[0];
-    res.json({ user, token: req.token });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+    // Return the user's data
+    res.json({ user: rows[0] });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

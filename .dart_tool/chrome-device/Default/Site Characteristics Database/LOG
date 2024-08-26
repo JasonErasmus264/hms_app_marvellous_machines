@@ -1,11 +1,18 @@
-2024/08/25-17:10:50.615 4e40 Reusing MANIFEST C:\Users\jason\AppData\Local\Temp\flutter_tools.3e1dc6dc\flutter_tools_chrome_device.b64a7eb1\Default\Site Characteristics Database/MANIFEST-000001
-2024/08/25-17:10:50.617 13d8 Compacting 6@0 + 0@1 files
-2024/08/25-17:10:50.619 13d8 Generated table #17@0: 2 keys, 191 bytes
-2024/08/25-17:10:50.619 13d8 Compacted 6@0 + 0@1 files => 191 bytes
-2024/08/25-17:10:50.621 13d8 compacted to: files[ 0 1 0 0 0 0 0 ]
-2024/08/25-17:10:50.621 13d8 Delete type=2 #4
-2024/08/25-17:10:50.621 13d8 Delete type=2 #6
-2024/08/25-17:10:50.621 13d8 Delete type=2 #11
-2024/08/25-17:10:50.621 13d8 Delete type=2 #12
-2024/08/25-17:10:50.621 13d8 Delete type=2 #13
-2024/08/25-17:10:50.621 13d8 Delete type=2 #14
+2024/08/25-22:56:55.166 564c Reusing MANIFEST C:\Users\jason\AppData\Local\Temp\flutter_tools.96d54a88\flutter_tools_chrome_device.2a9bf054\Default\Site Characteristics Database/MANIFEST-000001
+2024/08/25-22:56:55.183 564c Recovering log #3
+2024/08/25-22:56:55.183 564c Level-0 table #19: started
+2024/08/25-22:56:55.188 564c Level-0 table #19: 191 bytes OK
+2024/08/25-22:56:55.188 564c Recovering log #6
+2024/08/25-22:56:55.189 564c Level-0 table #20: started
+2024/08/25-22:56:55.204 564c Level-0 table #20: 190 bytes OK
+2024/08/25-22:56:55.205 564c Recovering log #10
+2024/08/25-22:56:55.205 564c Level-0 table #21: started
+2024/08/25-22:56:55.210 564c Level-0 table #21: 162 bytes OK
+2024/08/25-22:56:55.210 564c Recovering log #16
+2024/08/25-22:56:55.210 564c Reusing old log C:\Users\jason\AppData\Local\Temp\flutter_tools.96d54a88\flutter_tools_chrome_device.2a9bf054\Default\Site Characteristics Database/000016.log 
+2024/08/25-22:56:55.212 564c Delete type=0 #3
+2024/08/25-22:56:55.213 564c Delete type=2 #4
+2024/08/25-22:56:55.213 564c Delete type=2 #6
+2024/08/25-22:56:55.213 564c Delete type=0 #6
+2024/08/25-22:56:55.213 564c Delete type=0 #10
+2024/08/25-22:56:55.213 564c Delete type=2 #11

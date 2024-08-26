@@ -1,8 +1,7 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import pool from '../db.js'; // Adjust the import path if needed
-import verifyToken from '../middleware/verifyToken.js'; // Adjust the import path if needed
+import pool from '../db.js';
 
 const authRouter = express.Router();
 
@@ -70,26 +69,5 @@ authRouter.post('/api/v1/refresh-token', async (req, res) => {
   }
 });
 
-// Get current user (protected route)
-authRouter.get('/api/v1/user', verifyToken, async (req, res) => {
-  try {
-    const { userID } = req.user;
-
-    // Fetch the user's data based on userID
-    const [rows] = await pool.execute(
-      'SELECT userID, username, firstName, lastName, email, userType FROM users WHERE userID = ?',
-      [userID]
-    );
-
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Return the user's data
-    res.json({ user: rows[0] });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 export default authRouter;

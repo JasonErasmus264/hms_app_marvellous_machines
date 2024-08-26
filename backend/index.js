@@ -4,6 +4,7 @@ import cors from 'cors';
 
 // IMPORTS FROM OTHER FILES
 import authRoute from './routes/authRouter.js';
+import userRoute from './routes/userRouter.js';
 
 
 // INIT
@@ -15,6 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(authRoute);
+app.use(userRoute);
 
 // Connections
 app.listen(PORT, "0.0.0.0", () => {

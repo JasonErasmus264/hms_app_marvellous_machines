@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '/backend/schema/structs/index.dart';
 import 'custom_auth_user_provider.dart';
 
 export 'custom_auth_manager.dart';
@@ -22,14 +20,13 @@ class CustomAuthManager {
   DateTime? tokenExpiration;
   // User attributes
   String? uid;
-  UserStruct? userData;
 
   Future signOut() async {
     authenticationToken = null;
     refreshToken = null;
     tokenExpiration = null;
     uid = null;
-    userData = null;
+
     // Update the current user.
     nwuHmsAuthUserSubject.add(
       NwuHmsAuthUser(loggedIn: false),
@@ -42,14 +39,12 @@ class CustomAuthManager {
     String? refreshToken,
     DateTime? tokenExpiration,
     String? authUid,
-    UserStruct? userData,
   }) async =>
       _updateCurrentUser(
         authenticationToken: authenticationToken,
         refreshToken: refreshToken,
         tokenExpiration: tokenExpiration,
         authUid: authUid,
-        userData: userData,
       );
 
   void updateAuthUserData({
@@ -57,7 +52,6 @@ class CustomAuthManager {
     String? refreshToken,
     DateTime? tokenExpiration,
     String? authUid,
-    UserStruct? userData,
   }) {
     assert(
       currentUser?.loggedIn ?? false,
@@ -69,7 +63,6 @@ class CustomAuthManager {
       refreshToken: refreshToken,
       tokenExpiration: tokenExpiration,
       authUid: authUid,
-      userData: userData,
     );
   }
 
@@ -78,18 +71,16 @@ class CustomAuthManager {
     String? refreshToken,
     DateTime? tokenExpiration,
     String? authUid,
-    UserStruct? userData,
   }) {
     this.authenticationToken = authenticationToken;
     this.refreshToken = refreshToken;
     this.tokenExpiration = tokenExpiration;
     uid = authUid;
-    this.userData = userData;
+
     // Update the current user stream.
     final updatedUser = NwuHmsAuthUser(
       loggedIn: true,
       uid: authUid,
-      userData: userData,
     );
     nwuHmsAuthUserSubject.add(updatedUser);
     persistAuthData();
@@ -108,12 +99,6 @@ class CustomAuthManager {
               _prefs.getInt(_kTokenExpirationKey)!)
           : null;
       uid = _prefs.getString(_kUidKey);
-      userData = _prefs.getString(_kUserDataKey) != null
-          ? UserStruct.fromSerializableMap(
-              (jsonDecode(_prefs.getString(_kUserDataKey)!) as Map)
-                  .cast<String, dynamic>(),
-            )
-          : null;
     } catch (e) {
       if (kDebugMode) {
         print('Error initializing auth: $e');
@@ -127,7 +112,6 @@ class CustomAuthManager {
     final updatedUser = NwuHmsAuthUser(
       loggedIn: authTokenExists && !tokenExpired,
       uid: uid,
-      userData: userData,
     );
     nwuHmsAuthUserSubject.add(updatedUser);
   }
@@ -144,10 +128,6 @@ class CustomAuthManager {
             _kTokenExpirationKey, tokenExpiration!.millisecondsSinceEpoch)
         : _prefs.remove(_kTokenExpirationKey);
     uid != null ? _prefs.setString(_kUidKey, uid!) : _prefs.remove(_kUidKey);
-    userData != null
-        ? _prefs.setString(
-            _kUserDataKey, jsonEncode(userData!.toSerializableMap()))
-        : _prefs.remove(_kUserDataKey);
   }
 }
 

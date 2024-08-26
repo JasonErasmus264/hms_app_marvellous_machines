@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -53,51 +54,34 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          automaticallyImplyLeading: false,
-          title: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Create User',
-                style: FlutterFlowTheme.of(context).headlineMedium.override(
-                      fontFamily: 'Urbanist',
-                      letterSpacing: 0.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              Text(
-                'Please fill out the form below.',
-                style: FlutterFlowTheme.of(context).labelMedium.override(
-                      fontFamily: 'Manrope',
-                      letterSpacing: 0.0,
-                    ),
-              ),
-            ].divide(const SizedBox(height: 4.0)),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 12.0, 8.0),
-              child: FlutterFlowIconButton(
-                borderColor: FlutterFlowTheme.of(context).alternate,
-                borderRadius: 12.0,
-                borderWidth: 1.0,
-                buttonSize: 40.0,
-                fillColor: FlutterFlowTheme.of(context).tertiary,
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  size: 24.0,
-                ),
-                onPressed: () async {
-                  context.safePop();
-                },
-              ),
+          backgroundColor: FlutterFlowTheme.of(context).tertiary,
+          automaticallyImplyLeading: true,
+          leading: FlutterFlowIconButton(
+            borderRadius: 20.0,
+            borderWidth: 1.0,
+            buttonSize: 60.0,
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: FlutterFlowTheme.of(context).info,
+              size: 30.0,
             ),
-          ],
-          centerTitle: false,
-          elevation: 0.0,
+            onPressed: () async {
+              context.safePop();
+            },
+          ),
+          title: Text(
+            'Add User',
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: 'Manrope',
+                  color: FlutterFlowTheme.of(context).info,
+                  fontSize: 22.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          actions: const [],
+          centerTitle: true,
+          elevation: 4.0,
         ),
         body: SafeArea(
           top: true,
@@ -127,6 +111,18 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text(
+                                    'Please fill out the form below.',
+                                    style: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .override(
+                                          fontFamily: 'Outfit',
+                                          color: const Color(0xFF606A85),
+                                          fontSize: 14.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
                                   TextFormField(
                                     controller:
                                         _model.txtFirstNameTextController,
@@ -143,6 +139,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                           .override(
                                             fontFamily: 'Manrope',
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                       hintStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
@@ -211,7 +208,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                         .override(
                                           fontFamily: 'Manrope',
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                     cursorColor:
                                         FlutterFlowTheme.of(context).primary,
@@ -235,6 +232,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                           .override(
                                             fontFamily: 'Manrope',
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                       hintStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
@@ -303,6 +301,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                         .override(
                                           fontFamily: 'Manrope',
                                           letterSpacing: 0.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                     cursorColor:
                                         FlutterFlowTheme.of(context).primary,
@@ -325,6 +324,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                           .override(
                                             fontFamily: 'Manrope',
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                       hintStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
@@ -393,6 +393,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                         .override(
                                           fontFamily: 'Manrope',
                                           letterSpacing: 0.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                     keyboardType: TextInputType.number,
                                     cursorColor:
@@ -419,6 +420,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                         .override(
                                           fontFamily: 'Manrope',
                                           letterSpacing: 0.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                     hintText: 'Select a user type...',
                                     icon: Icon(
@@ -478,8 +480,63 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                             );
                                             return;
                                           }
+                                          _model.apiResult =
+                                              await UserGroup.addUserCall.call(
+                                            firstName: _model
+                                                .txtFirstNameTextController
+                                                .text,
+                                            lastName: _model
+                                                .txtLastNameTextController.text,
+                                            phoneNum: _model
+                                                .phoneNumberTextController.text,
+                                            userType: _model.dropDownValue,
+                                          );
+
+                                          if ((_model.apiResult?.succeeded ??
+                                              true)) {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (alertDialogContext) {
+                                                return AlertDialog(
+                                                  title: const Text('Success'),
+                                                  content: const Text(
+                                                      'User successfully added'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              alertDialogContext),
+                                                      child: const Text('Ok'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                            context.safePop();
+                                          } else {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (alertDialogContext) {
+                                                return AlertDialog(
+                                                  title: const Text('Error'),
+                                                  content: const Text(
+                                                      'User was not added'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              alertDialogContext),
+                                                      child: const Text('Ok'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+
+                                          setState(() {});
                                         },
-                                        text: 'Submit Form',
+                                        text: 'Submit',
                                         options: FFButtonOptions(
                                           width: double.infinity,
                                           height: 48.0,
@@ -497,7 +554,9 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                                   .override(
                                                     fontFamily: 'Manrope',
                                                     color: Colors.white,
+                                                    fontSize: 18.0,
                                                     letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                           elevation: 3.0,
                                           borderSide: const BorderSide(

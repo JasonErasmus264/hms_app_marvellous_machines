@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -9,6 +8,50 @@ export 'api_manager.dart' show ApiCallResponse;
 
 const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 
+/// Start User Group Code
+
+class UserGroup {
+  static String getBaseUrl() => 'http://localhost:3000';
+  static Map<String, String> headers = {};
+  static AddUserCall addUserCall = AddUserCall();
+}
+
+class AddUserCall {
+  Future<ApiCallResponse> call({
+    String? firstName = '',
+    String? lastName = '',
+    String? phoneNum = '',
+    String? userType = '',
+  }) async {
+    final baseUrl = UserGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "firstName": "$firstName",
+  "lastName": "$lastName",
+  "phoneNum": "$phoneNum",
+  "userType": "$userType"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Add User',
+      apiUrl: '$baseUrl/api/v1/addUser',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+/// End User Group Code
+
 class LoginCall {
   static Future<ApiCallResponse> call({
     String? username = '',
@@ -16,8 +59,8 @@ class LoginCall {
   }) async {
     final ffApiRequestBody = '''
 {
-"username": "$username",
-"password": "$password"
+  "username": "$username",
+  "password": "$password"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Login',
@@ -46,25 +89,6 @@ class LoginCall {
         response,
         r'''$.refreshToken''',
       ));
-}
-
-class RefreshTokenCall {
-  static Future<ApiCallResponse> call() async {
-    return ApiManager.instance.makeApiCall(
-      callName: 'Refresh Token',
-      apiUrl: 'http://localhost:3000/api/v1/refresh-token',
-      callType: ApiCallType.POST,
-      headers: {},
-      params: {},
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
 }
 
 class GetUserCall {

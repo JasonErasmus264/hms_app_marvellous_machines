@@ -68,6 +68,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                   color: Colors.white,
                   fontSize: 22.0,
                   letterSpacing: 0.0,
+                  fontWeight: FontWeight.bold,
                 ),
           ),
           actions: const [],
@@ -102,11 +103,13 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                               FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Manrope',
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                           hintStyle:
                               FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Manrope',
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -164,6 +167,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Manrope',
                               letterSpacing: 0.0,
+                              fontWeight: FontWeight.bold,
                             ),
                         validator: _model.searchBarTextControllerValidator
                             .asValidator(context),
@@ -202,6 +206,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                             ),
                             Padding(
@@ -217,6 +222,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                           .secondaryText,
                                       fontSize: 14.0,
                                       letterSpacing: 0.0,
+                                      fontWeight: FontWeight.bold,
                                     ),
                               ),
                             ),
@@ -229,6 +235,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                             ),
                             Padding(
@@ -246,14 +253,15 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                       0.0, 0.0, 0.0, 0.0),
                                   iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: FlutterFlowTheme.of(context).tertiary,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
                                         fontFamily: 'Manrope',
                                         color: Colors.white,
-                                        fontSize: 14.0,
+                                        fontSize: 18.0,
                                         letterSpacing: 0.0,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                   elevation: 2.0,
                                   borderRadius: BorderRadius.circular(24.0),

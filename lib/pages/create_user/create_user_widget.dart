@@ -414,7 +414,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                     onChanged: (val) => setState(
                                         () => _model.dropDownValue = val),
                                     width: double.infinity,
-                                    height: 52.0,
+                                    height: 60.0,
                                     textStyle: FlutterFlowTheme.of(context)
                                         .bodyLarge
                                         .override(

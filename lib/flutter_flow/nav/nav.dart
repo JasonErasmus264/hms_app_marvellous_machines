@@ -107,11 +107,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'forgotPass',
           path: '/forgotPass',
           builder: (context, params) => const ForgotPassWidget(),
-        ),
-        FFRoute(
-          name: 'Create05PatientIntake',
-          path: '/create05PatientIntake',
-          builder: (context, params) => const Create05PatientIntakeWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

@@ -98,6 +98,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const AssignmentWidget(),
         ),
         FFRoute(
+          name: 'feedback',
+          path: '/feedback',
+          requireAuth: true,
+          builder: (context, params) => const FeedbackWidget(),
+        ),
+        FFRoute(
           name: 'createUser',
           path: '/createUser',
           requireAuth: true,

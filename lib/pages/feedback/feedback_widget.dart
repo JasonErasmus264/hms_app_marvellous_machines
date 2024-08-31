@@ -51,8 +51,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
               color: FlutterFlowTheme.of(context).secondaryBackground,
               size: 24.0,
             ),
-            onPressed: () {
-              print('IconButton pressed ...');
+            onPressed: () async {
+              context.pop();
             },
           ),
           title: Padding(

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
   ///  State fields for stateful widgets in this page.
 
+  final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   // State field(s) for txtFirstName widget.
   FocusNode? txtFirstNameFocusNode;

@@ -86,16 +86,15 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const LoginWidget(),
         ),
         FFRoute(
-          name: 'home',
-          path: '/home',
-          requireAuth: true,
-          builder: (context, params) => const HomeWidget(),
-        ),
-        FFRoute(
           name: 'assignment',
           path: '/assignment',
           requireAuth: true,
-          builder: (context, params) => const AssignmentWidget(),
+          builder: (context, params) => AssignmentWidget(
+            userType: params.getParam(
+              'userType',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: 'createUser',
@@ -107,6 +106,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'forgotPass',
           path: '/forgotPass',
           builder: (context, params) => const ForgotPassWidget(),
+        ),
+        FFRoute(
+          name: 'home',
+          path: '/home',
+          requireAuth: true,
+          builder: (context, params) => const HomeWidget(),
+        ),
+        FFRoute(
+          name: 'addAssignment',
+          path: '/addAssignment',
+          builder: (context, params) => const AddAssignmentWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

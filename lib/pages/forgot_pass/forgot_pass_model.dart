@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class ForgotPassModel extends FlutterFlowModel<ForgotPassWidget> {
   ///  State fields for stateful widgets in this page.
 
+  final unfocusNode = FocusNode();
   // State field(s) for email widget.
   FocusNode? emailFocusNode;
   TextEditingController? emailTextController;

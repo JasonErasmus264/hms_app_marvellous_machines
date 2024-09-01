@@ -11,9 +11,10 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 /// Start User Group Code
 
 class UserGroup {
-  static String getBaseUrl() => 'http://192.168.3.66:3000';
+  static String getBaseUrl() => 'http://localhost:3000';
   static Map<String, String> headers = {};
   static AddUserCall addUserCall = AddUserCall();
+  static GetUserCall getUserCall = GetUserCall();
 }
 
 class AddUserCall {
@@ -50,6 +51,51 @@ class AddUserCall {
   }
 }
 
+class GetUserCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) async {
+    final baseUrl = UserGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get User',
+      apiUrl: '$baseUrl/api/v1/user',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? username(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.user.username''',
+      ));
+  String? firstName(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.user.firstName''',
+      ));
+  String? lastName(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.user.lastName''',
+      ));
+  String? email(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.user.email''',
+      ));
+  String? userType(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.user.userType''',
+      ));
+}
+
 /// End User Group Code
 
 class LoginCall {
@@ -64,7 +110,7 @@ class LoginCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Login',
-      apiUrl: 'http://192.168.3.66:3000/api/v1/login',
+      apiUrl: 'http://localhost:3000/api/v1/login',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -89,28 +135,6 @@ class LoginCall {
         response,
         r'''$.refreshToken''',
       ));
-}
-
-class GetUserCall {
-  static Future<ApiCallResponse> call({
-    String? token = '',
-  }) async {
-    return ApiManager.instance.makeApiCall(
-      callName: 'Get User',
-      apiUrl: 'http://192.168.3.66:3000/api/v1/user',
-      callType: ApiCallType.GET,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      params: {},
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
 }
 
 class ApiPagingParams {

@@ -1,14 +1,21 @@
+import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/form_field_controller.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'assignment_model.dart';
 export 'assignment_model.dart';
 
 class AssignmentWidget extends StatefulWidget {
-  const AssignmentWidget({super.key});
+  const AssignmentWidget({
+    super.key,
+    required this.userType,
+  });
+
+  final String? userType;
 
   @override
   State<AssignmentWidget> createState() => _AssignmentWidgetState();
@@ -80,13 +87,76 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              FlutterFlowDropDown<String>(
+                controller: _model.dropDownValueController ??=
+                    FormFieldController<String>(null),
+                options: const ['Option 1'],
+                onChanged: (val) => setState(() => _model.dropDownValue = val),
+                width: 329.0,
+                height: 56.0,
+                textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: 'Manrope',
+                      letterSpacing: 0.0,
+                    ),
+                hintText: 'Please select a module...',
+                icon: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  size: 24.0,
+                ),
+                elevation: 2.0,
+                borderColor: FlutterFlowTheme.of(context).alternate,
+                borderWidth: 2.0,
+                borderRadius: 8.0,
+                margin: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
+                hidesUnderline: true,
+                isOverButton: true,
+                isSearchable: false,
+                isMultiSelect: false,
+              ),
+              if ((widget.userType == 'Admin') ||
+                  (widget.userType == 'Lecturer'))
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      context.pushNamed('addAssignment');
+                    },
+                    text: 'Add Assignment',
+                    icon: const Icon(
+                      Icons.add_circle,
+                      size: 22.0,
+                    ),
+                    options: FFButtonOptions(
+                      height: 40.0,
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      iconPadding:
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).tertiary,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Manrope',
+                                color: Colors.white,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                      elevation: 3.0,
+                      borderSide: const BorderSide(
+                        color: Colors.transparent,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(
                     child: Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                          const EdgeInsetsDirectional.fromSTEB(10.0, 12.0, 10.0, 0.0),
                       child: TextFormField(
                         controller: _model.searchBarTextController,
                         focusNode: _model.searchBarFocusNode,

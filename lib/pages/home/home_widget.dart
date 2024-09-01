@@ -64,15 +64,13 @@ class _HomeWidgetState extends State<HomeWidget> {
         return Scaffold(
           key: scaffoldKey,
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(0.0),
-            child: AppBar(
-              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-              automaticallyImplyLeading: false,
-              actions: const [],
-              centerTitle: true,
-              toolbarHeight: 0.0,
-            ),
+          appBar: AppBar(
+            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+            automaticallyImplyLeading: false,
+            actions: const [],
+            centerTitle: true,
+            toolbarHeight: 0.0,
+            elevation: 1.0,
           ),
           body: SafeArea(
             top: true,
@@ -231,6 +229,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         .bodyMedium
                                         .override(
                                           fontFamily: 'Manrope',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -246,19 +246,17 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     child: Stack(
                                       alignment: const AlignmentDirectional(0.0, 0.0),
                                       children: [
-                                        Align(
+                                        const Align(
                                           alignment:
-                                              const AlignmentDirectional(0.95, 0.0),
+                                              AlignmentDirectional(0.95, 0.0),
                                           child: Padding(
                                             padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
+                                                EdgeInsetsDirectional.fromSTEB(
                                                     0.0, 0.0, 8.0, 0.0),
                                             child: Icon(
-                                              Icons.nights_stay,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              size: 20.0,
+                                              Icons.dark_mode,
+                                              color: Color(0xFF0035FF),
+                                              size: 24.0,
                                             ),
                                           ),
                                         ),
@@ -325,6 +323,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         .bodyMedium
                                         .override(
                                           fontFamily: 'Manrope',
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           letterSpacing: 0.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -340,18 +340,16 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     child: Stack(
                                       alignment: const AlignmentDirectional(0.0, 0.0),
                                       children: [
-                                        Align(
+                                        const Align(
                                           alignment:
-                                              const AlignmentDirectional(-0.9, 0.0),
+                                              AlignmentDirectional(-0.9, 0.0),
                                           child: Padding(
                                             padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
+                                                EdgeInsetsDirectional.fromSTEB(
                                                     8.0, 2.0, 0.0, 0.0),
                                             child: Icon(
                                               Icons.wb_sunny_rounded,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
+                                              color: Color(0xFFFFCE00),
                                               size: 24.0,
                                             ),
                                           ),
@@ -525,10 +523,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           ),
                         ),
                       ),
-                      if (UserGroup.getUserCall.userType(
-                            homeGetUserResponse.jsonBody,
-                          ) ==
-                          'Admin')
+                      if (currentUserData?.userType == 'Admin')
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               20.0, 5.0, 20.0, 5.0),
@@ -626,17 +621,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            context.pushNamed(
-                              'assignment',
-                              queryParameters: {
-                                'userType': serializeParam(
-                                  UserGroup.getUserCall.userType(
-                                    homeGetUserResponse.jsonBody,
-                                  ),
-                                  ParamType.String,
-                                ),
-                              }.withoutNulls,
-                            );
+                            context.pushNamed('assignment');
                           },
                           child: Container(
                             width: double.infinity,

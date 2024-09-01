@@ -12,7 +12,7 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 /// Start User Group Code
 
 class UserGroup {
-  static String getBaseUrl() => 'http://localhost:3000';
+  static String getBaseUrl() => 'http://192.168.3.66:3000';
   static Map<String, String> headers = {};
   static AddUserCall addUserCall = AddUserCall();
   static GetUserCall getUserCall = GetUserCall();
@@ -123,7 +123,7 @@ class LoginCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Login',
-      apiUrl: 'http://localhost:3000/api/v1/login',
+      apiUrl: 'http://192.168.3.66:3000/api/v1/login',
       callType: ApiCallType.POST,
       headers: {},
       params: {},

@@ -10,31 +10,69 @@ authRouter.post('/api/v1/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    // Fetch user from the database
     const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
 
-    if (rows.length === 0) return res.status(400).json({ message: 'Invalid credentials' });
+    // Check if user exists
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Invalid credentials' }); // 401 Unauthorized for incorrect username
+    }
 
     const user = rows[0];
-    const match = await bcryptjs.compare(password, user.password);
 
-    if (!match) return res.status(400).json({ message: 'Invalid credentials' });
+    // Check if the password matches
+    const match = await bcryptjs.compare(password, user.password);
+    if (!match) {
+      return res.status(401).json({ message: 'Invalid credentials' }); // 401 Unauthorized for incorrect password
+    }
 
     // Generate Access Token
-    const accessToken = jwt.sign({ userID: user.userID }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    let accessToken;
+    try {
+      accessToken = jwt.sign({ userID: user.userID, userType: user.userType }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    } catch (err) {
+      console.error('Error generating access token:', err);
+      return res.status(500).json({ message: 'Failed to generate access token' });
+    }
 
     // Generate Refresh Token
-    const refreshToken = jwt.sign({ userID: user.userID }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+    let refreshToken;
+    try {
+      refreshToken = jwt.sign({ userID: user.userID, userType: user.userType }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+    } catch (err) {
+      console.error('Error generating refresh token:', err);
+      return res.status(500).json({ message: 'Failed to generate refresh token' });
+    }
 
     // Hash the refresh token before storing it in the database
-    const hashedRefreshToken = await bcryptjs.hash(refreshToken, 10);
+    let hashedRefreshToken;
+    try {
+      hashedRefreshToken = await bcryptjs.hash(refreshToken, 10);
+    } catch (err) {
+      console.error('Error hashing refresh token:', err);
+      return res.status(500).json({ message: 'Failed to hash refresh token' });
+    }
 
     // Store the hashed refresh token in the database
-    await pool.execute('UPDATE users SET refreshToken = ? WHERE userID = ?', [hashedRefreshToken, user.userID]);
+    try {
+      await pool.execute('UPDATE users SET refreshToken = ? WHERE userID = ?', [hashedRefreshToken, user.userID]);
+    } catch (err) {
+      console.error('Error storing hashed refresh token in the database:', err);
+      return res.status(500).json({ message: 'Failed to update refresh token in the database' });
+    }
 
-    // Return only the tokens
-    res.json({ accessToken, refreshToken });
+    // Return the tokens and user info
+    return res.json({
+      accessToken,
+      refreshToken,
+      userID: user.userID,
+      userType: user.userType
+    });
+    
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    // Handle unexpected errors (e.g., database connection issues)
+    console.error('Unexpected error during login:', error);
+    res.status(500).json({ message: 'An unexpected error occurred during login' });
   }
 });
 

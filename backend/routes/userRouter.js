@@ -4,11 +4,15 @@ import pool from '../db.js';
 import verifyToken from '../middleware/verifyToken.js';
 
 const userRoute = express.Router();
+// All routes should check for a valid token
+userRoute.use('/api/v1', verifyToken);
+
+
 
 // GET USER //
 
 // Function to get user info
-userRoute.get('/api/v1/user', verifyToken, async (req, res) => {
+userRoute.get('/api/v1/user', async (req, res) => {
   try {
     const { userID } = req.user;
 

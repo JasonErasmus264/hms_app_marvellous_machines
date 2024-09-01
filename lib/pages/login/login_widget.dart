@@ -1,5 +1,6 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -383,6 +384,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         refreshToken: LoginCall.refreshToken(
                                           (_model.authResponse?.jsonBody ?? ''),
                                         ),
+                                        authUid: LoginCall.userID(
+                                          (_model.authResponse?.jsonBody ?? ''),
+                                        )?.toString(),
+                                        userData: UserStruct(
+                                          userType: LoginCall.userType(
+                                            (_model.authResponse?.jsonBody ??
+                                                ''),
+                                          ),
+                                        ),
                                       );
                                       navigate = () => context.goNamedAuth(
                                           'home', context.mounted);
@@ -392,9 +402,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         builder: (alertDialogContext) {
                                           return AlertDialog(
                                             title: const Text('Error'),
-                                            content: Text((_model
-                                                    .authResponse?.bodyText ??
-                                                '')),
+                                            content:
+                                                Text(LoginCall.errorMessage(
+                                              (_model.authResponse?.jsonBody ??
+                                                  ''),
+                                            )!),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.pop(

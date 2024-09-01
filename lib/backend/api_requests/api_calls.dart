@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -23,6 +24,7 @@ class AddUserCall {
     String? lastName = '',
     String? phoneNum = '',
     String? userType = '',
+    String? token = '',
   }) async {
     final baseUrl = UserGroup.getBaseUrl();
 
@@ -37,7 +39,9 @@ class AddUserCall {
       callName: 'Add User',
       apiUrl: '$baseUrl/api/v1/addUser',
       callType: ApiCallType.POST,
-      headers: {},
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
       params: {},
       body: ffApiRequestBody,
       bodyType: BodyType.JSON,
@@ -49,6 +53,11 @@ class AddUserCall {
       alwaysAllowBody: false,
     );
   }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
 }
 
 class GetUserCall {
@@ -94,6 +103,10 @@ class GetUserCall {
         response,
         r'''$.user.userType''',
       ));
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
 }
 
 /// End User Group Code
@@ -134,6 +147,19 @@ class LoginCall {
       castToType<String>(getJsonField(
         response,
         r'''$.refreshToken''',
+      ));
+  static int? userID(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.userID''',
+      ));
+  static String? userType(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.userType''',
+      ));
+  static String? errorMessage(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
       ));
 }
 

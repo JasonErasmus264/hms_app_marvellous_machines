@@ -1,3 +1,4 @@
+import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -490,6 +491,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                             phoneNum: _model
                                                 .phoneNumberTextController.text,
                                             userType: _model.dropDownValue,
+                                            token: currentAuthenticationToken,
                                           );
 
                                           if ((_model.apiResult?.succeeded ??

@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'assignment_model.dart';
@@ -393,7 +394,13 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                                         ),
                                               ),
                                               Text(
-                                                'Open Date: ',
+                                                'Open Date: ${valueOrDefault<String>(
+                                                  getJsonField(
+                                                    assignmentsItem,
+                                                    r'''$.assignOpenDate''',
+                                                  )?.toString(),
+                                                  'OpenDate',
+                                                )}',
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -412,7 +419,13 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                                     .fromSTEB(
                                                         0.0, 0.0, 8.0, 0.0),
                                                 child: Text(
-                                                  'Due Date: Oct 10, 2023',
+                                                  'Due Date: ${valueOrDefault<String>(
+                                                    getJsonField(
+                                                      assignmentsItem,
+                                                      r'''$.assignDueDate''',
+                                                    )?.toString(),
+                                                    'Time',
+                                                  )}',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodySmall
@@ -429,47 +442,69 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                                       ),
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 10.0, 0.0, 0.0),
-                                                child: FFButtonWidget(
-                                                  onPressed: () {
-                                                    print('Button pressed ...');
-                                                  },
-                                                  text: 'View Details',
-                                                  options: FFButtonOptions(
-                                                    width: double.infinity,
-                                                    height: 41.0,
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 0.0),
-                                                    iconPadding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 0.0),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .tertiary,
-                                                    textStyle: FlutterFlowTheme
-                                                            .of(context)
-                                                        .titleSmall
-                                                        .override(
-                                                          fontFamily: 'Manrope',
-                                                          color: Colors.white,
-                                                          fontSize: 18.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                    elevation: 2.0,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            24.0),
+                                              if (functions.isAssignmentOpen(
+                                                  getJsonField(
+                                                    assignmentsItem,
+                                                    r'''$.assignOpenDate''',
+                                                  ).toString(),
+                                                  getJsonField(
+                                                    assignmentsItem,
+                                                    r'''$.assignDueDate''',
+                                                  ).toString()))
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 10.0, 0.0, 0.0),
+                                                  child: FFButtonWidget(
+                                                    onPressed: () {
+                                                      print(
+                                                          'Button pressed ...');
+                                                    },
+                                                    text: 'View Details',
+                                                    options: FFButtonOptions(
+                                                      width: double.infinity,
+                                                      height: 41.0,
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      iconPadding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .tertiary,
+                                                      textStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .titleSmall
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Manrope',
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 18.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                      elevation: 2.0,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              24.0),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
                                             ],
                                           ),
                                         ),

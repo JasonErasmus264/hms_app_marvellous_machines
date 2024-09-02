@@ -56,24 +56,54 @@ assignmentRoute.get('/api/v1/module', async (req, res) => {
 assignmentRoute.get('/api/v1/assignments/:moduleID', async (req, res) => {
   const { moduleID } = req.params; // Get the moduleID from the URL path
   
-    try {
-      // Validate the moduleID
-      if (!moduleID) {
-        return res.status(400).json({ message: 'Module ID is required' });
-      }
-  
-      // Fetch assignments based on the provided moduleID
-      const [rows] = await pool.execute('SELECT * FROM assignment WHERE moduleID = ?', [moduleID]);
-  
-      if (rows.length === 0) {
-        return res.status(404).json({ message: 'No assignments found for this module' });
-      }
-  
-      res.json({ assignments: rows });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+  try {
+    // Validate the moduleID
+    if (!moduleID) {
+      return res.status(400).json({ message: 'Module ID is required' });
     }
-  });
+
+    // Fetch assignments based on the provided moduleID
+    const [rows] = await pool.execute('SELECT * FROM assignment WHERE moduleID = ?', [moduleID]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'No assignments found for this module' });
+    }
+
+    // Format the assignOpenDate and assignDueDate for each assignment
+    const formattedAssignments = rows.map(assignment => {
+      // Parse the dates from the input string
+      const assignOpenDate = new Date(assignment.assignOpenDate);
+      const assignDueDate = new Date(assignment.assignDueDate);
+    
+      // Function to format dates to '01 September 2024 at 12:00'
+      const formatDate = (date) => {
+        const options = {
+          day: '2-digit',
+          month: 'long', // Full month name
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        };
+    
+        // Format the date
+        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
+        return formattedDate.replace(',', ' at'); // Replace the comma with ' at'
+      };
+    
+      // Return the assignment with formatted open and due dates
+      return {
+        ...assignment,
+        assignOpenDate: formatDate(assignOpenDate),
+        assignDueDate: formatDate(assignDueDate),
+      };
+    });
+
+    res.json({ assignments: formattedAssignments });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
   
   /*// VIEW SPECIFIC ASSIGNMENT DETAILS //
   assignmentRoute.get('/api/v1/assignments/:assignmentID', async (req, res) => {

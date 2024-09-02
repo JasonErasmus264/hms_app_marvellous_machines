@@ -53,8 +53,8 @@ assignmentRoute.get('/api/v1/module', async (req, res) => {
 
 
 // GET ASSIGNMENTS BASED ON MODULE ID //
-assignmentRoute.get('/api/v1/assignments', async (req, res) => {
-    const { moduleID } = req.query; // Get the moduleID from the query parameters
+assignmentRoute.get('/api/v1/assignments/:moduleID', async (req, res) => {
+  const { moduleID } = req.params; // Get the moduleID from the URL path
   
     try {
       // Validate the moduleID

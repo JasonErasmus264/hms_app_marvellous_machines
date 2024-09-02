@@ -111,6 +111,127 @@ class GetUserCall {
 
 /// End User Group Code
 
+/// Start Assignment Group Code
+
+class AssignmentGroup {
+  static String getBaseUrl() => 'http://localhost:3000';
+  static Map<String, String> headers = {};
+  static GetModuleCall getModuleCall = GetModuleCall();
+  static GetAssignmentCall getAssignmentCall = GetAssignmentCall();
+}
+
+class GetModuleCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) async {
+    final baseUrl = AssignmentGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'GetModule',
+      apiUrl: '$baseUrl/api/v1/module',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  List<int>? moduleID(dynamic response) => (getJsonField(
+        response,
+        r'''$.modules[:].moduleID''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<int>(x))
+          .withoutNulls
+          .toList();
+  List<String>? moduleCode(dynamic response) => (getJsonField(
+        response,
+        r'''$.modules[:].moduleCode''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+}
+
+class GetAssignmentCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? moduleID,
+  }) async {
+    final baseUrl = AssignmentGroup.getBaseUrl();
+
+    return ApiManager.instance.makeApiCall(
+      callName: 'GetAssignment',
+      apiUrl: '$baseUrl/api/v1/assignments/$moduleID',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  int? assignID(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.assignment.assignmentID''',
+      ));
+  int? userID(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.assignment.userID''',
+      ));
+  int? moduleID(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.assignment.moduleID''',
+      ));
+  String? name(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.assignment.assignName''',
+      ));
+  String? description(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.assignment.assignDesc''',
+      ));
+  String? dueDate(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.assignment.assignDueDate''',
+      ));
+  String? createdAt(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.assignment.assignCreatedAt''',
+      ));
+  String? updatedAt(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.assignment.assignUpdatedAt''',
+      ));
+  List? assignment(dynamic response) => getJsonField(
+        response,
+        r'''$.assignment''',
+        true,
+      ) as List?;
+}
+
+/// End Assignment Group Code
+
 class LoginCall {
   static Future<ApiCallResponse> call({
     String? username = '',

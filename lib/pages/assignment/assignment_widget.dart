@@ -1,4 +1,5 @@
 import '/auth/custom_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -86,50 +87,78 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
             children: [
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                child: FlutterFlowDropDown<String>(
-                  controller: _model.dropDownValueController ??=
-                      FormFieldController<String>(
-                    _model.dropDownValue ??= '',
+                child: FutureBuilder<ApiCallResponse>(
+                  future: AssignmentGroup.getModuleCall.call(
+                    token: currentAuthenticationToken,
                   ),
-                  options: List<String>.from(['1']),
-                  optionLabels: const ['g'],
-                  onChanged: (val) =>
-                      setState(() => _model.dropDownValue = val),
-                  height: 56.0,
-                  searchHintTextStyle:
-                      FlutterFlowTheme.of(context).labelMedium.override(
-                            fontFamily: 'Manrope',
-                            letterSpacing: 0.0,
+                  builder: (context, snapshot) {
+                    // Customize what your widget looks like when it's loading.
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
                           ),
-                  searchTextStyle:
-                      FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Manrope',
-                            letterSpacing: 0.0,
-                          ),
-                  textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Manrope',
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }
+                    final dropDownGetModuleResponse = snapshot.data!;
+
+                    return FlutterFlowDropDown<int>(
+                      controller: _model.dropDownValueController ??=
+                          FormFieldController<int>(null),
+                      options:
+                          List<int>.from(AssignmentGroup.getModuleCall.moduleID(
+                        dropDownGetModuleResponse.jsonBody,
+                      )!),
+                      optionLabels: AssignmentGroup.getModuleCall.moduleCode(
+                        dropDownGetModuleResponse.jsonBody,
+                      )!,
+                      onChanged: (val) =>
+                          setState(() => _model.dropDownValue = val),
+                      height: 56.0,
+                      searchHintTextStyle:
+                          FlutterFlowTheme.of(context).labelMedium.override(
+                                fontFamily: 'Manrope',
+                                letterSpacing: 0.0,
+                              ),
+                      searchTextStyle:
+                          FlutterFlowTheme.of(context).bodyMedium.override(
+                                fontFamily: 'Manrope',
+                                letterSpacing: 0.0,
+                              ),
+                      textStyle:
+                          FlutterFlowTheme.of(context).bodyMedium.override(
+                                fontFamily: 'Manrope',
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                      hintText: 'Please select a module...',
+                      searchHintText: 'Search for a module...',
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                        size: 24.0,
                       ),
-                  hintText: 'Please select a module...',
-                  searchHintText: 'Search for a module...',
-                  icon: Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    size: 24.0,
-                  ),
-                  elevation: 2.0,
-                  borderColor: FlutterFlowTheme.of(context).alternate,
-                  borderWidth: 2.0,
-                  borderRadius: 8.0,
-                  margin: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
-                  hidesUnderline: true,
-                  isOverButton: true,
-                  isSearchable: true,
-                  isMultiSelect: false,
+                      elevation: 2.0,
+                      borderColor: FlutterFlowTheme.of(context).alternate,
+                      borderWidth: 2.0,
+                      borderRadius: 8.0,
+                      margin:
+                          const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
+                      hidesUnderline: true,
+                      isOverButton: true,
+                      isSearchable: true,
+                      isMultiSelect: false,
+                    );
+                  },
                 ),
               ),
-              if (_model.dropDownValue != null && _model.dropDownValue != '')
+              if (_model.dropDownValue != null)
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -281,107 +310,181 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                       Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             10.0, 10.0, 10.0, 0.0),
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              color: FlutterFlowTheme.of(context).alternate,
-                              elevation: 4.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    10.0, 10.0, 10.0, 10.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Assignment 1',
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                        child: FutureBuilder<ApiCallResponse>(
+                          future: AssignmentGroup.getAssignmentCall.call(
+                            token: currentAuthenticationToken,
+                            moduleID: _model.dropDownValue,
+                          ),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: SizedBox(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      FlutterFlowTheme.of(context).primary,
                                     ),
-                                    Padding(
+                                  ),
+                                ),
+                              );
+                            }
+                            final listViewGetAssignmentResponse =
+                                snapshot.data!;
+
+                            return Builder(
+                              builder: (context) {
+                                final assignments =
+                                    AssignmentGroup.getAssignmentCall
+                                            .assignment(
+                                              listViewGetAssignmentResponse
+                                                  .jsonBody,
+                                            )
+                                            ?.toList() ??
+                                        [];
+
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: assignments.length,
+                                  itemBuilder: (context, assignmentsIndex) {
+                                    final assignmentsItem =
+                                        assignments[assignmentsIndex];
+                                    return Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 8.0, 0.0),
-                                      child: Text(
-                                        'Due Date: Oct 10, 2023',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              fontFamily: 'Manrope',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              fontSize: 14.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                    Text(
-                                      'Description: Complete the math worksheet.',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 10.0, 0.0, 0.0),
-                                      child: FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'View Details',
-                                        options: FFButtonOptions(
-                                          width: double.infinity,
-                                          height: 41.0,
+                                          0.0, 0.0, 0.0, 10.0),
+                                      child: Card(
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        color: FlutterFlowTheme.of(context)
+                                            .alternate,
+                                        elevation: 4.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: Padding(
                                           padding:
                                               const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          iconPadding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .tertiary,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .override(
-                                                    fontFamily: 'Manrope',
-                                                    color: Colors.white,
-                                                    fontSize: 18.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.bold,
+                                                  10.0, 10.0, 10.0, 10.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                valueOrDefault<String>(
+                                                  AssignmentGroup
+                                                      .getAssignmentCall
+                                                      .name(
+                                                    listViewGetAssignmentResponse
+                                                        .jsonBody,
                                                   ),
-                                          elevation: 2.0,
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
+                                                  'name',
+                                                ),
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleMedium
+                                                        .override(
+                                                          fontFamily: 'Manrope',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                              ),
+                                              Text(
+                                                'Open Date: ',
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Manrope',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 0.0, 8.0, 0.0),
+                                                child: Text(
+                                                  'Due Date: Oct 10, 2023',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodySmall
+                                                      .override(
+                                                        fontFamily: 'Manrope',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .error,
+                                                        fontSize: 14.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 10.0, 0.0, 0.0),
+                                                child: FFButtonWidget(
+                                                  onPressed: () {
+                                                    print('Button pressed ...');
+                                                  },
+                                                  text: 'View Details',
+                                                  options: FFButtonOptions(
+                                                    width: double.infinity,
+                                                    height: 41.0,
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 0.0),
+                                                    iconPadding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 0.0),
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .tertiary,
+                                                    textStyle: FlutterFlowTheme
+                                                            .of(context)
+                                                        .titleSmall
+                                                        .override(
+                                                          fontFamily: 'Manrope',
+                                                          color: Colors.white,
+                                                          fontSize: 18.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                    elevation: 2.0,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            24.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                     ],

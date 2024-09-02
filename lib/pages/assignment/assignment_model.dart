@@ -8,8 +8,8 @@ class AssignmentModel extends FlutterFlowModel<AssignmentWidget> {
 
   final unfocusNode = FocusNode();
   // State field(s) for DropDown widget.
-  String? dropDownValue;
-  FormFieldController<String>? dropDownValueController;
+  int? dropDownValue;
+  FormFieldController<int>? dropDownValueController;
   // State field(s) for searchBar widget.
   FocusNode? searchBarFocusNode;
   TextEditingController? searchBarTextController;

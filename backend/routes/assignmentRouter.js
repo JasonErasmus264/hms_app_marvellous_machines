@@ -104,25 +104,6 @@ assignmentRoute.get('/api/v1/assignments/:moduleID', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-  
-  /*// VIEW SPECIFIC ASSIGNMENT DETAILS //
-  assignmentRoute.get('/api/v1/assignments/:assignmentID', async (req, res) => {
-    try {
-      const { assignmentID } = req.params;
-  
-      const [rows] = await pool.execute('SELECT * FROM assignment WHERE assignmentID = ?', [assignmentID]);
-  
-      if (rows.length === 0) {
-        return res.status(404).json({ message: 'Assignment not found' });
-      }
-  
-      res.json({ assignment: rows[0] });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });*/
-
-
 
 
 

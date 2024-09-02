@@ -445,10 +445,14 @@ class _LoginWidgetState extends State<LoginWidget>
                                           return AlertDialog(
                                             title: const Text('Error'),
                                             content:
-                                                Text(LoginCall.errorMessage(
-                                              (_model.authResponse?.jsonBody ??
-                                                  ''),
-                                            )!),
+                                                Text(valueOrDefault<String>(
+                                              LoginCall.errorMessage(
+                                                (_model.authResponse
+                                                        ?.jsonBody ??
+                                                    ''),
+                                              ),
+                                              'Conncection to server failed',
+                                            )),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.pop(

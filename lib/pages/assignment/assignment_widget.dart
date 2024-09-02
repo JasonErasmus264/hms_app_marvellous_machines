@@ -337,7 +337,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                               builder: (context) {
                                 final assignments =
                                     AssignmentGroup.getAssignmentCall
-                                            .assignment(
+                                            .assignments(
                                               listViewGetAssignmentResponse
                                                   .jsonBody,
                                             )
@@ -375,15 +375,10 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                valueOrDefault<String>(
-                                                  AssignmentGroup
-                                                      .getAssignmentCall
-                                                      .name(
-                                                    listViewGetAssignmentResponse
-                                                        .jsonBody,
-                                                  ),
-                                                  'name',
-                                                ),
+                                                getJsonField(
+                                                  assignmentsItem,
+                                                  r'''$.assignName''',
+                                                ).toString(),
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .titleMedium

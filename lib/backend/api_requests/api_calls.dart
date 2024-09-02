@@ -114,7 +114,7 @@ class GetUserCall {
 /// Start Assignment Group Code
 
 class AssignmentGroup {
-  static String getBaseUrl() => 'http://localhost:3000';
+  static String getBaseUrl() => 'http://192.168.3.66:3000';
   static Map<String, String> headers = {};
   static GetModuleCall getModuleCall = GetModuleCall();
   static GetAssignmentCall getAssignmentCall = GetAssignmentCall();

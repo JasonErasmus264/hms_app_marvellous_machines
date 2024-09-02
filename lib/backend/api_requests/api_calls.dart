@@ -191,41 +191,9 @@ class GetAssignmentCall {
     );
   }
 
-  int? assignID(dynamic response) => castToType<int>(getJsonField(
+  List? assignments(dynamic response) => getJsonField(
         response,
-        r'''$.assignment.assignmentID''',
-      ));
-  int? userID(dynamic response) => castToType<int>(getJsonField(
-        response,
-        r'''$.assignment.userID''',
-      ));
-  int? moduleID(dynamic response) => castToType<int>(getJsonField(
-        response,
-        r'''$.assignment.moduleID''',
-      ));
-  String? name(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.assignment.assignName''',
-      ));
-  String? description(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.assignment.assignDesc''',
-      ));
-  String? dueDate(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.assignment.assignDueDate''',
-      ));
-  String? createdAt(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.assignment.assignCreatedAt''',
-      ));
-  String? updatedAt(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.assignment.assignUpdatedAt''',
-      ));
-  List? assignment(dynamic response) => getJsonField(
-        response,
-        r'''$.assignment''',
+        r'''$.assignments''',
         true,
       ) as List?;
 }

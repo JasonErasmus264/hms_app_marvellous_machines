@@ -16,9 +16,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(authRoute);
-app.use(userRoute);
-app.use(assignmentRoute);
+app.use('/api/v1', authRoute);
+app.use('/api/v1', userRoute);
+app.use('/api/v1', assignmentRoute);
 
 
 // Start server

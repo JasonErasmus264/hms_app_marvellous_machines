@@ -1,9 +1,14 @@
+import 'dart:io';
+import 'dart:convert';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column hide Row;
+import 'package:open_file/open_file.dart';
+import 'package:http/http.dart' as http;
 import 'feedback_model.dart';
 export 'feedback_model.dart';
 
@@ -30,6 +35,54 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
     _model.dispose();
 
     super.dispose();
+  }
+
+  Future<void> createExcel() async {
+    try {
+      // Fetch feedback data 
+      final response = await http.get(Uri.parse('http://192.168.3.66:3000/api/v1/feedback'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> feedbackList = json.decode(response.body);
+
+        // Create Excel workbook and worksheet
+        final Workbook workbook = Workbook();
+        final Worksheet sheet = workbook.worksheets[0];
+
+        // Headers
+        sheet.getRangeByName('A1').setText('userID');
+        sheet.getRangeByName('B1').setText('submissionID');
+        sheet.getRangeByName('C1').setText('mark');
+        sheet.getRangeByName('D1').setText('comment');
+
+        // Populate sheet
+        for (int i = 0; i < feedbackList.length; i++) {
+          final feedback = feedbackList[i];
+          sheet.getRangeByIndex(i + 2, 1).setText(feedback['userID'].toString());
+          sheet.getRangeByIndex(i + 2, 2).setText(feedback['submissionID'].toString());
+          sheet.getRangeByIndex(i + 2, 3).setText(feedback['mark'].toString());
+          sheet.getRangeByIndex(i + 2, 4).setText(feedback['comment'].toString());
+        }
+
+        // Save workbook
+        final List<int> bytes = workbook.saveAsStream();
+        workbook.dispose();
+
+        
+        final Directory directory = await getApplicationSupportDirectory();
+        final String path = directory.path;
+        final String fileName = '$path/Feedback.xlsx';
+        final File file = File(fileName);
+        await file.writeAsBytes(bytes, flush: true);
+
+        // Open file
+        OpenFile.open(fileName);
+      } else {
+        print('Failed to load feedback data');
+      }
+    } catch (e) {
+      print('Error creating Excel file: $e');
+    }
   }
 
   @override
@@ -96,7 +149,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                               25.0, 20.0, 0.0, 20.0),
                           child: FFButtonWidget(
                             onPressed: () {
-                              print('FeedbackBtn pressed ...');
+                              createExcel();
                             },
                             text: 'View Feedback',
                             options: FFButtonOptions(

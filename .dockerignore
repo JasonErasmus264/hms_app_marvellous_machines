@@ -1,0 +1,22 @@
+# Ignore the docker files
+backend/Dockerfile
+.dockerignore
+
+# Ignore node_modules folder
+backend/node_modules
+
+# Ignore build artifacts
+dist
+build
+out
+
+# Ignore environment files
+backend/.env
+
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore IDE/editor specific files
+.vscode
+.idea

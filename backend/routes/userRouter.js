@@ -4,10 +4,9 @@ import pool from '../db.js';
 import verifyToken from '../middleware/verifyToken.js';
 
 const userRoute = express.Router();
+
 // All routes should check for a valid token
 userRoute.use('/api/v1', verifyToken);
-
-
 
 // GET USER //
 

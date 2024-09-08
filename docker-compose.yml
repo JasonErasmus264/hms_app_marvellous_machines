@@ -1,0 +1,11 @@
+
+services:
+  node-container:
+    build:
+      context: ./backend   # Build context is the backend folder
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  # Map ports
+    volumes:
+      - ./:/app
+      - /app/node_modules  # Mount the node_modules folder to persist across builds

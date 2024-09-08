@@ -1,0 +1,9 @@
+# Ignore the docker files
+Dockerfile
+.dockerignore
+
+# Ignore node_modules folder
+node_modules
+
+# Ignore environment files
+.env

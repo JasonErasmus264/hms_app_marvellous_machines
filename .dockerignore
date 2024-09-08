@@ -1,17 +1,13 @@
 # Ignore the docker files
-backend/Dockerfile
+Dockerfile
 .dockerignore
 
-# Ignore node_modules folder
-backend/node_modules
+# could use **/node_modules
 
 # Ignore build artifacts
 dist
 build
 out
-
-# Ignore environment files
-backend/.env
 
 # Ignore version control files
 .git

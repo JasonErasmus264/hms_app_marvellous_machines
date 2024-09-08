@@ -20,6 +20,10 @@ app.use('/api/v1', authRoute);
 app.use('/api/v1', userRoute);
 app.use('/api/v1', assignmentRoute);
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Marvellous Machines API!");
+});
+
 
 // Start server
 app.listen(PORT, "0.0.0.0", () => {

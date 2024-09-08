@@ -1,9 +1,24 @@
-2024/09/02-14:38:43.457 58f8 Reusing MANIFEST C:\Users\jason\AppData\Local\Temp\flutter_tools.efa4dd71\flutter_tools_chrome_device.e9b5159e\Default\Site Characteristics Database/MANIFEST-000001
-2024/09/02-14:38:43.464 58f8 Recovering log #16
-2024/09/02-14:38:43.465 58f8 Reusing old log C:\Users\jason\AppData\Local\Temp\flutter_tools.efa4dd71\flutter_tools_chrome_device.e9b5159e\Default\Site Characteristics Database/000016.log 
-2024/09/02-14:38:43.466 58f8 Delete type=0 #3
-2024/09/02-14:38:43.466 58f8 Delete type=2 #4
-2024/09/02-14:38:43.466 58f8 Delete type=2 #6
-2024/09/02-14:38:43.466 58f8 Delete type=0 #6
-2024/09/02-14:38:43.466 58f8 Delete type=0 #10
-2024/09/02-14:38:43.466 58f8 Delete type=2 #11
+2024/09/04-21:04:20.598 5bf0 Reusing MANIFEST C:\Users\jason\AppData\Local\Temp\flutter_tools.d2183495\flutter_tools_chrome_device.d0a860fb\Default\Site Characteristics Database/MANIFEST-000001
+2024/09/04-21:04:20.598 5bf0 Recovering log #16
+2024/09/04-21:04:20.599 5bf0 Level-0 table #23: started
+2024/09/04-21:04:20.602 5bf0 Level-0 table #23: 291 bytes OK
+2024/09/04-21:04:20.602 5bf0 Recovering log #27
+2024/09/04-21:04:20.603 5bf0 Reusing old log C:\Users\jason\AppData\Local\Temp\flutter_tools.d2183495\flutter_tools_chrome_device.d0a860fb\Default\Site Characteristics Database/000027.log 
+2024/09/04-21:04:20.613 5bf0 Delete type=0 #3
+2024/09/04-21:04:20.613 5bf0 Delete type=2 #4
+2024/09/04-21:04:20.613 5bf0 Delete type=2 #6
+2024/09/04-21:04:20.613 5bf0 Delete type=0 #6
+2024/09/04-21:04:20.614 5bf0 Delete type=0 #10
+2024/09/04-21:04:20.614 5bf0 Delete type=2 #11
+2024/09/04-21:04:20.614 5bf0 Delete type=0 #16
+2024/09/04-21:04:20.614 5bf0 Delete type=2 #28
+2024/09/04-21:04:20.614 5bf0 Delete type=2 #34
+2024/09/04-21:04:20.616 48e0 Compacting 4@0 + 1@1 files
+2024/09/04-21:04:20.622 48e0 Generated table #28@0: 2 keys, 194 bytes
+2024/09/04-21:04:20.622 48e0 Compacted 4@0 + 1@1 files => 194 bytes
+2024/09/04-21:04:20.622 48e0 compacted to: files[ 0 1 0 0 0 0 0 ]
+2024/09/04-21:04:20.623 48e0 Delete type=2 #17
+2024/09/04-21:04:20.623 48e0 Delete type=2 #19
+2024/09/04-21:04:20.623 48e0 Delete type=2 #20
+2024/09/04-21:04:20.623 48e0 Delete type=2 #21
+2024/09/04-21:04:20.624 48e0 Delete type=2 #23

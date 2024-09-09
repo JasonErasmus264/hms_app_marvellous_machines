@@ -6,6 +6,7 @@ import cors from 'cors';
 import authRoute from './routes/authRouter.js';
 import userRoute from './routes/userRouter.js';
 import assignmentRoute from './routes/assignmentRouter.js';
+import feedbackRoute from './routes/feedbackRouter.js';
 
 
 // INIT
@@ -19,6 +20,11 @@ app.use(express.json());
 app.use('/api/v1', authRoute);
 app.use('/api/v1', userRoute);
 app.use('/api/v1', assignmentRoute);
+
+
+app.use('/api/v1', feedbackRoute);
+
+
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Marvellous Machines API!");

@@ -60,8 +60,9 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
           final feedback = feedbackList[i];
           sheet.getRangeByIndex(i + 2, 1).setText(feedback['userID'].toString());
           sheet.getRangeByIndex(i + 2, 2).setText(feedback['submissionID'].toString());
-          sheet.getRangeByIndex(i + 2, 3).setText(feedback['mark'].toString());
-          sheet.getRangeByIndex(i + 2, 4).setText(feedback['comment'].toString());
+          sheet.getRangeByName('C${i + 2}').setNumber(
+            double.tryParse(feedback[i]['mark'].toString()) ?? 0.0);
+          sheet.getRangeByName('D${i + 2}').setText(feedback[i]['comment'].toString());
         }
 
         // Save workbook

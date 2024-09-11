@@ -1,10 +1,13 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'login_model.dart';
 export 'login_model.dart';
 
@@ -15,10 +18,13 @@ class LoginWidget extends StatefulWidget {
   State<LoginWidget> createState() => _LoginWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _LoginWidgetState extends State<LoginWidget>
+    with TickerProviderStateMixin {
   late LoginModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final animationsMap = <String, AnimationInfo>{};
 
   @override
   void initState() {
@@ -30,6 +36,43 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     _model.passwordTextController ??= TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
+
+    animationsMap.addAll({
+      'containerOnPageLoadAnimation': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 1.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 600.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          MoveEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 300.0.ms,
+            begin: const Offset(0.0, 140.0),
+            end: const Offset(0.0, 0.0),
+          ),
+          ScaleEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 300.0.ms,
+            begin: const Offset(0.9, 1.0),
+            end: const Offset(1.0, 1.0),
+          ),
+          TiltEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 300.0.ms,
+            begin: const Offset(-0.349, 0),
+            end: const Offset(0, 0),
+          ),
+        ],
+      ),
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -383,6 +426,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         refreshToken: LoginCall.refreshToken(
                                           (_model.authResponse?.jsonBody ?? ''),
                                         ),
+                                        authUid: LoginCall.userID(
+                                          (_model.authResponse?.jsonBody ?? ''),
+                                        )?.toString(),
+                                        userData: UserStruct(
+                                          userType: LoginCall.userType(
+                                            (_model.authResponse?.jsonBody ??
+                                                ''),
+                                          ),
+                                        ),
                                       );
                                       navigate = () => context.goNamedAuth(
                                           'home', context.mounted);
@@ -392,9 +444,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         builder: (alertDialogContext) {
                                           return AlertDialog(
                                             title: const Text('Error'),
-                                            content: Text((_model
-                                                    .authResponse?.bodyText ??
-                                                '')),
+                                            content:
+                                                Text(valueOrDefault<String>(
+                                              LoginCall.errorMessage(
+                                                (_model.authResponse
+                                                        ?.jsonBody ??
+                                                    ''),
+                                              ),
+                                              'Conncection to server failed',
+                                            )),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.pop(
@@ -476,7 +534,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ),
                         ),
                       ),
-                    ),
+                    ).animateOnPageLoad(
+                        animationsMap['containerOnPageLoadAnimation']!),
                   ),
                 ],
               ),

@@ -1,0 +1,18 @@
+# Ignore the docker files
+Dockerfile
+.dockerignore
+
+# could use **/node_modules
+
+# Ignore build artifacts
+dist
+build
+out
+
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore IDE/editor specific files
+.vscode
+.idea

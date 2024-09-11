@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '/backend/schema/structs/index.dart';
+
 import '/auth/custom_auth/custom_auth_user_provider.dart';
 
 import '/index.dart';
@@ -86,12 +88,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const LoginWidget(),
         ),
         FFRoute(
-          name: 'home',
-          path: '/home',
-          requireAuth: true,
-          builder: (context, params) => const HomeWidget(),
-        ),
-        FFRoute(
           name: 'assignment',
           path: '/assignment',
           requireAuth: true,
@@ -113,6 +109,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'forgotPass',
           path: '/forgotPass',
           builder: (context, params) => const ForgotPassWidget(),
+        ),
+        FFRoute(
+          name: 'home',
+          path: '/home',
+          requireAuth: true,
+          builder: (context, params) => const HomeWidget(),
+        ),
+        FFRoute(
+          name: 'addAssignment',
+          path: '/addAssignment',
+          builder: (context, params) => const AddAssignmentWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -231,6 +238,7 @@ class FFParameters {
     String paramName,
     ParamType type, {
     bool isList = false,
+    StructBuilder<T>? structBuilder,
   }) {
     if (futureParamValues.containsKey(paramName)) {
       return futureParamValues[paramName];
@@ -248,6 +256,7 @@ class FFParameters {
       param,
       type,
       isList,
+      structBuilder: structBuilder,
     );
   }
 }

@@ -6,6 +6,7 @@ import cors from 'cors';
 import authRoute from './routes/authRouter.js';
 import userRoute from './routes/userRouter.js';
 import feedbackRouter from './routes/feedbackRouter.js';
+import assignmentRoute from './routes/assignmentRouter.js';
 
 // INIT
 const PORT = process.env.PORT || 3000;
@@ -18,8 +19,16 @@ app.use(express.json());
 app.use(authRoute);
 app.use(userRoute);
 app.use(feedbackRouter);
+app.use('/api/v1', authRoute);
+app.use('/api/v1', userRoute);
+app.use('/api/v1', assignmentRoute);
 
-// Connections
+app.get("/", (req, res) => {
+  res.send("Welcome to the Marvellous Machines API!");
+});
+
+
+// Start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Connected at port ${PORT}`);
 });

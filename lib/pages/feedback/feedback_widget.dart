@@ -50,19 +50,23 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
         final Worksheet sheet = workbook.worksheets[0];
 
         // Headers
-        sheet.getRangeByName('A1').setText('userID');
-        sheet.getRangeByName('B1').setText('submissionID');
-        sheet.getRangeByName('C1').setText('mark');
-        sheet.getRangeByName('D1').setText('comment');
+        sheet.getRangeByName('A1').setText('User ID');
+        sheet.getRangeByName('B1').setText('Surname');
+        sheet.getRangeByName('C1').setText('First Names');
+        sheet.getRangeByName('D1').setText('Assignment');
+        sheet.getRangeByName('E1').setText('Mark');
+        sheet.getRangeByName('F1').setText('Comment');
 
         // Populate sheet
         for (int i = 0; i < feedbackList.length; i++) {
           final feedback = feedbackList[i];
-          sheet.getRangeByIndex(i + 2, 1).setText(feedback['userID'].toString());
-          sheet.getRangeByIndex(i + 2, 2).setText(feedback['submissionID'].toString());
-          sheet.getRangeByName('C${i + 2}').setNumber(
-            double.tryParse(feedback[i]['mark'].toString()) ?? 0.0);
-          sheet.getRangeByName('D${i + 2}').setText(feedback[i]['comment'].toString());
+          sheet.getRangeByName('A${i + 2}').setText(feedback['userID'].toString());
+          sheet.getRangeByName('B${i + 2}').setText(feedback['userSurname'].toString());
+          sheet.getRangeByName('C${i + 2}').setText(feedback['userName'].toString());
+          sheet.getRangeByName('D${i + 2}').setText(feedback['assignName'].toString());
+          sheet.getRangeByName('E${i + 2}').setNumber(
+            double.tryParse(feedback['mark'].toString()) ?? 0.0);
+          sheet.getRangeByName('F${i + 2}').setText(feedback['comment'].toString());
         }
 
         // Save workbook

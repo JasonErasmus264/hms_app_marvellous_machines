@@ -37,6 +37,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
     super.dispose();
   }
 
+  // xlsx
   Future<void> createExcel() async {
     try {
       // Fetch feedback data 
@@ -50,8 +51,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
         final Worksheet sheet = workbook.worksheets[0];
 
         // Headers
-        sheet.getRangeByName('A1').setText('User ID');
-        sheet.getRangeByName('B1').setText('Surname');
+        sheet.getRangeByName('A1').setText('username');
+        sheet.getRangeByName('B1').setText('Last Name');
         sheet.getRangeByName('C1').setText('First Names');
         sheet.getRangeByName('D1').setText('Assignment');
         sheet.getRangeByName('E1').setText('Mark');
@@ -60,9 +61,9 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
         // Populate sheet
         for (int i = 0; i < feedbackList.length; i++) {
           final feedback = feedbackList[i];
-          sheet.getRangeByName('A${i + 2}').setText(feedback['userID'].toString());
-          sheet.getRangeByName('B${i + 2}').setText(feedback['userSurname'].toString());
-          sheet.getRangeByName('C${i + 2}').setText(feedback['userName'].toString());
+          sheet.getRangeByName('A${i + 2}').setText(feedback['username'].toString());
+          sheet.getRangeByName('B${i + 2}').setText(feedback['lastName'].toString());
+          sheet.getRangeByName('C${i + 2}').setText(feedback['firstName'].toString());
           sheet.getRangeByName('D${i + 2}').setText(feedback['assignName'].toString());
           sheet.getRangeByName('E${i + 2}').setNumber(
             double.tryParse(feedback['mark'].toString()) ?? 0.0);
@@ -89,6 +90,54 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
       print('Error creating Excel file: $e');
     }
   }
+
+  // CSV
+  Future<void> createCSV() async {
+  try {
+    // Fetch feedback data 
+    final response = await http.get(Uri.parse('http://192.168.3.66:3000/api/v1/feedback'));
+    if (response.statusCode != 200) {
+      print('Failed to load feedback data');
+      return;
+    }
+
+    final List<dynamic> feedbackList = json.decode(response.body);
+
+    // Build data
+    StringBuffer csvData = StringBuffer();
+
+    // Add headers
+    csvData.writeln('Username,Last Name,First Names,Assignment,Mark,Comment');
+
+    // Add rows with feedback data
+    for (int i = 0; i < feedbackList.length; i++) {
+      final feedback = feedbackList[i];
+      csvData.writeln([
+        feedback['username'].toString(),
+        feedback['lastName'].toString(),
+        feedback['firstName'].toString(),
+        feedback['assignName'].toString(),
+        feedback['mark'].toString(),
+        feedback['comment'].toString(),
+      ].join(','));
+    }
+
+    // Save file
+    final Directory directory = await getApplicationSupportDirectory();
+    final String path = directory.path;
+    final String fileName = '$path/Feedback.csv';
+    final File file = File(fileName);
+
+    // Write to file
+    await file.writeAsString(csvData.toString(), flush: true);
+    print('File saved: $fileName');
+
+    // Open file
+    OpenFile.open(fileName);
+  } catch (e) {
+    print('Error creating CSV file: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {

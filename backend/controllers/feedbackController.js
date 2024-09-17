@@ -1,4 +1,6 @@
 import pool from '../db.js';  // Database connection
+import XLSX from 'xlsx';
+
 
 // Get student marks based on moduleID and student userID
 export const getStudentMarksByUserAndModule = async (req, res) => {
@@ -47,3 +49,82 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
     res.status(500).json({ message: 'Error fetching marks', error });
   }
 };
+
+
+/*export const downloadMarks = async (req, res) => {
+  const { assignmentID, format } = req.params;
+  const [rows] = await pool.query(
+      `SELECT 
+         s.userID,
+         u.userName,
+         f.mark,
+         f.comment,
+         a.assignTotalMarks
+       FROM 
+         submission s
+       INNER JOIN 
+         feedback f ON s.submissionID = f.submissionID
+       INNER JOIN 
+         assignment a ON s.assignmentID = a.assignmentID
+       INNER JOIN 
+         user u ON s.userID = u.userID
+       WHERE 
+         a.assignmentID =?`,
+      [assignmentID]
+    );
+
+
+
+};*/
+
+
+export const downloadMarks = async (req, res) => {
+  try 
+  {
+    // SQL query to fetch the required data
+    const [rows] = await pool.query(`
+      SELECT 
+          u.firstName AS StudentFirstName,
+          u.lastName AS StudentLastName,
+          u.username AS StudentUsername,
+          f.comment AS FeedbackComment,
+          f.mark AS Mark,
+          a.assignTotalMarks AS TotalMarks
+      FROM 
+          submission s
+      JOIN 
+          feedback f ON s.submissionID = f.submissionID
+      JOIN 
+          users u ON s.userID = u.userID
+      JOIN 
+          assignment a ON s.assignmentID = a.assignmentID
+      WHERE 
+          u.userType = 'Student';
+    `);
+
+    // Define the sheet header
+    const heading = [['First Name', 'Last Name', 'Username', 'Comment', 'Mark', 'Total Marks']];
+
+    const workbook = XLSX.utils.book_new()
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    XLSX.utils.sheet_add_aoa(worksheet, heading)
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Student Marks')
+
+    
+    const buffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'buffer'})
+
+    res.attachment('student_marks.xlsx')
+
+    return res.send(buffer)
+
+
+    
+  } catch (error) {
+    console.log(error);
+  }
+
+
+
+
+};
+

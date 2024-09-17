@@ -8,9 +8,9 @@ const assignmentRoute = express.Router();
 assignmentRoute.use(verifyToken);
 
 // GET MODULES FOR DROPDOWN route
-assignmentRoute.get('/module', getModules); // Use the getModules function from the controller
+assignmentRoute.get('/v1/module', getModules); // Use the getModules function from the controller
 
 // GET ASSIGNMENTS BASED ON MODULE ID route
-assignmentRoute.get('/assignments/:moduleID', getAssignmentsByModule); // Use the getAssignmentsByModule function from the controller
+assignmentRoute.get('/v1/assignments/:moduleID', getAssignmentsByModule); // Use the getAssignmentsByModule function from the controller
 
 export default assignmentRoute;

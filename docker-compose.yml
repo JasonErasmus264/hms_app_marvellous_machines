@@ -1,10 +1,8 @@
 version: "3.8"
 
 services:
-  node-container:
-    build:
-      context: ./backend   # Build context is the backend folder
-      dockerfile: Dockerfile
+  backend:
+    build: ./backend   # Build context is the backend folder
     ports:
       - "3000:3000"  # Map ports
     volumes:

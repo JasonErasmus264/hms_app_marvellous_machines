@@ -5,32 +5,28 @@ import 'package:flutter/material.dart';
 class AddAssignmentModel extends FlutterFlowModel<AddAssignmentWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
-  // State field(s) for TextField widget.
-  FocusNode? textFieldFocusNode1;
-  TextEditingController? textController1;
-  String? Function(BuildContext, String?)? textController1Validator;
-  // State field(s) for TextField widget.
-  FocusNode? textFieldFocusNode2;
-  TextEditingController? textController2;
-  String? Function(BuildContext, String?)? textController2Validator;
-  // State field(s) for txtFirstName widget.
-  FocusNode? txtFirstNameFocusNode;
-  TextEditingController? txtFirstNameTextController;
-  String? Function(BuildContext, String?)? txtFirstNameTextControllerValidator;
+  final formKey = GlobalKey<FormState>();
+  // State field(s) for txtTitle widget.
+  FocusNode? txtTitleFocusNode;
+  TextEditingController? txtTitleTextController;
+  String? Function(BuildContext, String?)? txtTitleTextControllerValidator;
+  // State field(s) for txtDescription widget.
+  FocusNode? txtDescriptionFocusNode;
+  TextEditingController? txtDescriptionTextController;
+  String? Function(BuildContext, String?)?
+      txtDescriptionTextControllerValidator;
+  DateTime? datePicked1;
+  DateTime? datePicked2;
 
   @override
   void initState(BuildContext context) {}
 
   @override
   void dispose() {
-    textFieldFocusNode1?.dispose();
-    textController1?.dispose();
+    txtTitleFocusNode?.dispose();
+    txtTitleTextController?.dispose();
 
-    textFieldFocusNode2?.dispose();
-    textController2?.dispose();
-
-    txtFirstNameFocusNode?.dispose();
-    txtFirstNameTextController?.dispose();
+    txtDescriptionFocusNode?.dispose();
+    txtDescriptionTextController?.dispose();
   }
 }

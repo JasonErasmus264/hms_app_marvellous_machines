@@ -1,25 +1,24 @@
+import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
-import 'assignment_widget.dart' show AssignmentWidget;
+import 'gradebook_widget.dart' show GradebookWidget;
 import 'package:flutter/material.dart';
 
-class AssignmentModel extends FlutterFlowModel<AssignmentWidget> {
+class GradebookModel extends FlutterFlowModel<GradebookWidget> {
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for DropDown widget.
   int? dropDownValue;
   FormFieldController<int>? dropDownValueController;
-  // State field(s) for searchBar widget.
-  FocusNode? searchBarFocusNode;
-  TextEditingController? searchBarTextController;
-  String? Function(BuildContext, String?)? searchBarTextControllerValidator;
+  // State field(s) for PaginatedDataTable widget.
+  final paginatedDataTableController =
+      FlutterFlowDataTableController<dynamic>();
 
   @override
   void initState(BuildContext context) {}
 
   @override
   void dispose() {
-    searchBarFocusNode?.dispose();
-    searchBarTextController?.dispose();
+    paginatedDataTableController.dispose();
   }
 }

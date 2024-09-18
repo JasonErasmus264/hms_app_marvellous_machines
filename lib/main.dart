@@ -8,7 +8,6 @@ import 'auth/custom_auth/custom_auth_user_provider.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
-import 'flutter_flow/nav/nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +57,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void setThemeMode(ThemeMode mode) => setState(() {
+  void setThemeMode(ThemeMode mode) => safeSetState(() {
         _themeMode = mode;
         FlutterFlowTheme.saveThemeMode(mode);
       });
@@ -76,11 +75,33 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
         brightness: Brightness.light,
-        useMaterial3: false,
+        scrollbarTheme: ScrollbarThemeData(
+          interactive: false,
+          thumbColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.dragged)) {
+              return const Color(0xff6d5fed);
+            }
+            if (states.contains(WidgetState.hovered)) {
+              return const Color(0xff6d5fed);
+            }
+            return const Color(0xff6d5fed);
+          }),
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        useMaterial3: false,
+        scrollbarTheme: ScrollbarThemeData(
+          interactive: false,
+          thumbColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.dragged)) {
+              return const Color(0xff6d5fed);
+            }
+            if (states.contains(WidgetState.hovered)) {
+              return const Color(0xff6d5fed);
+            }
+            return const Color(0xff6d5fed);
+          }),
+        ),
       ),
       themeMode: _themeMode,
       routerConfig: _router,

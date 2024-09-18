@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   // State field(s) for txtFirstName widget.
   FocusNode? txtFirstNameFocusNode;
@@ -43,6 +42,13 @@ class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
       return 'Field is required';
+    }
+
+    if (val.length < 10) {
+      return 'Not a valid phone number';
+    }
+    if (val.length > 10) {
+      return 'Not a valid phone number';
     }
 
     return null;

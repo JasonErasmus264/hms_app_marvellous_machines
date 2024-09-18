@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '/backend/schema/structs/index.dart';
@@ -108,6 +109,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'forgotPass',
           path: '/forgotPass',
+          requireAuth: true,
           builder: (context, params) => const ForgotPassWidget(),
         ),
         FFRoute(
@@ -119,7 +121,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'addAssignment',
           path: '/addAssignment',
+          requireAuth: true,
           builder: (context, params) => const AddAssignmentWidget(),
+        ),
+        FFRoute(
+          name: 'gradebook',
+          path: '/gradebook',
+          requireAuth: true,
+          builder: (context, params) => const GradebookWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -308,10 +317,9 @@ class FFRoute {
                   child: SizedBox(
                     width: 50.0,
                     height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
+                    child: SpinKitFadingCube(
+                      color: FlutterFlowTheme.of(context).tertiary,
+                      size: 50.0,
                     ),
                   ),
                 )

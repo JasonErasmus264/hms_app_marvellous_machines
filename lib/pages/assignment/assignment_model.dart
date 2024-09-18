@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 class AssignmentModel extends FlutterFlowModel<AssignmentWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for DropDown widget.
   int? dropDownValue;
   FormFieldController<int>? dropDownValueController;

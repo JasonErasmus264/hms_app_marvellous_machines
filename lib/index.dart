@@ -6,3 +6,4 @@ export '/pages/forgot_pass/forgot_pass_widget.dart' show ForgotPassWidget;
 export '/pages/home/home_widget.dart' show HomeWidget;
 export '/pages/add_assignment/add_assignment_widget.dart'
     show AddAssignmentWidget;
+export '/pages/gradebook/gradebook_widget.dart' show GradebookWidget;

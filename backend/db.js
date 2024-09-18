@@ -10,26 +10,12 @@ console.log("Port:", process.env.DB_PORT);*/
 
 
 
-// Create a connection pool
 const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    waitForConnections: true,  
-    connectionLimit: 10,  
-    queueLimit: 0  
-}).promise();
-
-// Check for initial connection
-pool.getConnection((err, connection) => {
-    if (err) {
-        console.error('Error connecting to the database:', err.message);
-    } else {
-        console.log('Database connection established successfully.');
-        connection.release();  
-    }
-});
+    host: process.env.MYSQL_HOST || 'mysql',
+    user: process.env.MYSQL_USER || 'root',
+    password: process.env.MYSQL_PASSWORD || 'hms',
+    database: process.env.MYSQL_DATABASE || 'nwu_hms',
+    port: process.env.MYSQL_PORT || 3306
+}).promise()
 
 export default pool;

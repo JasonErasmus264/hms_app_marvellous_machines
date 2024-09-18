@@ -8,7 +8,7 @@ export const getUserInfo = async (req, res) => {
 
     // Fetch the user's data based on userID
     const [rows] = await pool.execute(
-      'SELECT userID, username, firstName, lastName, email, userType FROM users WHERE userID = ?',
+      'SELECT username, firstName, lastName, email, userType FROM users WHERE userID = ?',
       [userID]
     );
 

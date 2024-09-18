@@ -74,7 +74,7 @@ class _LoginWidgetState extends State<LoginWidget>
       ),
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -169,7 +169,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                     .override(
                                       fontFamily: 'Plus Jakarta Sans',
                                       color: const Color(0xFF101213),
-                                      fontSize: 36.0,
+                                      fontSize: 34.0,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -210,7 +210,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                               EasyDebounce.debounce(
                                             '_model.usernameTextController',
                                             const Duration(milliseconds: 2000),
-                                            () => setState(() {}),
+                                            () => safeSetState(() {}),
                                           ),
                                           autofocus: true,
                                           autofillHints: const [
@@ -300,7 +300,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                               EasyDebounce.debounce(
                                             '_model.passwordTextController',
                                             const Duration(milliseconds: 2000),
-                                            () => setState(() {}),
+                                            () => safeSetState(() {}),
                                           ),
                                           autofocus: false,
                                           autofillHints: const [
@@ -362,7 +362,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                             filled: true,
                                             fillColor: const Color(0xFFF1F4F8),
                                             suffixIcon: InkWell(
-                                              onTap: () => setState(
+                                              onTap: () => safeSetState(
                                                 () => _model
                                                         .passwordVisibility =
                                                     !_model.passwordVisibility,
@@ -408,7 +408,8 @@ class _LoginWidgetState extends State<LoginWidget>
                                             .validate()) {
                                       return;
                                     }
-                                    _model.authResponse = await LoginCall.call(
+                                    _model.authResponse =
+                                        await AuthGroup.loginCall.call(
                                       username:
                                           _model.usernameTextController.text,
                                       password:
@@ -420,17 +421,18 @@ class _LoginWidgetState extends State<LoginWidget>
                                       GoRouter.of(context).prepareAuthEvent();
                                       await authManager.signIn(
                                         authenticationToken:
-                                            LoginCall.accessToken(
+                                            AuthGroup.loginCall.accessToken(
                                           (_model.authResponse?.jsonBody ?? ''),
                                         ),
-                                        refreshToken: LoginCall.refreshToken(
-                                          (_model.authResponse?.jsonBody ?? ''),
-                                        ),
-                                        authUid: LoginCall.userID(
-                                          (_model.authResponse?.jsonBody ?? ''),
-                                        )?.toString(),
+                                        authUid: AuthGroup.loginCall
+                                            .userID(
+                                              (_model.authResponse?.jsonBody ??
+                                                  ''),
+                                            )
+                                            ?.toString(),
                                         userData: UserStruct(
-                                          userType: LoginCall.userType(
+                                          userType:
+                                              AuthGroup.loginCall.userType(
                                             (_model.authResponse?.jsonBody ??
                                                 ''),
                                           ),
@@ -446,12 +448,12 @@ class _LoginWidgetState extends State<LoginWidget>
                                             title: const Text('Error'),
                                             content:
                                                 Text(valueOrDefault<String>(
-                                              LoginCall.errorMessage(
+                                              AuthGroup.loginCall.errorMessage(
                                                 (_model.authResponse
                                                         ?.jsonBody ??
                                                     ''),
                                               ),
-                                              'Conncection to server failed',
+                                              'Failed to connect to server',
                                             )),
                                             actions: [
                                               TextButton(
@@ -467,7 +469,7 @@ class _LoginWidgetState extends State<LoginWidget>
 
                                     navigate();
 
-                                    setState(() {});
+                                    safeSetState(() {});
                                   },
                                   text: 'Login',
                                   options: FFButtonOptions(
@@ -477,7 +479,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                         0.0, 0.0, 0.0, 0.0),
                                     iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 0.0),
-                                    color: const Color(0xFF4B39EF),
+                                    color: FlutterFlowTheme.of(context).primary,
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
@@ -511,7 +513,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                         0.0, 0.0, 0.0, 0.0),
                                     iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 0.0),
-                                    color: const Color(0xFF4B39EF),
+                                    color: FlutterFlowTheme.of(context).primary,
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(

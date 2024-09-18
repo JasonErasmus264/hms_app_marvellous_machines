@@ -27,7 +27,7 @@ class _EmptyAssignmentsListWidgetState
     super.initState();
     _model = createModel(context, () => EmptyAssignmentsListModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -39,36 +39,39 @@ class _EmptyAssignmentsListWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.signal_cellular_no_sim_outlined,
-          color: FlutterFlowTheme.of(context).secondaryText,
-          size: 72.0,
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-          child: Text(
-            'No Assignments',
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: 'Urbanist',
-                  letterSpacing: 0.0,
-                ),
+    return Align(
+      alignment: const AlignmentDirectional(0.0, 0.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.signal_cellular_no_sim_outlined,
+            color: FlutterFlowTheme.of(context).secondaryText,
+            size: 72.0,
           ),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
-          child: Text(
-            'It seems that you don\'t have any assignments.',
-            style: FlutterFlowTheme.of(context).labelMedium.override(
-                  fontFamily: 'Manrope',
-                  letterSpacing: 0.0,
-                ),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+            child: Text(
+              'No Assignments',
+              style: FlutterFlowTheme.of(context).headlineMedium.override(
+                    fontFamily: 'Urbanist',
+                    letterSpacing: 0.0,
+                  ),
+            ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+            child: Text(
+              'It seems that you don\'t have any assignments.',
+              style: FlutterFlowTheme.of(context).labelMedium.override(
+                    fontFamily: 'Manrope',
+                    letterSpacing: 0.0,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

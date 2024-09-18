@@ -78,12 +78,11 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
 };*/
 
 
-export const downloadMarks = async (req, res) => {
-  try 
-  {
+export const downloadMarks = async (req, res) => { 
+  try {
     // SQL query to fetch the required data
-    const [rows] = await pool.query(`
-      SELECT 
+    const [rows] = await pool.query(
+      `SELECT 
           u.firstName AS StudentFirstName,
           u.lastName AS StudentLastName,
           u.username AS StudentUsername,
@@ -99,32 +98,36 @@ export const downloadMarks = async (req, res) => {
       JOIN 
           assignment a ON s.assignmentID = a.assignmentID
       WHERE 
-          u.userType = 'Student';
-    `);
+          u.userType = 'Student';`
+    );
+
+    // Check if rows are returned
+    if (rows.length === 0) {
+      return res.status(404).send('No data found.');
+    }
 
     // Define the sheet header
     const heading = [['First Name', 'Last Name', 'Username', 'Comment', 'Mark', 'Total Marks']];
 
-    const workbook = XLSX.utils.book_new()
-    const worksheet = XLSX.utils.json_to_sheet(rows)
-    XLSX.utils.sheet_add_aoa(worksheet, heading)
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Student Marks')
+    // Create a new workbook and add a worksheet
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.sheet_add_aoa(worksheet, heading, { origin: 'A1' });
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Student Marks');
 
+    // Write the workbook to a buffer
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    // Set response headers to prompt download
+    res.setHeader('Content-Disposition', 'attachment; filename=student_marks.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     
-    const buffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'buffer'})
-
-    res.attachment('student_marks.xlsx')
-
-    return res.send(buffer)
-
-
+    // Send the buffer as the response
+    return res.send(buffer);
     
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
-
-
-
-
 };
 

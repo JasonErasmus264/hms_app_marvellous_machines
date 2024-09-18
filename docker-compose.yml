@@ -1,10 +1,50 @@
-version: "3.8"
-
 services:
-  backend:
-    build: ./backend   # Build context is the backend folder
+  nodejs:
+    container_name: nodejs-container
+    build: ./backend                       # Build context is the backend folder
     ports:
-      - "3000:3000"  # Map ports
+      - "3000:3000"                        # Expose port 3000 for the Node.js backend
+    expose:
+      - 3000
     volumes:
-      - ./:/app
-      - /app/node_modules  # Mount the node_modules folder to persist across builds
+      - ./backend:/app                     # Mount backend folder to /app inside the container
+    environment:
+      MYSQL_HOST: mysql                      # Connect to MySQL running on the mysql service
+      MYSQL_DATABASE: nwu_hms               # Initial database to create
+      MYSQL_USER: admin                     # MySQL username
+      MYSQL_PASSWORD: 'hms'                   # Set MySQL admin password
+      MYSQL_PORT: 3306
+    networks:
+      - internalnet
+    depends_on:
+      - mysql                              # Wait for MySQL to be up before starting the backend
+
+
+  mysql:
+    container_name: mysql-container
+    image: mysql:8.0.39                     # Use the 8.0.39 MySQL image
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    volumes:
+      - dev-mysql:/var/lib/mysql            # Persist MySQL data in the named volume
+      - ./dump:/docker-entrypoint-initdb.d  # Mount the dump folder for initialization
+    ports:
+      - "3307:3306"                         # Expose MySQL on port 3306
+    expose:
+      - 3306
+    environment:
+      MYSQL_DATABASE: nwu_hms               # Initial database to create
+      MYSQL_USER: admin                     # MySQL username
+      MYSQL_PASSWORD: 'hms'                   # Set MySQL admin password
+      MYSQL_ROOT_PASSWORD: 'hms'             # Set MySQL root password
+    networks:
+      - internalnet
+
+
+networks:
+  internalnet:                              # Define a network for inter-container communication
+    driver: bridge                       # Use bridge driver
+    
+
+volumes:
+  dev-mysql:                                # Named volume for MySQL persistence

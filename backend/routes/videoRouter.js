@@ -1,4 +1,8 @@
 import express from 'express';
-import router from '../controllers/videoController.js';  // Import the router from videoController
+import { uploadVideo } from '../controllers/videoController.js';
 
-export default router;  // Export the router as default
+const videoRouter = express.Router();
+
+videoRouter.post('/upload-video', uploadVideo);
+
+export default videoRouter;

@@ -1,4 +1,3 @@
-import express from 'express';
 import multer from 'multer';  // For file uploads
 import ffmpeg from 'fluent-ffmpeg';  // For video compression
 import fs from 'fs';  // File system operations
@@ -7,7 +6,6 @@ import axios from 'axios';  // For Nextcloud upload
 import pool from '../db.js';  // MySQL connection pool
 import 'dotenv/config';  // Load environment variables
 
-const router = express.Router();
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  // 50MB in bytes
 
 // Ensure 'uploads' directory exists
@@ -42,8 +40,9 @@ const compressVideo = (filePath, outputFilePath) => {
 
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
-  const fileName = path.basename(filePath);
-  const nextcloudPath = `/remote.php/webdav/${fileName}`;
+  const fileName = path.basename(filePath);  // Use the unique file name already generated
+  const nextcloudFolder = '/HMS-Video-Uploads';  // Specify the folder path
+  const nextcloudPath = `${nextcloudFolder}/${fileName}`;  // Upload to the folder
   const fileStream = fs.createReadStream(filePath);
 
   try {
@@ -63,9 +62,14 @@ const uploadToNextcloud = async (filePath) => {
       throw new Error('Failed to upload to Nextcloud');
     }
   } catch (error) {
-    throw error;
+    if (error.response && error.response.status === 409) {
+      throw new Error('File already exists on Nextcloud (Conflict 409)');
+    } else {
+      throw error;
+    }
   }
 };
+
 
 // Store video metadata in MySQL
 const storeMetadata = async (fileName, fileSize, nextcloudUrl) => {
@@ -73,45 +77,46 @@ const storeMetadata = async (fileName, fileSize, nextcloudUrl) => {
   await pool.execute(query, [fileName, fileSize, nextcloudUrl]);
 };
 
-// Route to handle video upload with error handling for multer
-router.post('/upload-video', (req, res, next) => {
-  upload.single('video')(req, res, (err) => {
+// Main function to handle video upload
+export const uploadVideo = (req, res) => {
+  upload.single('video')(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ error: 'File upload error', details: err.message });
     } else if (err) {
       return res.status(500).json({ error: 'Unexpected error during file upload', details: err.message });
     }
-    next();  // Proceed to the next middleware (compression and upload)
-  });
-}, async (req, res) => {
-  const filePath = req.file.path;
-  const fileSize = req.file.size;
 
-  try {
-    let finalFilePath = filePath;
-
-    // If the file exceeds the maximum allowed size, compress it
-    if (fileSize > MAX_FILE_SIZE) {
-      const compressedFilePath = `uploads/compressed_${Date.now()}.mp4`;
-      finalFilePath = await compressVideo(filePath, compressedFilePath);
-      fs.unlinkSync(filePath);  // Delete the original file after compression
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Upload the (compressed or original) video to Nextcloud
-    const nextcloudUrl = await uploadToNextcloud(finalFilePath);
-    const finalFileName = path.basename(finalFilePath);
+    const filePath = req.file.path;
+    const fileSize = req.file.size;
 
-    // Store video metadata in the database
-    await storeMetadata(finalFileName, fs.statSync(finalFilePath).size, nextcloudUrl);
+    try {
+      let finalFilePath = filePath;
 
-    // Delete the local file after uploading to Nextcloud
-    fs.unlinkSync(finalFilePath);
+      // If the file exceeds the maximum allowed size, compress it
+      if (fileSize > MAX_FILE_SIZE) {
+        const compressedFilePath = `uploads/compressed_${Date.now()}.mp4`;
+        finalFilePath = await compressVideo(filePath, compressedFilePath);
+        fs.unlinkSync(filePath);  // Delete the original file after compression
+      }
 
-    res.status(200).json({ message: 'File uploaded successfully', nextcloudUrl });
-  } catch (error) {
-    console.error('Error during video upload:', error);
-    res.status(500).json({ error: 'Failed to upload video', details: error.message });
-  }
-});
+      // Upload the (compressed or original) video to Nextcloud
+      const nextcloudUrl = await uploadToNextcloud(finalFilePath);
+      const finalFileName = path.basename(finalFilePath);
 
-export default router;
+      // Store video metadata in the database
+      await storeMetadata(finalFileName, fs.statSync(finalFilePath).size, nextcloudUrl);
+
+      // Delete the local file after uploading to Nextcloud
+      fs.unlinkSync(finalFilePath);
+
+      res.status(200).json({ message: 'File uploaded successfully', nextcloudUrl });
+    } catch (error) {
+      console.error('Error during video upload:', error);
+      res.status(500).json({ error: 'Failed to upload video', details: error.message });
+    }
+  });
+};

@@ -34,9 +34,10 @@ app.use('/api', submissionRoute);
 app.use('/api', feedbackRoute);
 
 
-import { getStudentMarksByUserAndModule, downloadMarks } from './controllers/feedbackController.js';
 
-app.get('/v1/download-marks', downloadMarks);
+
+
+
 
 
 

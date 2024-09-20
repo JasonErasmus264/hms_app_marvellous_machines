@@ -1,5 +1,6 @@
 import express from 'express';
-import verifyToken from '../middleware/verifyToken.js';
+import verifyToken from '../middleware/verifyToken.js'; // Middleware to check JWT
+import { authorize } from '../middleware/authorizeUser.js'; // Role-based middleware
 import { getUserInfo, createUser } from '../controllers/userController.js';
 
 const userRoute = express.Router();
@@ -8,9 +9,9 @@ const userRoute = express.Router();
 userRoute.use(verifyToken);
 
 // GET USER route
-userRoute.get('/user', getUserInfo); // Use the getUserInfo function from the controller
+userRoute.get('/v1/user', getUserInfo);
 
-// CREATE USER route
-userRoute.post('/addUser', createUser); // Use the createUser function from the controller
+// CREATE USER route (only accessible to admin users)
+userRoute.post('/v1/addUser', verifyToken, authorize(['Admin']), createUser);
 
 export default userRoute;

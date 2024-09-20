@@ -12,7 +12,7 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 /// Start User Group Code
 
 class UserGroup {
-  static String getBaseUrl() => 'http://localhost:3000/api';
+  static String getBaseUrl() => 'http://192.168.3.66:3000/api';
   static Map<String, String> headers = {};
   static AddUserCall addUserCall = AddUserCall();
   static GetUserCall getUserCall = GetUserCall();
@@ -114,7 +114,7 @@ class GetUserCall {
 /// Start Assignment Group Code
 
 class AssignmentGroup {
-  static String getBaseUrl() => 'http://localhost:3000/api';
+  static String getBaseUrl() => 'http://192.168.3.66:3000/api';
   static Map<String, String> headers = {};
   static GetModuleCall getModuleCall = GetModuleCall();
   static GetAssignmentCall getAssignmentCall = GetAssignmentCall();
@@ -206,7 +206,7 @@ class FeedbackGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://localhost:3000/api';
+      'http://192.168.3.66:3000/api';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -317,7 +317,7 @@ class SubmissionGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://localhost:3000/api';
+      'http://192.168.3.66:3000/api';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -430,7 +430,7 @@ class GetMarkedCall {
 /// Start Auth Group Code
 
 class AuthGroup {
-  static String getBaseUrl() => 'http://localhost:3000/api';
+  static String getBaseUrl() => 'http://192.168.3.66:3000/api';
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
   static RefreshTokenCall refreshTokenCall = RefreshTokenCall();

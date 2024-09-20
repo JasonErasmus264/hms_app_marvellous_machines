@@ -1,6 +1,12 @@
 # Use Node.js LTS version
 FROM node:20
 
+# Install FFmpeg
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Create and set the working directory inside the backend folder
 WORKDIR /app
 

@@ -8,6 +8,9 @@ import 'dotenv/config';  // Load environment variables
 
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  // 50MB in bytes
 
+// Set the path to the FFmpeg binary
+ffmpeg.setFfmpegPath('/usr/bin/ffmpeg');
+
 // Ensure 'uploads' directory exists
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
@@ -25,18 +28,43 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Set the path to ffmpeg explicitly
+const ffmpegPath = '/usr/bin/ffmpeg';
+ffmpeg.setFfmpegPath(ffmpegPath);
+
 // Video compression function
-const compressVideo = (filePath, outputFilePath) => {
+const compressVideo = (filePath, outputFilePath, maxFileSize) => {
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
       .output(outputFilePath)
       .videoCodec('libx264')
-      .size('640x?')  // Resize to 640px width, maintain aspect ratio
-      .on('end', () => resolve(outputFilePath))
-      .on('error', (err) => reject(err))
+      .size('?x360')  // Resize to height 360px while maintaining aspect ratio
+      .videoBitrate('800k')  // Set the video bitrate to 800 kbps
+      .audioBitrate('128k')  // Set audio bitrate to 128 kbps for better quality
+      .outputOptions('-crf 28')  // CRF value of 28 for medium compression
+      .on('end', async () => {
+        try {
+          // Check if the compressed file size exceeds the maximum allowed size
+          const compressedSize = fs.statSync(outputFilePath).size;
+          if (compressedSize > maxFileSize) {
+            console.error('Compressed file still exceeds the maximum size.');
+            return reject(new Error('Compressed file size exceeds the maximum allowed size'));
+          }
+
+          // If compressed size is within the limit, resolve the promise
+          resolve(outputFilePath);
+        } catch (err) {
+          reject(err);
+        }
+      })
+      .on('error', (err) => {
+        console.error('FFmpeg error:', err);
+        reject(err);
+      })
       .run();
   });
 };
+
 
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
@@ -92,15 +120,16 @@ export const uploadVideo = (req, res) => {
 
     const filePath = req.file.path;
     const fileSize = req.file.size;
+    let finalFilePath = filePath;
 
     try {
-      let finalFilePath = filePath;
-
       // If the file exceeds the maximum allowed size, compress it
       if (fileSize > MAX_FILE_SIZE) {
         const compressedFilePath = `uploads/compressed_${Date.now()}.mp4`;
-        finalFilePath = await compressVideo(filePath, compressedFilePath);
-        fs.unlinkSync(filePath);  // Delete the original file after compression
+        finalFilePath = await compressVideo(filePath, compressedFilePath, MAX_FILE_SIZE);
+
+        // Delete the original file after successful compression
+        fs.unlinkSync(filePath);
       }
 
       // Upload the (compressed or original) video to Nextcloud

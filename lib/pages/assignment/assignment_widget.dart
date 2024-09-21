@@ -1,7 +1,7 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/assignment_detailed_view/assignment_detailed_view_widget.dart';
-import '/components/empty_assignments_list/empty_assignments_list_widget.dart';
+import '/components/empty_lists/empty_assignments_list/empty_assignments_list_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -11,6 +11,7 @@ import '/flutter_flow/form_field_controller.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'assignment_model.dart';
 export 'assignment_model.dart';
 
@@ -34,7 +35,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
     _model.searchBarTextController ??= TextEditingController();
     _model.searchBarFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -101,10 +102,9 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                         child: SizedBox(
                           width: 50.0,
                           height: 50.0,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              FlutterFlowTheme.of(context).primary,
-                            ),
+                          child: SpinKitFadingCube(
+                            color: FlutterFlowTheme.of(context).tertiary,
+                            size: 50.0,
                           ),
                         ),
                       );
@@ -122,7 +122,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                         dropDownGetModuleResponse.jsonBody,
                       )!,
                       onChanged: (val) =>
-                          setState(() => _model.dropDownValue = val),
+                          safeSetState(() => _model.dropDownValue = val),
                       height: 56.0,
                       searchHintTextStyle:
                           FlutterFlowTheme.of(context).labelMedium.override(
@@ -166,8 +166,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      if ((currentUserData?.userType == 'Admin') ||
-                          (currentUserData?.userType == 'Lecturer'))
+                      if (currentUserData?.userType != 'Student')
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 10.0, 0.0, 10.0),
@@ -183,7 +182,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                             options: FFButtonOptions(
                               height: 40.0,
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  24.0, 0.0, 24.0, 0.0),
+                                  30.0, 0.0, 30.0, 0.0),
                               iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                   0.0, 0.0, 0.0, 0.0),
                               color: FlutterFlowTheme.of(context).tertiary,
@@ -217,7 +216,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.searchBarTextController',
                                   const Duration(milliseconds: 1),
-                                  () => setState(() {}),
+                                  () => safeSetState(() {}),
                                 ),
                                 textCapitalization: TextCapitalization.words,
                                 obscureText: false,
@@ -248,7 +247,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color:
-                                          FlutterFlowTheme.of(context).primary,
+                                          FlutterFlowTheme.of(context).tertiary,
                                       width: 2.0,
                                     ),
                                     borderRadius: BorderRadius.circular(12.0),
@@ -285,7 +284,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                           onTap: () async {
                                             _model.searchBarTextController
                                                 ?.clear();
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                           child: const Icon(
                                             Icons.clear,
@@ -310,257 +309,258 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            10.0, 10.0, 10.0, 0.0),
-                        child: FutureBuilder<ApiCallResponse>(
-                          future: AssignmentGroup.getAssignmentCall.call(
-                            token: currentAuthenticationToken,
-                            moduleID: _model.dropDownValue,
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      FlutterFlowTheme.of(context).primary,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              10.0, 10.0, 10.0, 0.0),
+                          child: FutureBuilder<ApiCallResponse>(
+                            future: AssignmentGroup.getAssignmentCall.call(
+                              token: currentAuthenticationToken,
+                              moduleID: _model.dropDownValue,
+                            ),
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: SpinKitFadingCube(
+                                      color:
+                                          FlutterFlowTheme.of(context).tertiary,
+                                      size: 50.0,
                                     ),
                                   ),
-                                ),
-                              );
-                            }
-                            final listViewGetAssignmentResponse =
-                                snapshot.data!;
+                                );
+                              }
+                              final listViewGetAssignmentResponse =
+                                  snapshot.data!;
 
-                            return Builder(
-                              builder: (context) {
-                                final assignments =
-                                    AssignmentGroup.getAssignmentCall
-                                            .assignments(
-                                              listViewGetAssignmentResponse
-                                                  .jsonBody,
-                                            )
-                                            ?.toList() ??
-                                        [];
-                                if (assignments.isEmpty) {
-                                  return const Center(
-                                    child: EmptyAssignmentsListWidget(),
-                                  );
-                                }
+                              return Builder(
+                                builder: (context) {
+                                  final assignment =
+                                      AssignmentGroup.getAssignmentCall
+                                              .assignments(
+                                                listViewGetAssignmentResponse
+                                                    .jsonBody,
+                                              )
+                                              ?.toList() ??
+                                          [];
+                                  if (assignment.isEmpty) {
+                                    return const Center(
+                                      child: EmptyAssignmentsListWidget(),
+                                    );
+                                  }
 
-                                return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: assignments.length,
-                                  itemBuilder: (context, assignmentsIndex) {
-                                    final assignmentsItem =
-                                        assignments[assignmentsIndex];
-                                    return Visibility(
-                                      visible:
-                                          currentUserData?.userType != 'Student'
-                                              ? true
-                                              : functions.isAssignmentOpen(
-                                                  getJsonField(
-                                                    assignmentsItem,
-                                                    r'''$.assignOpenDate''',
-                                                  ).toString(),
-                                                  getJsonField(
-                                                    assignmentsItem,
-                                                    r'''$.assignDueDate''',
-                                                  ).toString()),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 10.0),
-                                        child: Card(
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                          elevation: 4.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    10.0, 10.0, 10.0, 10.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  getJsonField(
-                                                    assignmentsItem,
-                                                    r'''$.assignName''',
-                                                  ).toString(),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .titleMedium
-                                                      .override(
-                                                        fontFamily: 'Manrope',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                ),
-                                                Text(
-                                                  'Open Date: ${valueOrDefault<String>(
+                                  return ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: assignment.length,
+                                    itemBuilder: (context, assignmentIndex) {
+                                      final assignmentItem =
+                                          assignment[assignmentIndex];
+                                      return Visibility(
+                                        visible: currentUserData?.userType !=
+                                                'Student'
+                                            ? true
+                                            : functions.isAssignmentOpen(
+                                                getJsonField(
+                                                  assignmentItem,
+                                                  r'''$.assignOpenDate''',
+                                                ).toString(),
+                                                getJsonField(
+                                                  assignmentItem,
+                                                  r'''$.assignDueDate''',
+                                                ).toString()),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 10.0),
+                                          child: Card(
+                                            clipBehavior:
+                                                Clip.antiAliasWithSaveLayer,
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                            elevation: 4.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      10.0, 10.0, 10.0, 10.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
                                                     getJsonField(
-                                                      assignmentsItem,
-                                                      r'''$.assignOpenDate''',
-                                                    )?.toString(),
-                                                    'OpenDate',
-                                                  )}',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Manrope',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryText,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 0.0, 8.0, 0.0),
-                                                  child: Text(
-                                                    'Due Date: ${valueOrDefault<String>(
-                                                      getJsonField(
-                                                        assignmentsItem,
-                                                        r'''$.assignDueDate''',
-                                                      )?.toString(),
-                                                      'Time',
-                                                    )}',
+                                                      assignmentItem,
+                                                      r'''$.assignName''',
+                                                    ).toString(),
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodySmall
+                                                        .titleMedium
                                                         .override(
                                                           fontFamily: 'Manrope',
                                                           color: FlutterFlowTheme
                                                                   .of(context)
-                                                              .error,
-                                                          fontSize: 14.0,
+                                                              .primaryText,
                                                           letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 10.0, 0.0, 0.0),
-                                                  child: FFButtonWidget(
-                                                    onPressed: () async {
-                                                      await showModalBottomSheet(
-                                                        isScrollControlled:
-                                                            true,
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        enableDrag: false,
-                                                        useSafeArea: true,
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return GestureDetector(
-                                                            onTap: () =>
-                                                                FocusScope.of(
-                                                                        context)
-                                                                    .unfocus(),
-                                                            child: Padding(
-                                                              padding: MediaQuery
-                                                                  .viewInsetsOf(
-                                                                      context),
-                                                              child:
-                                                                  AssignmentDetailedViewWidget(
-                                                                assignmentName:
-                                                                    valueOrDefault<
-                                                                        String>(
-                                                                  getJsonField(
-                                                                    assignmentsItem,
-                                                                    r'''$.assignName''',
-                                                                  )?.toString(),
-                                                                  'name',
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ).then((value) =>
-                                                          safeSetState(() {}));
-                                                    },
-                                                    text: 'View Details',
-                                                    options: FFButtonOptions(
-                                                      width: double.infinity,
-                                                      height: 41.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .tertiary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Manrope',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 18.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                      elevation: 2.0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24.0),
+                                                  Text(
+                                                    'Open Date: ${getJsonField(
+                                                      assignmentItem,
+                                                      r'''$.assignOpenDate''',
+                                                    ).toString()}',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Manrope',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                8.0, 0.0),
+                                                    child: Text(
+                                                      'Due Date: ${getJsonField(
+                                                        assignmentItem,
+                                                        r'''$.assignDueDate''',
+                                                      ).toString()}',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodySmall
+                                                          .override(
+                                                            fontFamily:
+                                                                'Manrope',
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
+                                                            fontSize: 14.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 10.0,
+                                                                0.0, 0.0),
+                                                    child: FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await showModalBottomSheet(
+                                                          isScrollControlled:
+                                                              true,
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          enableDrag: false,
+                                                          useSafeArea: true,
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return GestureDetector(
+                                                              onTap: () =>
+                                                                  FocusScope.of(
+                                                                          context)
+                                                                      .unfocus(),
+                                                              child: Padding(
+                                                                padding: MediaQuery
+                                                                    .viewInsetsOf(
+                                                                        context),
+                                                                child:
+                                                                    AssignmentDetailedViewWidget(
+                                                                  assignmentName:
+                                                                      getJsonField(
+                                                                    assignmentItem,
+                                                                    r'''$.assignName''',
+                                                                  ).toString(),
+                                                                  assignmentID:
+                                                                      getJsonField(
+                                                                    assignmentItem,
+                                                                    r'''$.assignmentID''',
+                                                                  ).toString(),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ).then((value) =>
+                                                            safeSetState(
+                                                                () {}));
+                                                      },
+                                                      text: 'View Details',
+                                                      options: FFButtonOptions(
+                                                        width: double.infinity,
+                                                        height: 41.0,
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .tertiary,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Manrope',
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      18.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                        elevation: 2.0,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],

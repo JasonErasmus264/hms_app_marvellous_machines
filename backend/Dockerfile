@@ -2,7 +2,7 @@
 FROM node:20
 
 # Create and set the working directory inside the backend folder
-WORKDIR /app/backend
+WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
 COPY package.json ./
@@ -11,7 +11,7 @@ COPY package.json ./
 RUN npm install
 
 # Copy the rest of the backend application code
-COPY . ./
+COPY . .
 
 # Run the application from the backend folder
 CMD ["npm", "run", "dev"]

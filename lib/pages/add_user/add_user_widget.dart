@@ -1,4 +1,3 @@
-import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -8,36 +7,36 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'create_user_model.dart';
-export 'create_user_model.dart';
+import 'add_user_model.dart';
+export 'add_user_model.dart';
 
-class CreateUserWidget extends StatefulWidget {
-  const CreateUserWidget({super.key});
+class AddUserWidget extends StatefulWidget {
+  const AddUserWidget({super.key});
 
   @override
-  State<CreateUserWidget> createState() => _CreateUserWidgetState();
+  State<AddUserWidget> createState() => _AddUserWidgetState();
 }
 
-class _CreateUserWidgetState extends State<CreateUserWidget> {
-  late CreateUserModel _model;
+class _AddUserWidgetState extends State<AddUserWidget> {
+  late AddUserModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CreateUserModel());
+    _model = createModel(context, () => AddUserModel());
 
     _model.txtFirstNameTextController ??= TextEditingController();
     _model.txtFirstNameFocusNode ??= FocusNode();
-    _model.txtFirstNameFocusNode!.addListener(() => setState(() {}));
+    _model.txtFirstNameFocusNode!.addListener(() => safeSetState(() {}));
     _model.txtLastNameTextController ??= TextEditingController();
     _model.txtLastNameFocusNode ??= FocusNode();
-    _model.txtLastNameFocusNode!.addListener(() => setState(() {}));
+    _model.txtLastNameFocusNode!.addListener(() => safeSetState(() {}));
     _model.phoneNumberTextController ??= TextEditingController();
     _model.phoneNumberFocusNode ??= FocusNode();
-    _model.phoneNumberFocusNode!.addListener(() => setState(() {}));
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    _model.phoneNumberFocusNode!.addListener(() => safeSetState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -102,7 +101,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                           alignment: const AlignmentDirectional(0.0, -1.0),
                           child: Container(
                             constraints: const BoxConstraints(
-                              maxWidth: 770.0,
+                              maxWidth: 1000.0,
                             ),
                             decoration: const BoxDecoration(),
                             child: Padding(
@@ -113,15 +112,16 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Please fill out the form below.',
+                                    'Please fill in the information below.',
                                     style: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
                                           fontFamily: 'Outfit',
-                                          color: const Color(0xFF606A85),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           fontSize: 14.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                   TextFormField(
@@ -169,7 +169,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: FlutterFlowTheme.of(context)
-                                              .primary,
+                                              .tertiary,
                                           width: 2.0,
                                         ),
                                         borderRadius:
@@ -194,12 +194,8 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                             BorderRadius.circular(12.0),
                                       ),
                                       filled: true,
-                                      fillColor: (_model.txtFirstNameFocusNode
-                                                  ?.hasFocus ??
-                                              false)
-                                          ? FlutterFlowTheme.of(context).accent1
-                                          : FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                      fillColor: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
                                       contentPadding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               16.0, 20.0, 16.0, 20.0),
@@ -262,7 +258,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: FlutterFlowTheme.of(context)
-                                              .primary,
+                                              .tertiary,
                                           width: 2.0,
                                         ),
                                         borderRadius:
@@ -287,12 +283,8 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                             BorderRadius.circular(12.0),
                                       ),
                                       filled: true,
-                                      fillColor: (_model.txtLastNameFocusNode
-                                                  ?.hasFocus ??
-                                              false)
-                                          ? FlutterFlowTheme.of(context).accent1
-                                          : FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                      fillColor: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
                                       contentPadding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               16.0, 20.0, 16.0, 20.0),
@@ -354,7 +346,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: FlutterFlowTheme.of(context)
-                                              .primary,
+                                              .tertiary,
                                           width: 2.0,
                                         ),
                                         borderRadius:
@@ -379,12 +371,8 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                             BorderRadius.circular(12.0),
                                       ),
                                       filled: true,
-                                      fillColor: (_model.phoneNumberFocusNode
-                                                  ?.hasFocus ??
-                                              false)
-                                          ? FlutterFlowTheme.of(context).accent1
-                                          : FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                      fillColor: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
                                       contentPadding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               16.0, 20.0, 16.0, 20.0),
@@ -412,7 +400,7 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                         _model.dropDownValueController ??=
                                             FormFieldController<String>(null),
                                     options: const ['Student', 'Lecturer', 'Admin'],
-                                    onChanged: (val) => setState(
+                                    onChanged: (val) => safeSetState(
                                         () => _model.dropDownValue = val),
                                     width: double.infinity,
                                     height: 60.0,
@@ -444,129 +432,124 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                     isSearchable: false,
                                     isMultiSelect: false,
                                   ),
-                                  Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 770.0,
-                                    ),
-                                    decoration: const BoxDecoration(),
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 12.0, 16.0, 12.0),
-                                      child: FFButtonWidget(
-                                        onPressed: () async {
-                                          if (_model.formKey.currentState ==
-                                                  null ||
-                                              !_model.formKey.currentState!
-                                                  .validate()) {
-                                            return;
-                                          }
-                                          if (_model.dropDownValue == null) {
-                                            await showDialog(
-                                              context: context,
-                                              builder: (alertDialogContext) {
-                                                return AlertDialog(
-                                                  title: const Text('Error'),
-                                                  content: const Text(
-                                                      'Please select a role for the user.'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              alertDialogContext),
-                                                      child: const Text('Ok'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                            return;
-                                          }
-                                          _model.apiResult =
-                                              await UserGroup.addUserCall.call(
-                                            firstName: _model
-                                                .txtFirstNameTextController
-                                                .text,
-                                            lastName: _model
-                                                .txtLastNameTextController.text,
-                                            phoneNum: _model
-                                                .phoneNumberTextController.text,
-                                            userType: _model.dropDownValue,
-                                            token: currentAuthenticationToken,
-                                          );
+                                  Align(
+                                    alignment: const AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 600.0,
+                                      ),
+                                      decoration: const BoxDecoration(),
+                                      child: Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 12.0, 16.0, 12.0),
+                                        child: FFButtonWidget(
+                                          onPressed: () async {
+                                            if (_model.formKey.currentState ==
+                                                    null ||
+                                                !_model.formKey.currentState!
+                                                    .validate()) {
+                                              return;
+                                            }
+                                            if (_model.dropDownValue == null) {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: const Text('Error'),
+                                                    content: const Text(
+                                                        'Please select a role for the user.'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext),
+                                                        child: const Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                              return;
+                                            }
+                                            _model.apiResult = await UserGroup
+                                                .getUserCall
+                                                .call();
 
-                                          if ((_model.apiResult?.succeeded ??
-                                              true)) {
-                                            await showDialog(
-                                              context: context,
-                                              builder: (alertDialogContext) {
-                                                return AlertDialog(
-                                                  title: const Text('Success'),
-                                                  content: const Text(
-                                                      'User successfully added'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              alertDialogContext),
-                                                      child: const Text('Ok'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                            context.safePop();
-                                          } else {
-                                            await showDialog(
-                                              context: context,
-                                              builder: (alertDialogContext) {
-                                                return AlertDialog(
-                                                  title: const Text('Error'),
-                                                  content: const Text(
-                                                      'User was not added'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              alertDialogContext),
-                                                      child: const Text('Ok'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          }
+                                            if ((_model.apiResult?.succeeded ??
+                                                true)) {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: const Text('Success'),
+                                                    content: const Text(
+                                                        'User successfully added'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext),
+                                                        child: const Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                              context.safePop();
+                                            } else {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: const Text('Error'),
+                                                    content: const Text(
+                                                        'User was not added'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext),
+                                                        child: const Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
 
-                                          setState(() {});
-                                        },
-                                        text: 'Submit',
-                                        options: FFButtonOptions(
-                                          width: double.infinity,
-                                          height: 48.0,
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  24.0, 0.0, 24.0, 0.0),
-                                          iconPadding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .tertiary,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .override(
-                                                    fontFamily: 'Manrope',
-                                                    color: Colors.white,
-                                                    fontSize: 18.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                          elevation: 3.0,
-                                          borderSide: const BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1.0,
+                                            safeSetState(() {});
+                                          },
+                                          text: 'Submit',
+                                          options: FFButtonOptions(
+                                            width: double.infinity,
+                                            height: 48.0,
+                                            padding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    24.0, 0.0, 24.0, 0.0),
+                                            iconPadding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .tertiary,
+                                            textStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .override(
+                                                      fontFamily: 'Manrope',
+                                                      color: Colors.white,
+                                                      fontSize: 18.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                            elevation: 3.0,
+                                            borderSide: const BorderSide(
+                                              color: Colors.transparent,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
                                         ),
                                       ),
                                     ),

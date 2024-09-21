@@ -25,7 +25,6 @@ bool isAssignmentOpen(
 
     // Get the current date and time
     DateTime now = DateTime.now();
-
     // Check if the current time is between openDatetime and dueDatetime
     if ((now.isAfter(openDatetime) || now.isAtSameMomentAs(openDatetime)) &&
         now.isBefore(dueDatetime)) {
@@ -36,5 +35,53 @@ bool isAssignmentOpen(
   } catch (e) {
     print("Error parsing date: $e");
     return false; // Return false if there's an error in date parsing
+  }
+}
+
+bool checkVideoSize(FFUploadedFile? videoFile) {
+  // Get the size of the uploaded video file and check if it is over 100MB
+  if (videoFile != null) {
+    var bytes = videoFile.bytes;
+    if (bytes != null) {
+      int fileSizeInBytes = bytes.length;
+      double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      return fileSizeInMB > 100; // Return true if file size is over 100MB
+    }
+  }
+  return false; // Return false if file is null or size is not over 100MB
+}
+
+bool isTokenExpired(String accessToken) {
+  try {
+    // Split the token into its parts: header, payload, and signature
+    final parts = accessToken.split('.');
+    if (parts.length != 3) {
+      return true; // Invalid token format
+    }
+
+    // Decode the payload from Base64
+    final payload = parts[1];
+    final normalizedPayload = base64Url.normalize(payload);
+    final decodedPayload = utf8.decode(base64Url.decode(normalizedPayload));
+
+    // Convert the payload into a JSON map
+    final payloadMap = jsonDecode(decodedPayload);
+
+    // Check if the 'exp' field exists
+    if (payloadMap.containsKey('exp')) {
+      final expiration = payloadMap['exp'];
+
+      // Get the current time (in seconds)
+      final currentTime = DateTime.now().millisecondsSinceEpoch / 1000;
+
+      // Return true if the current time is greater than the expiration time
+      return currentTime >= expiration;
+    }
+
+    return true; // If there's no 'exp' field, assume the token is expired
+  } catch (e) {
+    // If any error occurs (e.g., token parsing failed), assume it's expired
+    print('Error parsing token: $e');
+    return true;
   }
 }

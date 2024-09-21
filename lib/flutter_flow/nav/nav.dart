@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '/backend/schema/structs/index.dart';
@@ -94,15 +95,15 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const AssignmentWidget(),
         ),
         FFRoute(
-          name: 'createUser',
-          path: '/createUser',
+          name: 'addUser',
+          path: '/addUser',
           requireAuth: true,
-          builder: (context, params) => const CreateUserWidget(),
+          builder: (context, params) => const AddUserWidget(),
         ),
         FFRoute(
-          name: 'forgotPass',
-          path: '/forgotPass',
-          builder: (context, params) => const ForgotPassWidget(),
+          name: 'forgotPassword',
+          path: '/forgotPassword',
+          builder: (context, params) => const ForgotPasswordWidget(),
         ),
         FFRoute(
           name: 'home',
@@ -113,7 +114,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'addAssignment',
           path: '/addAssignment',
+          requireAuth: true,
           builder: (context, params) => const AddAssignmentWidget(),
+        ),
+        FFRoute(
+          name: 'gradebook',
+          path: '/gradebook',
+          requireAuth: true,
+          builder: (context, params) => const GradebookWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -302,10 +310,9 @@ class FFRoute {
                   child: SizedBox(
                     width: 50.0,
                     height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
+                    child: SpinKitFadingCube(
+                      color: FlutterFlowTheme.of(context).tertiary,
+                      size: 50.0,
                     ),
                   ),
                 )

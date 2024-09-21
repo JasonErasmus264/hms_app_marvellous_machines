@@ -1,22 +1,25 @@
+import '/backend/api_requests/api_calls.dart';
+import '/components/forgot_password/enter_pin/enter_pin_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'forgot_pass_model.dart';
-export 'forgot_pass_model.dart';
+import 'forgot_password_model.dart';
+export 'forgot_password_model.dart';
 
-class ForgotPassWidget extends StatefulWidget {
-  const ForgotPassWidget({super.key});
+class ForgotPasswordWidget extends StatefulWidget {
+  const ForgotPasswordWidget({super.key});
 
   @override
-  State<ForgotPassWidget> createState() => _ForgotPassWidgetState();
+  State<ForgotPasswordWidget> createState() => _ForgotPasswordWidgetState();
 }
 
-class _ForgotPassWidgetState extends State<ForgotPassWidget>
+class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
     with TickerProviderStateMixin {
-  late ForgotPassModel _model;
+  late ForgotPasswordModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -25,7 +28,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ForgotPassModel());
+    _model = createModel(context, () => ForgotPasswordModel());
 
     _model.emailTextController ??= TextEditingController();
     _model.emailFocusNode ??= FocusNode();
@@ -67,7 +70,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
       ),
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -134,29 +137,27 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Text(
-                                      'Forgot Password',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .displaySmall
-                                          .override(
-                                            fontFamily: 'Plus Jakarta Sans',
-                                            color: const Color(0xFF101213),
-                                            fontSize: 36.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                    ),
-                                  ],
+                                Align(
+                                  alignment: const AlignmentDirectional(0.0, 0.0),
+                                  child: AutoSizeText(
+                                    'Forgot Password?',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .displaySmall
+                                        .override(
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          color: const Color(0xFF101213),
+                                          fontSize: 28.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0.0, 12.0, 0.0, 12.0),
                                   child: Text(
-                                    'We will send you an email with a link to reset your password, please enter the email associated with your profile below.',
+                                    'Don\'t worry! Just enter the email address associated with your account, and we\'ll send you a code to reset your password.',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .labelMedium
@@ -165,7 +166,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                           color: const Color(0xFF57636C),
                                           fontSize: 14.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                 ),
@@ -179,6 +180,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                       focusNode: _model.emailFocusNode,
                                       autofocus: true,
                                       autofillHints: const [AutofillHints.email],
+                                      textInputAction: TextInputAction.done,
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'NWU Email',
@@ -237,7 +239,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w500,
                                           ),
-                                      keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType.emailAddress,
                                       validator: _model
                                           .emailTextControllerValidator
                                           .asValidator(context),
@@ -248,8 +250,63 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 16.0),
                                   child: FFButtonWidget(
-                                    onPressed: () {
-                                      print('btnForgotPass pressed ...');
+                                    onPressed: () async {
+                                      _model.apiResult = await AuthGroup
+                                          .forgotPasswordCall
+                                          .call(
+                                        email: _model.emailTextController.text,
+                                      );
+
+                                      if ((_model.apiResult?.succeeded ??
+                                          true)) {
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          enableDrag: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return GestureDetector(
+                                              onTap: () =>
+                                                  FocusScope.of(context)
+                                                      .unfocus(),
+                                              child: Padding(
+                                                padding:
+                                                    MediaQuery.viewInsetsOf(
+                                                        context),
+                                                child: EnterPinWidget(
+                                                  email: _model
+                                                      .emailTextController.text,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ).then((value) => safeSetState(() {}));
+                                      } else {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Error'),
+                                              content: Text(AuthGroup
+                                                  .forgotPasswordCall
+                                                  .errorMessage(
+                                                (_model.apiResult?.jsonBody ??
+                                                    ''),
+                                              )!),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+
+                                      safeSetState(() {});
                                     },
                                     text: 'Send',
                                     options: FFButtonOptions(
@@ -260,7 +317,8 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                       iconPadding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               0.0, 0.0, 0.0, 0.0),
-                                      color: const Color(0xFF4B39EF),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
                                       textStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .override(
@@ -295,7 +353,8 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                       iconPadding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               0.0, 0.0, 0.0, 0.0),
-                                      color: const Color(0xFF4B39EF),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
                                       textStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .override(

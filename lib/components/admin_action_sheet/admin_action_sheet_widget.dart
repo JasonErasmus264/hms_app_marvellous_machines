@@ -25,7 +25,7 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
     super.initState();
     _model = createModel(context, () => AdminActionSheetModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -81,7 +81,7 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
                   hoverColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   onTap: () async {
-                    context.pushNamed('createUser');
+                    context.pushNamed('addUser');
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.max,

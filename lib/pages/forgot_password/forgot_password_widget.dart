@@ -1,4 +1,5 @@
-import '/components/enter_pin/enter_pin_widget.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/components/forgot_password/enter_pin/enter_pin_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -6,19 +7,19 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'forgot_pass_model.dart';
-export 'forgot_pass_model.dart';
+import 'forgot_password_model.dart';
+export 'forgot_password_model.dart';
 
-class ForgotPassWidget extends StatefulWidget {
-  const ForgotPassWidget({super.key});
+class ForgotPasswordWidget extends StatefulWidget {
+  const ForgotPasswordWidget({super.key});
 
   @override
-  State<ForgotPassWidget> createState() => _ForgotPassWidgetState();
+  State<ForgotPasswordWidget> createState() => _ForgotPasswordWidgetState();
 }
 
-class _ForgotPassWidgetState extends State<ForgotPassWidget>
+class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
     with TickerProviderStateMixin {
-  late ForgotPassModel _model;
+  late ForgotPasswordModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -27,7 +28,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ForgotPassModel());
+    _model = createModel(context, () => ForgotPasswordModel());
 
     _model.emailTextController ??= TextEditingController();
     _model.emailFocusNode ??= FocusNode();
@@ -146,9 +147,9 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                         .override(
                                           fontFamily: 'Plus Jakarta Sans',
                                           color: const Color(0xFF101213),
-                                          fontSize: 30.0,
+                                          fontSize: 28.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                 ),
@@ -165,7 +166,7 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                           color: const Color(0xFF57636C),
                                           fontSize: 14.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                 ),
@@ -250,23 +251,62 @@ class _ForgotPassWidgetState extends State<ForgotPassWidget>
                                       0.0, 0.0, 0.0, 16.0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        enableDrag: false,
-                                        context: context,
-                                        builder: (context) {
-                                          return GestureDetector(
-                                            onTap: () => FocusScope.of(context)
-                                                .unfocus(),
-                                            child: Padding(
-                                              padding: MediaQuery.viewInsetsOf(
-                                                  context),
-                                              child: const EnterPinWidget(),
-                                            ),
-                                          );
-                                        },
-                                      ).then((value) => safeSetState(() {}));
+                                      _model.apiResult = await AuthGroup
+                                          .forgotPasswordCall
+                                          .call(
+                                        email: _model.emailTextController.text,
+                                      );
+
+                                      if ((_model.apiResult?.succeeded ??
+                                          true)) {
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          enableDrag: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return GestureDetector(
+                                              onTap: () =>
+                                                  FocusScope.of(context)
+                                                      .unfocus(),
+                                              child: Padding(
+                                                padding:
+                                                    MediaQuery.viewInsetsOf(
+                                                        context),
+                                                child: EnterPinWidget(
+                                                  email: _model
+                                                      .emailTextController.text,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ).then((value) => safeSetState(() {}));
+                                      } else {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Error'),
+                                              content: Text(AuthGroup
+                                                  .forgotPasswordCall
+                                                  .errorMessage(
+                                                (_model.apiResult?.jsonBody ??
+                                                    ''),
+                                              )!),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+
+                                      safeSetState(() {});
                                     },
                                     text: 'Send',
                                     options: FFButtonOptions(

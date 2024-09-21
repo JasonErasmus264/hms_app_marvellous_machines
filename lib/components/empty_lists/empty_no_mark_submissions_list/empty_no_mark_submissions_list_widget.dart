@@ -1,20 +1,20 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'empty_assignments_list_model.dart';
-export 'empty_assignments_list_model.dart';
+import 'empty_no_mark_submissions_list_model.dart';
+export 'empty_no_mark_submissions_list_model.dart';
 
-class EmptyAssignmentsListWidget extends StatefulWidget {
-  const EmptyAssignmentsListWidget({super.key});
+class EmptyNoMarkSubmissionsListWidget extends StatefulWidget {
+  const EmptyNoMarkSubmissionsListWidget({super.key});
 
   @override
-  State<EmptyAssignmentsListWidget> createState() =>
-      _EmptyAssignmentsListWidgetState();
+  State<EmptyNoMarkSubmissionsListWidget> createState() =>
+      _EmptyNoMarkSubmissionsListWidgetState();
 }
 
-class _EmptyAssignmentsListWidgetState
-    extends State<EmptyAssignmentsListWidget> {
-  late EmptyAssignmentsListModel _model;
+class _EmptyNoMarkSubmissionsListWidgetState
+    extends State<EmptyNoMarkSubmissionsListWidget> {
+  late EmptyNoMarkSubmissionsListModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -25,7 +25,7 @@ class _EmptyAssignmentsListWidgetState
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EmptyAssignmentsListModel());
+    _model = createModel(context, () => EmptyNoMarkSubmissionsListModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -53,7 +53,8 @@ class _EmptyAssignmentsListWidgetState
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
             child: Text(
-              'No Assignments',
+              'No Submissions to be Marked',
+              textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).headlineMedium.override(
                     fontFamily: 'Urbanist',
                     letterSpacing: 0.0,
@@ -63,7 +64,8 @@ class _EmptyAssignmentsListWidgetState
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
             child: Text(
-              'It seems that you don\'t have any assignments.',
+              'It seems that you don\'t have any submissions to mark.',
+              textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).labelMedium.override(
                     fontFamily: 'Manrope',
                     letterSpacing: 0.0,

@@ -1,5 +1,6 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/components/empty_lists/empty_gradebook/empty_gradebook_widget.dart';
 import '/components/feedback_comment/feedback_comment_widget.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -200,6 +201,9 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                                           )
                                           ?.toList() ??
                                       [];
+                                  if (feedback.isEmpty) {
+                                    return const EmptyGradebookWidget();
+                                  }
 
                                   return FlutterFlowDataTable<dynamic>(
                                     controller:
@@ -332,6 +336,7 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 enableDrag: false,
+                                                useSafeArea: true,
                                                 context: context,
                                                 builder: (context) {
                                                   return GestureDetector(
@@ -359,6 +364,7 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                                         ),
                                       ].map((c) => DataCell(c)).toList(),
                                     ),
+                                    emptyBuilder: () => const EmptyGradebookWidget(),
                                     paginated: false,
                                     selectable: false,
                                     headingRowHeight: 56.0,

@@ -1,10 +1,10 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
-import 'create_user_widget.dart' show CreateUserWidget;
+import 'add_user_widget.dart' show AddUserWidget;
 import 'package:flutter/material.dart';
 
-class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
+class AddUserModel extends FlutterFlowModel<AddUserWidget> {
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
@@ -57,7 +57,7 @@ class CreateUserModel extends FlutterFlowModel<CreateUserWidget> {
   // State field(s) for DropDown widget.
   String? dropDownValue;
   FormFieldController<String>? dropDownValueController;
-  // Stores action output result for [Backend Call - API (Add User)] action in Button widget.
+  // Stores action output result for [Backend Call - API (Get User)] action in Button widget.
   ApiCallResponse? apiResult;
 
   @override

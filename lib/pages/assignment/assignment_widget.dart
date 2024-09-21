@@ -1,7 +1,7 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/assignment_detailed_view/assignment_detailed_view_widget.dart';
-import '/components/empty_assignments_list/empty_assignments_list_widget.dart';
+import '/components/empty_lists/empty_assignments_list/empty_assignments_list_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -354,7 +354,6 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
 
                                   return ListView.builder(
                                     padding: EdgeInsets.zero,
-                                    shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
                                     itemCount: assignment.length,
                                     itemBuilder: (context, assignmentIndex) {

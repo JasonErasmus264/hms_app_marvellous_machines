@@ -1,7 +1,6 @@
 // IMPORTS FROM PACKAGES
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser'; // Import cookie-parser
 import dotenv from 'dotenv'; // Import dotenv for environment variables
 
 
@@ -23,15 +22,14 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 
 // Routes
-app.use('/api', authRoute);
-app.use('/api', userRoute);
-app.use('/api', assignmentRoute);
-app.use('/api', submissionRoute);
-app.use('/api', feedbackRoute);
+app.use(authRoute);
+app.use(userRoute);
+app.use(assignmentRoute);
+app.use(submissionRoute);
+app.use(feedbackRoute);
 
 
 import { getStudentMarksByUserAndModule, downloadMarks } from './controllers/feedbackController.js';

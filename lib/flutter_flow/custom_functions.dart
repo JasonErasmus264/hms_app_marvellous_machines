@@ -25,7 +25,6 @@ bool isAssignmentOpen(
 
     // Get the current date and time
     DateTime now = DateTime.now();
-
     // Check if the current time is between openDatetime and dueDatetime
     if ((now.isAfter(openDatetime) || now.isAtSameMomentAs(openDatetime)) &&
         now.isBefore(dueDatetime)) {

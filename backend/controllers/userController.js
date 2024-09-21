@@ -24,6 +24,7 @@ export const getUser = async (req, res) => {
 
 
 
+
 // Update current user's info
 export const updateUser = async (req, res) => {
   const { userID } = req.user; // Extract userID from JWT

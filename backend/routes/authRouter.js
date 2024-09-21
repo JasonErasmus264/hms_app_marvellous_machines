@@ -1,11 +1,12 @@
 import express from 'express'; 
-import { loginLimiter, login, refreshToken, logout, requestPasswordReset, verifyResetCode, resetPassword } from '../controllers/authController.js';
+import { login, refreshToken, logout, requestPasswordReset, verifyResetCode, resetPassword } from '../controllers/authController.js';
 import verifyToken from '../middleware/verifyToken.js';
 
 const authRouter = express.Router();
 
+
 // Apply loginLimiter to the login route
-authRouter.post('/v1/login', loginLimiter, login);
+authRouter.post('/v1/login', login);
 
 // Refresh Token route
 authRouter.post('/v1/refresh-token', refreshToken);

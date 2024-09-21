@@ -1,13 +1,12 @@
 import pool from '../db.js';
 
-// Function to get user info
 export const getUser = async (req, res) => {
   try {
     const { userID } = req.user; // Extract userID from JWT
 
-    // Fetch the user's data based on userID
+    // Fetch the user's data including createdAt and phoneNum fields
     const [rows] = await pool.execute(
-      'SELECT username, firstName, lastName, email, userType FROM users WHERE userID = ?',
+      'SELECT username, firstName, lastName, email, phoneNum, userType, createdAt FROM users WHERE userID = ?',
       [userID]
     );
 
@@ -15,13 +14,49 @@ export const getUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return the user's data
-    res.json({ user: rows[0] });
+    const user = rows[0];
+    
+    // Format the createdAt field to the desired format (e.g., "July 12th, 2023")
+    const formattedCreatedAt = formatDate(new Date(user.createdAt));
+
+    // Return the user's data including the formatted createdAt and phoneNum
+    res.json({
+      user: {
+        ...user,
+        createdAt: formattedCreatedAt, // Include the formatted createdAt
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+// Function to format dates to 'July 12th, 2023'
+const formatDate = (date) => {
+  const options = {
+    day: 'numeric',
+    month: 'long', // Full month name
+    year: 'numeric',
+  };
+
+  const day = date.getDate();
+  const ordinalDay = getOrdinalSuffix(day);
+  
+  // Format the date (e.g., "July 12th, 2023")
+  const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+  return formattedDate.replace(day, `${ordinalDay}`);
+};
+
+// Helper function to get the ordinal suffix (st, nd, rd, th)
+const getOrdinalSuffix = (day) => {
+  if (day > 3 && day < 21) return `${day}th`; // Teens are always "th"
+  switch (day % 10) {
+    case 1: return `${day}st`;
+    case 2: return `${day}nd`;
+    case 3: return `${day}rd`;
+    default: return `${day}th`;
+  }
+};
 
 
 

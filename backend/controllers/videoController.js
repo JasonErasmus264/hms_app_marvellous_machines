@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Set the path to ffmpeg explicitly
+// Set the path to ffmpeg explicitly otherwise there is trouble finding it
 const ffmpegPath = '/usr/bin/ffmpeg';
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -105,7 +105,7 @@ const storeMetadata = async (fileName, fileSize, nextcloudUrl) => {
   await pool.execute(query, [fileName, fileSize, nextcloudUrl]);
 };
 
-// Main function to handle video upload
+// Main function to handle video upload and compression
 export const uploadVideo = (req, res) => {
   upload.single('video')(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
@@ -148,4 +148,62 @@ export const uploadVideo = (req, res) => {
       res.status(500).json({ error: 'Failed to upload video', details: error.message });
     }
   });
+};
+
+
+// Retrieve video metadata from MySQL
+/* export const getVideoMetadata = async (req, res) => {
+  const videoId = req.params.id;
+
+  try {
+    const query = 'SELECT file_name, nextcloud_url FROM videos WHERE id = ?';
+    const [rows] = await pool.execute(query, [videoId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+
+    const videoData = rows[0];
+
+    res.status(200).json({
+      fileName: videoData.file_name,
+      nextcloudUrl: videoData.nextcloud_url,
+    });
+  } catch (error) {
+    console.error('Error retrieving video data:', error);
+    res.status(500).json({ error: 'Failed to retrieve video data', details: error.message });
+  }
+}; */
+
+
+
+// Route to retrieve video directly from Nextcloud by ID
+export const getVideoMetadata = async (req, res) => {
+  const videoId = req.params.id;
+  const nextcloudFolder = '/HMS-Video-Uploads';  
+  const videoUrl = `${process.env.NEXTCLOUD_URL}${nextcloudFolder}/${videoId}`;  
+
+  try {
+    const response = await axios.get(videoUrl, {
+      responseType: 'stream',
+      auth: {
+        username: process.env.NEXTCLOUD_USERNAME,
+        password: process.env.NEXTCLOUD_PASSWORD,
+      },
+    });
+
+    if (response.status === 200) {
+      res.setHeader('Content-Type', 'video/mp4');
+      res.setHeader('Content-Disposition', `inline; filename=${videoId}`);
+      response.data.pipe(res);
+    } else {
+      res.status(404).json({ error: 'Video not found on Nextcloud' });
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      res.status(404).json({ error: 'Video not found on Nextcloud' });
+    } else {
+      res.status(500).json({ error: 'Failed to retrieve video from Nextcloud', details: error.message });
+    }
+  }
 };

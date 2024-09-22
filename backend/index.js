@@ -28,12 +28,12 @@ app.use(cookieParser());
 
 
 // Routes
-app.use('/api', authRoute);
-app.use('/api', userRoute);
-app.use('/api', assignmentRoute);
-app.use('/api', submissionRoute);
-app.use('/api', feedbackRoute);
-app.use('/api/v1', videoRouter); 
+app.use(authRoute);
+app.use(userRoute);
+app.use(assignmentRoute);
+app.use(submissionRoute);
+app.use(feedbackRoute);
+app.use(videoRouter); 
 
 
 import { getStudentMarksByUserAndModule, downloadMarks } from './controllers/feedbackController.js';

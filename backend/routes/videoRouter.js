@@ -1,8 +1,13 @@
 import express from 'express';
-import { uploadVideo } from '../controllers/videoController.js';
+import { uploadVideo, getVideoMetadata } from '../controllers/videoController.js';
+import verifyToken from '../middleware/verifyToken.js';
 
 const videoRouter = express.Router();
 
-videoRouter.post('/upload-video', uploadVideo);
+videoRouter.use(verifyToken);
+
+videoRouter.post('/v1/upload-video', uploadVideo);
+
+videoRouter.get('/v1/video/:id', getVideoMetadata);
 
 export default videoRouter;

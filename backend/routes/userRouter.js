@@ -10,7 +10,7 @@ userRoute.use(verifyToken);
 // Get current user info (available to all users)
 userRoute.get('/v1/users', getUser);
 
-userRoute.post('/v1/users', updateUser);
+userRoute.patch('/v1/users', updateUser);
 
 
 export default userRoute;

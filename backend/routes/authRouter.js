@@ -5,7 +5,7 @@ import verifyToken from '../middleware/verifyToken.js';
 const authRouter = express.Router();
 
 
-// Apply loginLimiter to the login route
+// Apply Login route
 authRouter.post('/v1/login', login);
 
 // Refresh Token route
@@ -21,6 +21,6 @@ authRouter.post('/v1/forgot-password', requestPasswordReset);
 authRouter.post('/v1/verify-reset-code', verifyResetCode);
 
 // Route to reset password after code verification
-authRouter.post('/v1/reset-password', resetPassword);
+authRouter.put('/v1/reset-password', resetPassword);
 
 export default authRouter;

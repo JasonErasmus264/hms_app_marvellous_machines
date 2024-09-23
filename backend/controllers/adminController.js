@@ -2,7 +2,6 @@ import bcryptjs from 'bcryptjs';
 import pool from '../db.js';
 
 
-
 // Get All Users
 // Function to get all users with only userID and formatted username
 export const getAllUsers = async (req, res) => {
@@ -123,46 +122,32 @@ export const updateUser = async (req, res) => {
   const { userID } = req.params; // Extract userID from the route
   const { firstName, lastName, phoneNum, userType } = req.body; // Extract fields from the request body
 
+  // Validate that all required fields are provided
+  if (!firstName || !lastName || !phoneNum || !userType) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
   try {
     // Check if user exists
-    const [existingUser] = await pool.execute('SELECT * FROM users WHERE userID = ?', [userID]);
+    const [existingUser] = await pool.execute(
+      'SELECT * FROM users WHERE userID = ?',
+      [userID]
+    );
 
     if (existingUser.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    // Build update query dynamically (only update fields that are provided)
-    let query = 'UPDATE users SET';
-    const params = [];
-
-    if (firstName) {
-      query += ' firstName = ?,';
-      params.push(firstName);
-    }
-    if (lastName) {
-      query += ' lastName = ?,';
-      params.push(lastName);
-    }
-    if (phoneNum) {
-      query += ' phoneNum = ?,';
-      params.push(phoneNum);
-    }
-    if (userType) {
-      query += ' userType = ?,';
-      params.push(userType);
-    }
-
-    // Remove the trailing comma and append WHERE clause
-    query = query.slice(0, -1) + ' WHERE userID = ?';
-    params.push(userID);
-
-    // Execute the update query
-    await pool.execute(query, params);
+    // Static update query
+    await pool.execute(
+      'UPDATE users SET firstName = ?, lastName = ?, phoneNum = ?, userType = ? WHERE userID = ?',
+      [firstName, lastName, phoneNum, userType, userID]
+    );
 
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     console.error('Error updating user:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -170,17 +155,16 @@ export const updateUser = async (req, res) => {
 
 
 
-
 // Delete a user
 export const deleteUser = async (req, res) => {
-  const { userID } = req.params; // Extract userID from the route
+  const { userID } = req.params;
 
   try {
     // Check if the user exists
     const [existingUser] = await pool.execute('SELECT * FROM users WHERE userID = ?', [userID]);
 
     if (existingUser.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Execute the delete query
@@ -189,6 +173,6 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };

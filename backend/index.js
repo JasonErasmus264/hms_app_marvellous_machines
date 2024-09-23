@@ -1,12 +1,13 @@
-// IMPORTS from packages
+// Imports from packages
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-// IMPORTS from other files
+// Imports from other files
 import authRoute from './routes/authRouter.js';
 import adminRoute from './routes/adminRouter.js';
 import userRoute from './routes/userRouter.js';
+import moduleRoute from './routes/moduleRouter.js';
 import assignmentRoute from './routes/assignmentRouter.js';
 import submissionRoute from './routes/submissionRouter.js';
 import feedbackRoute from './routes/feedbackRouter.js';
@@ -26,14 +27,10 @@ app.use(express.json());
 app.use(authRoute);
 app.use(adminRoute);
 app.use(userRoute);
+app.use(moduleRoute);
 app.use(assignmentRoute);
 app.use(submissionRoute);
 app.use(feedbackRoute);
-
-// Homepage Route (for testing docker)
-app.get("/", (req, res) => {
-  res.send("Welcome to the Marvellous Machines API!");
-});
 
 // Start Server
 app.listen(PORT, "0.0.0.0", () => {

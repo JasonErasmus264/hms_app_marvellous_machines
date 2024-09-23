@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import pool from '../db.js';
-import { userLogger } from '../logger.js'; // import user logger
+import { userLogger } from '../middleware/logger.js'; // import user logger
 
 // Function to get user info
 export const getUserInfo = async (req, res) => {

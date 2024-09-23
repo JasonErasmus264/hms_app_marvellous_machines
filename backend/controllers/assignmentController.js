@@ -1,5 +1,5 @@
 import pool from '../db.js';
-import { assignmentLogger } from '../logger.js';// Import assignment-specific logger
+import { assignmentLogger } from '../middleware/logger.js';// Import assignment-specific logger
 
 // Function to get modules for dropdown
 export const getModules = async (req, res) => {

@@ -2,7 +2,7 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 import pool from '../db.js';
-import { authLogger } from '../logger.js'; // import auth logger
+import { authLogger } from '../middleware/logger.js'; // import auth logger
 
 // Login rate limiter: max attempts configurable via .env
 export const loginLimiter = rateLimit({

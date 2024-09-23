@@ -1,7 +1,7 @@
 import pool from '../db.js';
 import XLSX from 'xlsx';
 import { parse } from 'json2csv';  
-import { feedbackLogger } from '../logger.js'; // import feedback logger
+import { feedbackLogger } from '../middleware/logger.js'; // import feedback logger
 
 // Function to download marks as XLSX
 export const downloadMarksXLSX = async (req, res) => { 

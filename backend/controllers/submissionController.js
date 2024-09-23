@@ -1,5 +1,5 @@
 import pool from '../db.js';  // Assuming the database pool is set up
-import { submissionLogger } from '../logger.js'; // import submission logger
+import { submissionLogger } from '../middleware/logger.js'; // import submission logger
 
 // Function to format the date using native JS Intl.DateTimeFormat
 const formatDate = (date) => {

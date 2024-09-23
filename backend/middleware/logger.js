@@ -8,9 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Define the log directory in the backend folder
-const logDirectory = path.join(__dirname, 'logs');
+const logDirectory = path.join(__dirname, '..', 'logs');
 
-// Ensure the logs directory exists and create if not
+// Ensure the logs directory exists
 if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory, { recursive: true });
 }
@@ -60,8 +60,7 @@ const submissionLogger = winston.createLogger({
   ]
 });
 
-
-//user logger
+// user logger
 const userLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
@@ -70,5 +69,5 @@ const userLogger = winston.createLogger({
   ]
 });
 
-// export loggers 
+// export loggers
 export { authLogger, userLogger, assignmentLogger, feedbackLogger, submissionLogger };

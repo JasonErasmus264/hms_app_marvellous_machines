@@ -33,6 +33,8 @@ export const downloadMarksXLSX = async (req, res) => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Student Marks');
     const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
 
+    // log successful data retrieval and CSV generation (information log)
+    feedbackLogger.info(`Successfully generated Excel file for user: ${userID}`);
     res.attachment('student_marks.xlsx');
     res.send(buffer);
   } catch (error) {
@@ -65,6 +67,8 @@ export const downloadMarksCSV = async (req, res) => {
           s.userID = ?;`, [userID]  
     );
    
+    // log successful data retrieval and CSV generation (information log)
+    feedbackLogger.info(`Successfully generated CSV for user: ${userID}`);
     const csv = parse(rows);
     res.attachment('student_marks.csv');
     res.send(csv);

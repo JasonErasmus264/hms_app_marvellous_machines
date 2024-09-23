@@ -1,4 +1,5 @@
 import pool from '../db.js';
+import { assignmentLogger } from '../logger.js';// Import assignment-specific logger
 
 // Function to get modules for dropdown
 export const getModules = async (req, res) => {
@@ -24,11 +25,16 @@ export const getModules = async (req, res) => {
     const [rows] = await pool.execute(query, params);
 
     if (rows.length === 0) {
+      // Log that no modules were found for the specific user (informational log)
+      assignmentLogger.info(`No modules found for user: ${userID} (Type: ${userType})`); 
       return res.status(404).json({ message: 'No modules found' });
     }
-
+    // Log successful retrieval of modules for the user (informational log)
+    assignmentLogger.info(`Modules fetched for user: ${userID} (Type: ${userType}): ${JSON.stringify(rows)}`); 
     res.json({ modules: rows });
   } catch (error) {
+    // Log any errors encountered during the module retrieval process (error log)
+    assignmentLogger.error(`Error fetching modules for user: ${req.user.userID}: ${error.message}`, { error }); 
     res.status(500).json({ error: 'An error occurred while fetching modules' });
   }
 };
@@ -43,6 +49,8 @@ export const getAssignmentsByModule = async (req, res) => {
   try {
     // Validate the moduleID
     if (!moduleID) {
+      // Log a warning if the module ID is missing from the request (warning log)
+      assignmentLogger.warn('Module ID is missing in request'); 
       return res.status(400).json({ message: 'Module ID is required' });
     }
 
@@ -50,6 +58,8 @@ export const getAssignmentsByModule = async (req, res) => {
     const [rows] = await pool.execute('SELECT * FROM assignment WHERE moduleID = ?', [moduleID]);
 
     if (rows.length === 0) {
+      // Log that no assignments were found for the given module (informational log)
+      assignmentLogger.info(`No assignments found for module ${moduleID}`); 
       return res.status(404).json({ message: 'No assignments found for this module' });
     }
 
@@ -82,9 +92,12 @@ export const getAssignmentsByModule = async (req, res) => {
         assignDueDate: formatDate(assignDueDate),
       };
     });
-
+    // Log successful retrieval of assignments for the given module, including the formatted data (informational log)
+    assignmentLogger.info(`Assignments fetched for module: ${moduleID}: ${JSON.stringify(formattedAssignments)}`); 
     res.json({ assignments: formattedAssignments });
   } catch (error) {
+    // Log any errors encountered during the assignment retrieval process (error log)
+    assignmentLogger.error(`Error fetching assignments for module: ${moduleID}: ${error.message}`, { error }); 
     res.status(500).json({ error: error.message });
   }
 };

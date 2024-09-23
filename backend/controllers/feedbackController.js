@@ -1,15 +1,16 @@
 import pool from '../db.js';
 import XLSX from 'xlsx';
-import { parse } from 'json2csv';  // Import parse function for CSV
+import { parse } from 'json2csv';  
+import { feedbackLogger } from '../logger.js'; // import feedback logger
 
 // Function to download marks as XLSX
 export const downloadMarksXLSX = async (req, res) => { 
+  const { userID } = req.user; 
   try {
-    const [rows] = await pool.query(`
-      SELECT 
-          u.firstName AS StudentFirstName,
-          u.lastName AS StudentLastName,
-          u.username AS StudentUsername,
+    const [rows] = await pool.query(
+      `SELECT 
+          m.moduleName AS ModuleName,
+          a.assignName AS AssignmentName,
           f.comment AS FeedbackComment,
           f.mark AS Mark,
           a.assignTotalMarks AS TotalMarks
@@ -18,54 +19,58 @@ export const downloadMarksXLSX = async (req, res) => {
       JOIN 
           feedback f ON s.submissionID = f.submissionID
       JOIN 
-          users u ON s.userID = u.userID
-      JOIN 
           assignment a ON s.assignmentID = a.assignmentID
+      JOIN
+          module m ON a.moduleID = m.moduleID
       WHERE 
-          u.userType = 'Student';
-    `);
+          s.userID = ?;`, [userID] 
+    );
 
-    const heading = [['First Name', 'Last Name', 'Username', 'Comment', 'Mark', 'Total Marks']];
+    const heading = [['Module', 'Assignment', 'Comment', 'Mark', 'Total Marks']];
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(rows);
     XLSX.utils.sheet_add_aoa(worksheet, heading);
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Student Marks');
-    const buffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'buffer'});
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
 
     res.attachment('student_marks.xlsx');
     res.send(buffer);
   } catch (error) {
-    console.log(error);
-  }
+    // Log when no data is found (error log)
+    feedbackLogger.error(`Error downloading XLSX for user: ${userID}: ${error.message}`, { error });
+    res.status(500).send('Error downloading Excel file'); 
+  } 
 };
 
 // Function to download marks as CSV
 export const downloadMarksCSV = async (req, res) => {
+  const { userID } = req.user; 
   try {
-    const [rows] = await pool.query(`
-      SELECT
-          u.firstName AS StudentFirstName,
-          u.lastName AS StudentLastName,
-          u.username AS StudentUsername,
+    const [rows] = await pool.query(
+      `SELECT 
+          m.moduleName AS ModuleName,
+          a.assignName AS AssignmentName,
           f.comment AS FeedbackComment,
           f.mark AS Mark,
           a.assignTotalMarks AS TotalMarks
-      FROM
+      FROM 
           submission s
-      JOIN
+      JOIN 
           feedback f ON s.submissionID = f.submissionID
-      JOIN
-          users u ON s.userID = u.userID
-      JOIN
+      JOIN 
           assignment a ON s.assignmentID = a.assignmentID
-      WHERE
-          u.userType = 'Student';
-    `);
+      JOIN
+          module m ON a.moduleID = m.moduleID
+      WHERE 
+          s.userID = ?;`, [userID]  
+    );
    
     const csv = parse(rows);
     res.attachment('student_marks.csv');
     res.send(csv);
   } catch (error) {
-    console.log(error);
+    // Log when no data is found (error log)
+    feedbackLogger.error(`Error downloading CSV for user: ${userID}: ${error.message}`, { error });
+    res.status(500).send('Error downloading CSV file'); 
   }
 };

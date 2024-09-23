@@ -6,7 +6,7 @@ const feedbackRoute = express.Router();
 
 feedbackRoute.use(verifyToken);
 
-feedbackRoute.get('/download/xlsx', downloadMarksXLSX);
-feedbackRoute.get('/download/csv', downloadMarksCSV);
+feedbackRoute.get('/v1/download/xlsx', downloadMarksXLSX);
+feedbackRoute.get('/v1/download/csv', downloadMarksCSV);
 
 export default feedbackRoute;

@@ -1,4 +1,3 @@
-import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -8,25 +7,25 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'create_user_model.dart';
-export 'create_user_model.dart';
+import 'add_user_model.dart';
+export 'add_user_model.dart';
 
-class CreateUserWidget extends StatefulWidget {
-  const CreateUserWidget({super.key});
+class AddUserWidget extends StatefulWidget {
+  const AddUserWidget({super.key});
 
   @override
-  State<CreateUserWidget> createState() => _CreateUserWidgetState();
+  State<AddUserWidget> createState() => _AddUserWidgetState();
 }
 
-class _CreateUserWidgetState extends State<CreateUserWidget> {
-  late CreateUserModel _model;
+class _AddUserWidgetState extends State<AddUserWidget> {
+  late AddUserModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CreateUserModel());
+    _model = createModel(context, () => AddUserModel());
 
     _model.txtFirstNameTextController ??= TextEditingController();
     _model.txtFirstNameFocusNode ??= FocusNode();
@@ -473,20 +472,8 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
                                               return;
                                             }
                                             _model.apiResult = await UserGroup
-                                                .addUserCall
-                                                .call(
-                                              firstName: _model
-                                                  .txtFirstNameTextController
-                                                  .text,
-                                              lastName: _model
-                                                  .txtLastNameTextController
-                                                  .text,
-                                              phoneNum: _model
-                                                  .phoneNumberTextController
-                                                  .text,
-                                              userType: _model.dropDownValue,
-                                              token: currentAuthenticationToken,
-                                            );
+                                                .getUserCall
+                                                .call();
 
                                             if ((_model.apiResult?.succeeded ??
                                                 true)) {

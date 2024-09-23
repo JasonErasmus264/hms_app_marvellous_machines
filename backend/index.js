@@ -1,7 +1,6 @@
 // IMPORTS FROM PACKAGES
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser'; // Import cookie-parser
 import dotenv from 'dotenv'; // Import dotenv for environment variables
 
 
@@ -24,7 +23,6 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 
 // Routes

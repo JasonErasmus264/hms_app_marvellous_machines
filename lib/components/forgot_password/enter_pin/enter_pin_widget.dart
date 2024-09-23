@@ -1,3 +1,5 @@
+import '/backend/api_requests/api_calls.dart';
+import '/components/forgot_password/reset_password/reset_password_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -9,7 +11,12 @@ import 'enter_pin_model.dart';
 export 'enter_pin_model.dart';
 
 class EnterPinWidget extends StatefulWidget {
-  const EnterPinWidget({super.key});
+  const EnterPinWidget({
+    super.key,
+    this.email,
+  });
+
+  final String? email;
 
   @override
   State<EnterPinWidget> createState() => _EnterPinWidgetState();
@@ -76,8 +83,8 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).accent4,
+      decoration: const BoxDecoration(
+        color: Color(0xCCFFFFFF),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -91,7 +98,7 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                 maxWidth: 570.0,
               ),
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
+                color: Colors.white,
                 boxShadow: const [
                   BoxShadow(
                     blurRadius: 12.0,
@@ -110,29 +117,41 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 0.0, 0.0),
-                      child: Text(
-                        'Enter your PIN below',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              fontFamily: 'Urbanist',
-                              letterSpacing: 0.0,
-                            ),
+                    Align(
+                      alignment: const AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            10.0, 16.0, 10.0, 0.0),
+                        child: Text(
+                          'Enter the reset code below',
+                          textAlign: TextAlign.center,
+                          style: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .override(
+                                fontFamily: 'Urbanist',
+                                color: Colors.black,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(24.0, 4.0, 24.0, 0.0),
-                      child: Text(
-                        'An email has been sent.',
-                        style:
-                            FlutterFlowTheme.of(context).labelMedium.override(
-                                  fontFamily: 'Manrope',
-                                  letterSpacing: 0.0,
-                                ),
+                    Align(
+                      alignment: const AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            10.0, 4.0, 10.0, 0.0),
+                        child: Text(
+                          'Password reset code sent to your email. Please check your inbox or junk folder.',
+                          textAlign: TextAlign.center,
+                          style:
+                              FlutterFlowTheme.of(context).labelMedium.override(
+                                    fontFamily: 'Manrope',
+                                    color: const Color(0xFF57636C),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
                       ),
                     ),
                     Padding(
@@ -152,6 +171,7 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                                   .bodyLarge
                                   .override(
                                     fontFamily: 'Manrope',
+                                    color: const Color(0xFF101213),
                                     letterSpacing: 0.0,
                                   ),
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -163,6 +183,7 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                               cursorColor: FlutterFlowTheme.of(context).primary,
                               obscureText: false,
                               hintCharacter: '-',
+                              keyboardType: TextInputType.number,
                               pinTheme: PinTheme(
                                 fieldHeight: 50.0,
                                 fieldWidth: 44.0,
@@ -174,18 +195,16 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                                   topRight: Radius.circular(12.0),
                                 ),
                                 shape: PinCodeFieldShape.box,
-                                activeColor:
-                                    FlutterFlowTheme.of(context).primaryText,
-                                inactiveColor:
-                                    FlutterFlowTheme.of(context).alternate,
+                                activeColor: const Color(0xFF101213),
+                                inactiveColor: const Color(0xFFE0E3E7),
                                 selectedColor:
                                     FlutterFlowTheme.of(context).primary,
                               ),
-                              controller: _model.pinCodeController,
+                              controller: _model.resetCode,
                               onChanged: (_) {},
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              validator: _model.pinCodeControllerValidator
+                              validator: _model.resetCodeValidator
                                   .asValidator(context),
                             ),
                           ),
@@ -210,18 +229,17 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                                       iconPadding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               0.0, 0.0, 0.0, 0.0),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
+                                      color: Colors.white,
                                       textStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
                                             fontFamily: 'Manrope',
+                                            color: const Color(0xFF101213),
                                             letterSpacing: 0.0,
                                           ),
                                       elevation: 0.0,
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFFE0E3E7),
                                         width: 2.0,
                                       ),
                                       borderRadius: BorderRadius.circular(12.0),
@@ -242,8 +260,79 @@ class _EnterPinWidgetState extends State<EnterPinWidget>
                                 Align(
                                   alignment: const AlignmentDirectional(0.0, 0.05),
                                   child: FFButtonWidget(
-                                    onPressed: () {
-                                      print('Button pressed ...');
+                                    onPressed: () async {
+                                      _model.apiResult = await AuthGroup
+                                          .verifyResetCodeCall
+                                          .call(
+                                        email: widget.email,
+                                        resetCode: _model.resetCode!.text,
+                                      );
+
+                                      if ((_model.apiResult?.succeeded ??
+                                          true)) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Success'),
+                                              content: Text(AuthGroup
+                                                  .verifyResetCodeCall
+                                                  .errorMessage(
+                                                (_model.apiResult?.jsonBody ??
+                                                    ''),
+                                              )!),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          enableDrag: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return Padding(
+                                              padding: MediaQuery.viewInsetsOf(
+                                                  context),
+                                              child: ResetPasswordWidget(
+                                                email: widget.email,
+                                              ),
+                                            );
+                                          },
+                                        ).then((value) => safeSetState(() {}));
+                                      } else {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Error'),
+                                              content: Text(AuthGroup
+                                                  .verifyResetCodeCall
+                                                  .errorMessage(
+                                                (_model.apiResult?.jsonBody ??
+                                                    ''),
+                                              )!),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+
+                                      safeSetState(() {});
                                     },
                                     text: 'Verify Code',
                                     options: FFButtonOptions(

@@ -28,7 +28,7 @@ class AssignmentDetailedViewModel
       FFUploadedFile(bytes: Uint8List.fromList([]));
 
   // Stores action output result for [Backend Call - API (PostVideo)] action in Button widget.
-  ApiCallResponse? compressVid;
+  ApiCallResponse? apiVideoResult;
 
   @override
   void initState(BuildContext context) {}

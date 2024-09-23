@@ -1,5 +1,7 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/components/empty_lists/empty_marked_submissions_list/empty_marked_submissions_list_widget.dart';
+import '/components/empty_lists/empty_no_mark_submissions_list/empty_no_mark_submissions_list_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -142,6 +144,9 @@ class _MarkStudentSubmissionWidgetState
                                       )
                                       ?.toList() ??
                                   [];
+                              if (notMarked.isEmpty) {
+                                return const EmptyNoMarkSubmissionsListWidget();
+                              }
 
                               return FlutterFlowDataTable<dynamic>(
                                 controller:
@@ -332,6 +337,8 @@ class _MarkStudentSubmissionWidgetState
                                     ),
                                   ].map((c) => DataCell(c)).toList(),
                                 ),
+                                emptyBuilder: () =>
+                                    const EmptyNoMarkSubmissionsListWidget(),
                                 paginated: false,
                                 selectable: false,
                                 headingRowHeight: 56.0,
@@ -365,6 +372,60 @@ class _MarkStudentSubmissionWidgetState
                                 'http://localhost:3000/v1/download-marks');
                           },
                           text: 'Button',
+                          options: FFButtonOptions(
+                            height: 40.0,
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  fontFamily: 'Manrope',
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                ),
+                            elevation: 0.0,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        FFButtonWidget(
+                          onPressed: () async {
+                            _model.apiResults =
+                                await FeedbackGroup.downloadMarksCall.call(
+                              token: currentAuthenticationToken,
+                            );
+
+                            if ((_model.apiResults?.succeeded ?? true)) {
+                              var confirmDialogResponse =
+                                  await showDialog<bool>(
+                                        context: context,
+                                        builder: (alertDialogContext) {
+                                          return AlertDialog(
+                                            title: const Text('esf'),
+                                            content: const Text('eaf'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext, false),
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext, true),
+                                                child: const Text('Confirm'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ) ??
+                                      false;
+                            }
+
+                            safeSetState(() {});
+                          },
+                          text: 'try cust action',
                           options: FFButtonOptions(
                             height: 40.0,
                             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -458,6 +519,9 @@ class _MarkStudentSubmissionWidgetState
                                                 )
                                                 ?.toList() ??
                                             [];
+                                    if (notMarked.isEmpty) {
+                                      return const EmptyMarkedSubmissionsListWidget();
+                                    }
 
                                     return FlutterFlowDataTable<dynamic>(
                                       controller:
@@ -644,7 +708,7 @@ class _MarkStudentSubmissionWidgetState
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
                                               icon: Icon(
-                                                Icons.add_rounded,
+                                                Icons.edit,
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
@@ -657,6 +721,8 @@ class _MarkStudentSubmissionWidgetState
                                           ),
                                         ].map((c) => DataCell(c)).toList(),
                                       ),
+                                      emptyBuilder: () =>
+                                          const EmptyMarkedSubmissionsListWidget(),
                                       paginated: false,
                                       selectable: false,
                                       headingRowHeight: 56.0,

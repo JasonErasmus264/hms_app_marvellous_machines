@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util'; // To promisify jwt.verify for async/await
 
+// Token verification middleware
 const verifyToken = async (req, res, next) => {
   try {
     // Get the Authorization header
     const authHeader = req.headers['authorization'];
-    if (!authHeader) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Unauthorized: No token provided' });
     }
 
@@ -18,8 +19,8 @@ const verifyToken = async (req, res, next) => {
     // Verify the token (promisify jwt.verify for cleaner async/await code)
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-    // Attach the decoded user data to the request object
-    req.user = decoded;
+    // Attach the decoded userID and userType to the request object
+    req.user = { userID: decoded.userID, userType: decoded.userType };
     
     next(); // Pass control to the next middleware/route handler
   } catch (error) {

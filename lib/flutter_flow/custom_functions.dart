@@ -25,7 +25,6 @@ bool isAssignmentOpen(
 
     // Get the current date and time
     DateTime now = DateTime.now();
-
     // Check if the current time is between openDatetime and dueDatetime
     if ((now.isAfter(openDatetime) || now.isAtSameMomentAs(openDatetime)) &&
         now.isBefore(dueDatetime)) {
@@ -37,19 +36,6 @@ bool isAssignmentOpen(
     print("Error parsing date: $e");
     return false; // Return false if there's an error in date parsing
   }
-}
-
-bool checkVideoSize(FFUploadedFile? videoFile) {
-  // Get the size of the uploaded video file and check if it is over 100MB
-  if (videoFile != null) {
-    var bytes = videoFile.bytes;
-    if (bytes != null) {
-      int fileSizeInBytes = bytes.length;
-      double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-      return fileSizeInMB > 100; // Return true if file size is over 100MB
-    }
-  }
-  return false; // Return false if file is null or size is not over 100MB
 }
 
 bool isTokenExpired(String accessToken) {
@@ -84,5 +70,29 @@ bool isTokenExpired(String accessToken) {
     // If any error occurs (e.g., token parsing failed), assume it's expired
     print('Error parsing token: $e');
     return true;
+  }
+}
+
+String? formatTextForJson(String inputText) {
+  return inputText.trim().replaceAll('\n', '\\n');
+}
+
+String? convertVidPath(String? submissionVidPath) {
+  return submissionVidPath;
+}
+
+DateTime? convertDate(String? formattedDate) {
+  if (formattedDate == null || formattedDate.isEmpty) {
+    return null;
+  }
+
+  try {
+    // Define the date format according to the given string '01 September 2024 at 12:00'
+    final DateFormat dateFormat = DateFormat('dd MMMM yyyy \'at\' HH:mm');
+    return dateFormat.parse(formattedDate);
+  } catch (e) {
+    // If parsing fails, return null or handle error accordingly
+    print('Error parsing date: $e');
+    return null;
   }
 }

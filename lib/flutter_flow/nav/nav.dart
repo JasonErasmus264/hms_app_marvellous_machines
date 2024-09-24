@@ -96,16 +96,15 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         ),
         
         FFRoute(
-          name: 'createUser',
-          path: '/createUser',
+          name: 'addUser',
+          path: '/addUser',
           requireAuth: true,
-          builder: (context, params) => const CreateUserWidget(),
+          builder: (context, params) => const AddUserWidget(),
         ),
         FFRoute(
-          name: 'forgotPass',
-          path: '/forgotPass',
-          requireAuth: true,
-          builder: (context, params) => const ForgotPassWidget(),
+          name: 'forgotPassword',
+          path: '/forgotPassword',
+          builder: (context, params) => const ForgotPasswordWidget(),
         ),
         FFRoute(
           name: 'home',
@@ -114,18 +113,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const HomeWidget(),
         ),
         FFRoute(
-          name: 'addAssignment',
-          path: '/addAssignment',
-          requireAuth: true,
-          builder: (context, params) => const AddAssignmentWidget(),
-        ),
-        FFRoute(
           name: 'gradebook',
           path: '/gradebook',
           requireAuth: true,
           builder: (context, params) => const GradebookWidget(),
+        ),
+        FFRoute(
+          name: 'updateUser',
+          path: '/updateUser',
+          requireAuth: true,
+          builder: (context, params) => const UpdateUserWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
+      observers: [routeObserver],
     );
 
 extension NavParamExtensions on Map<String, String?> {

@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'login_model.dart';
 export 'login_model.dart';
@@ -171,7 +172,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                       color: const Color(0xFF101213),
                                       fontSize: 34.0,
                                       letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
                                     ),
                               ),
                               Padding(
@@ -187,7 +188,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                         color: const Color(0xFF57636C),
                                         fontSize: 14.0,
                                         letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                 ),
                               ),
@@ -284,6 +285,10 @@ class _LoginWidgetState extends State<LoginWidget>
                                           validator: _model
                                               .usernameTextControllerValidator
                                               .asValidator(context),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp('[0-9]'))
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -424,12 +429,10 @@ class _LoginWidgetState extends State<LoginWidget>
                                             AuthGroup.loginCall.accessToken(
                                           (_model.authResponse?.jsonBody ?? ''),
                                         ),
-                                        authUid: AuthGroup.loginCall
-                                            .userID(
-                                              (_model.authResponse?.jsonBody ??
-                                                  ''),
-                                            )
-                                            ?.toString(),
+                                        refreshToken:
+                                            AuthGroup.loginCall.refreshToken(
+                                          (_model.authResponse?.jsonBody ?? ''),
+                                        ),
                                         userData: UserStruct(
                                           userType:
                                               AuthGroup.loginCall.userType(
@@ -503,7 +506,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                     0.0, 0.0, 0.0, 16.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    context.pushNamed('forgotPass');
+                                    context.pushNamed('forgotPassword');
                                   },
                                   text: 'Forgot Password?',
                                   options: FFButtonOptions(

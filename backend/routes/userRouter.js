@@ -1,17 +1,19 @@
 import express from 'express';
 import verifyToken from '../middleware/verifyToken.js'; // Middleware to check JWT
-import { authorize } from '../middleware/authorizeUser.js'; // Role-based middleware
-import { getUserInfo, createUser } from '../controllers/userController.js';
+import { getUser, updateUser, changePassword } from '../controllers/userController.js';
 
 const userRoute = express.Router();
 
 // All routes should check for a valid token
 userRoute.use(verifyToken);
 
-// GET USER route
-userRoute.get('/v1/user', getUserInfo);
+// Get current user info (available to all users)
+userRoute.get('/v1/users', getUser);
 
-// CREATE USER route (only accessible to admin users)
-userRoute.post('/v1/addUser', verifyToken, authorize(['Admin']), createUser);
+// Update user info (available to all users)
+userRoute.put('/v1/users', updateUser);
+
+// Add route for changing password (available to all users)
+userRoute.put('/v1/users/change-password', changePassword);
 
 export default userRoute;

@@ -25,15 +25,15 @@ DROP TABLE IF EXISTS `submission`;
 CREATE TABLE `submission` (
   `submissionID` int NOT NULL AUTO_INCREMENT,
   `assignmentID` int NOT NULL,
-  `userID` int NOT NULL,
+  `userID` int DEFAULT NULL,
   `submissionVidPath` varchar(255) NOT NULL,
   `uploadedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`submissionID`),
   KEY `assignmentID_idx` (`assignmentID`),
   KEY `userID_idx` (`userID`),
-  CONSTRAINT `assignmentID` FOREIGN KEY (`assignmentID`) REFERENCES `assignment` (`assignmentID`),
-  CONSTRAINT `assignuserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `subAssignID` FOREIGN KEY (`assignmentID`) REFERENCES `assignment` (`assignmentID`) ON DELETE CASCADE,
+  CONSTRAINT `subuserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-18 10:59:45
+-- Dump completed on 2024-09-24 10:07:40

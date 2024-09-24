@@ -74,7 +74,7 @@ const adminLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+    new winston.transports.File({ filename: path.join(logDirectory, 'admin.log') })
   ]
 });
 
@@ -83,7 +83,7 @@ const moduleLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+    new winston.transports.File({ filename: path.join(logDirectory, 'module.log') })
   ]
 });
 
@@ -92,7 +92,7 @@ const userModuleLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+    new winston.transports.File({ filename: path.join(logDirectory, 'userModule.log') })
   ]
 });
 

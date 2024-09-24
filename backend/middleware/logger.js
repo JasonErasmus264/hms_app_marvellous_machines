@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { performance } from 'perf_hooks';
+import os from 'os';
 
 // Get the current directory name
 const __filename = fileURLToPath(import.meta.url);
@@ -22,15 +23,12 @@ const logFormat = winston.format.combine(
   winston.format.errors({ stack: true }), // Include stack trace for errors
   winston.format.prettyPrint(), 
 );
+
+// Performance Format
 const performanceLogFormat = winston.format.combine(
   winston.format.timestamp(),
-  winston.format.prettyPrint(({ timestamp, level, message, ...meta }) => {
-    return JSON.stringify({
-      timestamp,
-      level,
-      ...message,   
-      ...meta       
-    });
+  winston.format.printf(({ timestamp, level, message }) => {
+    return `Time Stamp: ${timestamp}\nLevel: ${level}\n${JSON.stringify(message, null, 2)}`;
   })
 );
 
@@ -117,18 +115,30 @@ const performanceLogger = winston.createLogger({
   ]
 });
 
-// Log performace
+// Log performance
 export const logPerformance = (req, res, next) => {
-  const start = performance.now();  // More precise timing
+  const start = performance.now();  // Start timing
 
   res.on('finish', () => {
-    const duration = (performance.now() - start).toFixed(2);  // Convert to milliseconds with two decimals
+    const duration = (performance.now() - start).toFixed(2);  
+    const memoryUsage = process.memoryUsage();
+    const cpuUsage = os.loadavg(); 
 
     performanceLogger.info({
       method: req.method,
       url: req.originalUrl,
       statusCode: res.statusCode,
-      responseTime: `${duration}ms`
+      responseTime: `${duration}ms`,
+      memory: {
+        totalMemory: `${(os.totalmem() / 1024 / 1024).toFixed(2)} MB`,  // Total memory in MB
+        freeMemory: `${(os.freemem() / 1024 / 1024).toFixed(2)} MB`,    // Free memory in MB
+        memoryUsed: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`  // Memory used by process in MB
+      },
+      cpu: {
+        loadAvg1m: cpuUsage[0].toFixed(2),  // CPU load average for the last 1 minute
+        loadAvg5m: cpuUsage[1].toFixed(2),  // CPU load average for the last 5 minutes
+        loadAvg15m: cpuUsage[2].toFixed(2)  // CPU load average for the last 15 minutes
+      }
     });
   });
 

@@ -113,7 +113,7 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
                     child: FutureBuilder<ApiCallResponse>(
-                      future: AssignmentGroup.getModuleCall.call(
+                      future: ModuleGroup.getModuleCall.call(
                         token: currentAuthenticationToken,
                       ),
                       builder: (context, snapshot) {
@@ -135,12 +135,11 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                         return FlutterFlowDropDown<int>(
                           controller: _model.dropDownValueController ??=
                               FormFieldController<int>(null),
-                          options: List<int>.from(
-                              AssignmentGroup.getModuleCall.moduleID(
+                          options:
+                              List<int>.from(ModuleGroup.getModuleCall.moduleID(
                             dropDownGetModuleResponse.jsonBody,
                           )!),
-                          optionLabels:
-                              AssignmentGroup.getModuleCall.moduleCode(
+                          optionLabels: ModuleGroup.getModuleCall.moduleCode(
                             dropDownGetModuleResponse.jsonBody,
                           )!,
                           onChanged: (val) =>

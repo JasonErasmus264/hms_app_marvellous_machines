@@ -11,3 +11,4 @@ const pool = mysql.createPool({
 }).promise()
 
 export default pool;
+

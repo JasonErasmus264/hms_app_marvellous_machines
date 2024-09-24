@@ -6,15 +6,16 @@ import axios from 'axios';  // For Nextcloud upload
 import pool from '../db.js';  // MySQL connection pool
 import 'dotenv/config';  // Load environment variables
 
+
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  // 50MB in bytes
 
-// Set the path to the FFmpeg binary
-ffmpeg.setFfmpegPath('/usr/bin/ffmpeg');
 
-// Ensure 'uploads' directory exists
+
+// Ensure 'uploads' directories exist
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
+
 
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
@@ -28,9 +29,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Set the path to ffmpeg explicitly otherwise there is trouble finding it
-const ffmpegPath = '/usr/bin/ffmpeg';
-ffmpeg.setFfmpegPath(ffmpegPath);
 
 // Video compression function
 const compressVideo = (filePath, outputFilePath, maxFileSize) => {
@@ -100,27 +98,99 @@ const uploadToNextcloud = async (filePath) => {
 
 
 // Store video metadata in MySQL
-const storeMetadata = async (fileName, fileSize, nextcloudUrl) => {
-  const query = 'INSERT INTO videos (file_name, file_size, nextcloud_url) VALUES (?, ?, ?)';
-  await pool.execute(query, [fileName, fileSize, nextcloudUrl]);
+const storeMetadata = async (req, res, assignmentID, submissionVidPath ) => {
+  try{
+    const { userID } = req.user;
+
+    const query = 'INSERT INTO submission (assignmentID, userID, submissionVidPath) VALUES (?, ?, ?)';
+
+    await pool.execute(query, [assignmentID, userID, submissionVidPath]);
+  } catch (error) {
+    console.error('Error during metadata storing:', error);
+    if (!res.headersSent) { return res.status(500).json({ message: 'Failed to store metadata', details: error.message }); }
+  }
+}
+
+/* const storeMetadata = async (assignmentID, submissionVidPath) => {
+  const query = `
+    UPDATE submission 
+    SET submissionVidPath = ? 
+    WHERE assignmentID = ?`;
+  
+  const [result] = await pool.execute(query, [submissionVidPath, assignmentID]);
+
+  // Optionally, you can check if any rows were affected
+  if (result.affectedRows === 0) {
+    throw new Error('No rows were updated. Check if the assignmentID exist.');
+  }
+}; */
+
+
+// Retrieve video directly from Nextcloud by URL and return public video link
+const getVideoUrl = async (nextcloudUrl, videoId) => {
+  const nextcloudFolder = '/HMS-Video-Uploads';
+  const videoPath = `${nextcloudFolder}/${videoId}`;
+
+  const shareUrl = `https://mia.nl.tab.digital/ocs/v2.php/apps/files_sharing/api/v1/shares`;
+
+  try {
+    console.log('Requesting public link for:', videoPath); // Debugging log
+
+    const response = await axios.post(shareUrl, null, {
+      auth: {
+        username: process.env.NEXTCLOUD_USERNAME,
+        password: process.env.NEXTCLOUD_PASSWORD,
+      },
+      headers: {
+        'OCS-APIRequest': true,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        path: videoPath,  // Use full Nextcloud URL
+        shareType: 3,    // Public link share type
+        permissions: 1,   // Read-only permissions
+      },
+    });
+    console.log('Response from Nextcloud:', response.data); // Debugging log
+
+    if (response.data && response.data.ocs && response.data.ocs.data && response.data.ocs.data.url) {
+      const publicLink = response.data.ocs.data.url;
+      return `${publicLink}/download/${videoId}`;  // Return the public link directly
+    } else {
+      return res.status(500).json({ error: 'Failed to generate public link' });
+    }
+  } catch (error) {
+    console.error('Error creating public link:', error); // Log the error details
+    throw new Error(`Failed to create public link: ${error.message}`);
+  }
 };
+
+
 
 // Main function to handle video upload and compression
 export const uploadVideo = (req, res) => {
   upload.single('video')(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
-      return res.status(500).json({ error: 'File upload error', details: err.message });
+      return res.status(500).json({ message: 'File upload error', details: err.message });
     } else if (err) {
-      return res.status(500).json({ error: 'Unexpected error during file upload', details: err.message });
+      return res.status(500).json({ message: 'Unexpected error during file upload', details: err.message });
     }
 
     if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    // Extract assignmentID from the request body
+    const { assignmentID } = req.body;
+
+    if (!assignmentID) {
+      return res.status(400).json({ message: 'Assignment ID is required' });
     }
 
     const filePath = req.file.path;
     const fileSize = req.file.size;
     let finalFilePath = filePath;
+    let videoId;
 
     try {
       // If the file exceeds the maximum allowed size, compress it
@@ -132,23 +202,27 @@ export const uploadVideo = (req, res) => {
         fs.unlinkSync(filePath);
       }
 
-      // Upload the (compressed or original) video to Nextcloud
+      // Upload the (compressed or original) video to Nextcloud and get link returned
       const nextcloudUrl = await uploadToNextcloud(finalFilePath);
-      const finalFileName = path.basename(finalFilePath);
 
-      // Store video metadata in the database
-      await storeMetadata(finalFileName, fs.statSync(finalFilePath).size, nextcloudUrl);
+      videoId = path.basename(nextcloudUrl); // Get the videoId from the nextcloudUrl
+
+      const publicLink = await getVideoUrl(nextcloudUrl, videoId);
+
+      // Store video metadata in the database, including assignmentID
+      await storeMetadata(req, res, assignmentID, publicLink);
 
       // Delete the local file after uploading to Nextcloud
       fs.unlinkSync(finalFilePath);
 
-      res.status(200).json({ message: 'File uploaded successfully', nextcloudUrl });
+      res.status(200).json({ message: 'File uploaded successfully', publicLink });
     } catch (error) {
       console.error('Error during video upload:', error);
-      res.status(500).json({ error: 'Failed to upload video', details: error.message });
+      res.status(500).json({ message: 'Failed to upload video', details: error.message });
     }
   });
 };
+
 
 
 // Retrieve video metadata from MySQL
@@ -156,7 +230,7 @@ export const uploadVideo = (req, res) => {
   const videoId = req.params.id;
 
   try {
-    const query = 'SELECT file_name, nextcloud_url FROM videos WHERE id = ?';
+    const query = 'SELECT fileName, submissionVidPath FROM submission WHERE assignmentID = ?';
     const [rows] = await pool.execute(query, [videoId]);
 
     if (rows.length === 0) {
@@ -166,8 +240,8 @@ export const uploadVideo = (req, res) => {
     const videoData = rows[0];
 
     res.status(200).json({
-      fileName: videoData.file_name,
-      nextcloudUrl: videoData.nextcloud_url,
+      fileName: videoData.fileName,
+      nextcloudUrl: videoData.submissionVidPath,
     });
   } catch (error) {
     console.error('Error retrieving video data:', error);
@@ -175,35 +249,46 @@ export const uploadVideo = (req, res) => {
   }
 }; */
 
+export const getPublicUrl = async (req, res) => {
+  const videoId = req.params.id;  // Retrieve video ID from URL
+  const nextcloudFolder = '/HMS-Video-Uploads';  // Declare the variable here
+  const videoPath = `${nextcloudFolder}/${videoId}`;  // Use the declared variable
 
-
-// Route to retrieve video directly from Nextcloud by ID
-export const getVideoMetadata = async (req, res) => {
-  const videoId = req.params.id;
-  const nextcloudFolder = '/HMS-Video-Uploads';  
-  const videoUrl = `${process.env.NEXTCLOUD_URL}${nextcloudFolder}/${videoId}`;  
+  const shareUrl = 'https://mia.nl.tab.digital/ocs/v2.php/apps/files_sharing/api/v1/shares';
 
   try {
-    const response = await axios.get(videoUrl, {
-      responseType: 'stream',
+    console.log('Requesting public link for:', videoPath); // Debugging log
+
+    const response = await axios.post(shareUrl, null, {
       auth: {
         username: process.env.NEXTCLOUD_USERNAME,
         password: process.env.NEXTCLOUD_PASSWORD,
       },
+      headers: {
+        'OCS-APIRequest': true,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      params: {
+        path: videoPath,  // Use the full video path
+        shareType: 3,    // Public link share type
+        permissions: 1,   // Read-only permissions
+      },
     });
 
-    if (response.status === 200) {
-      res.setHeader('Content-Type', 'video/mp4');
-      res.setHeader('Content-Disposition', `inline; filename=${videoId}`);
-      response.data.pipe(res);
+    console.log('Response from Nextcloud:', response.data); // Debugging log
+
+    if (response.data && response.data.ocs && response.data.ocs.data && response.data.ocs.data.url) {
+      const publicLink = response.data.ocs.data.url;
+
+      // Construct the final link
+      const fullLink = `${publicLink}/download/${videoId}`;
+
+      res.status(200).json({ publicLink: fullLink });
     } else {
-      res.status(404).json({ error: 'Video not found on Nextcloud' });
+      res.status(500).json({ error: 'Failed to generate public link' });
     }
   } catch (error) {
-    if (error.response && error.response.status === 404) {
-      res.status(404).json({ error: 'Video not found on Nextcloud' });
-    } else {
-      res.status(500).json({ error: 'Failed to retrieve video from Nextcloud', details: error.message });
-    }
+    console.error('Error creating public link:', error); // Log the error details
+    res.status(500).json({ error: 'Failed to create public link', details: error.message });
   }
 };

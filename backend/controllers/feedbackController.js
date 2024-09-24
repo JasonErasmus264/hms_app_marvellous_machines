@@ -2,6 +2,107 @@ import pool from '../db.js';  // Database connection
 import XLSX from 'xlsx';
 
 
+
+
+// Add feedback
+export const addFeedback = async (req, res) => {
+  const { submissionID, userID, comment, mark } = req.body;
+
+  // Ensure all required fields are provided
+  if (!submissionID || !comment || mark === undefined) {
+    return res.status(400).json({ message: 'Submission ID, comment, and mark are required' });
+  }
+
+  try {
+    const result = await pool.execute(
+      'INSERT INTO feedback (submissionID, userID, comment, mark) VALUES (?, ?, ?, ?)',
+      [submissionID, userID || null, comment, mark]
+    );
+
+    res.status(201).json({ message: 'Feedback added successfully', feedbackID: result[0].insertId });
+  } catch (error) {
+    console.error('Error adding feedback:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Update feedback
+export const updateFeedback = async (req, res) => {
+  const { feedbackID } = req.params;
+  const { comment, mark } = req.body;
+
+  // Ensure both fields are provided
+  if (!comment || mark === undefined) {
+    return res.status(400).json({ message: 'Comment and mark are required' });
+  }
+
+  try {
+    const [result] = await pool.execute(
+      'UPDATE feedback SET comment = ?, mark = ? WHERE feedbackID = ?',
+      [comment, mark, feedbackID]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    res.status(200).json({ message: 'Feedback updated successfully' });
+  } catch (error) {
+    console.error('Error updating feedback:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Delete feedback
+export const deleteFeedback = async (req, res) => {
+  const { feedbackID } = req.params;
+
+  try {
+    const [result] = await pool.execute(
+      'DELETE FROM feedback WHERE feedbackID = ?',
+      [feedbackID]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    res.status(200).json({ message: 'Feedback deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting feedback:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Get student marks based on moduleID and student userID
 export const getStudentMarksByUserAndModule = async (req, res) => {
   const { moduleID, userID } = req.params;  // Extract moduleID (for the module) and userID (for the student)
@@ -131,3 +232,87 @@ export const downloadMarks = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+import  parse  from 'json2csv';  
+//import { feedbackLogger } from '../logger.js'; // import feedback logger
+
+// Function to download marks as XLSX
+export const downloadMarksXLSX = async (req, res) => { 
+  const { userID } = req.user; 
+  try {
+    const [rows] = await pool.query(
+      `SELECT 
+          m.moduleName AS ModuleName,
+          a.assignName AS AssignmentName,
+          f.comment AS FeedbackComment,
+          f.mark AS Mark,
+          a.assignTotalMarks AS TotalMarks
+      FROM 
+          submission s
+      JOIN 
+          feedback f ON s.submissionID = f.submissionID
+      JOIN 
+          assignment a ON s.assignmentID = a.assignmentID
+      JOIN
+          module m ON a.moduleID = m.moduleID
+      WHERE 
+          s.userID = ?;`, [userID] 
+    );
+
+    const heading = [['Module', 'Assignment', 'Comment', 'Mark', 'Total Marks']];
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.sheet_add_aoa(worksheet, heading);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Student Marks');
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    // log successful data retrieval and CSV generation (information log)
+    feedbackLogger.info(`Successfully generated Excel file for user: ${userID}`);
+    res.attachment('student_marks.xlsx');
+    res.send(buffer);
+  } catch (error) {
+    // Log when no data is found (error log)
+    feedbackLogger.error(`Error downloading XLSX for user: ${userID}: ${error.message}`, { error });
+    res.status(500).send('Error downloading Excel file'); 
+  } 
+};
+
+// Function to download marks as CSV
+export const downloadMarksCSV = async (req, res) => {
+  const { userID } = req.user; 
+  try {
+    const [rows] = await pool.query(
+      `SELECT 
+          m.moduleName AS ModuleName,
+          a.assignName AS AssignmentName,
+          f.comment AS FeedbackComment,
+          f.mark AS Mark,
+          a.assignTotalMarks AS TotalMarks
+      FROM 
+          submission s
+      JOIN 
+          feedback f ON s.submissionID = f.submissionID
+      JOIN 
+          assignment a ON s.assignmentID = a.assignmentID
+      JOIN
+          module m ON a.moduleID = m.moduleID
+      WHERE 
+          s.userID = ?;`, [userID]  
+    );
+   
+    // log successful data retrieval and CSV generation (information log)
+    feedbackLogger.info(`Successfully generated CSV for user: ${userID}`);
+    const csv = parse(rows);
+    res.attachment('student_marks.csv');
+    res.send(csv);
+  } catch (error) {
+    // Log when no data is found (error log)
+    feedbackLogger.error(`Error downloading CSV for user: ${userID}: ${error.message}`, { error });
+    res.status(500).send('Error downloading CSV file'); 
+  }
+};

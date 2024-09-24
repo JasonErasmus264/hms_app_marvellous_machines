@@ -1,16 +1,23 @@
 import express from 'express';
 import verifyToken from '../middleware/verifyToken.js';
-import { getModules, getAssignmentsByModule } from '../controllers/assignmentController.js';
+import { authorizeRoles } from '../middleware/authorization.js'; // Import the authorization middleware
+import { addAssignment, getAssignmentsByModule, updateAssignment, deleteAssignment } from '../controllers/assignmentController.js';
 
 const assignmentRoute = express.Router();
 
-// All routes should check for a valid token
+// All routes require token verification and Admin and Lecturer authorization
 assignmentRoute.use(verifyToken);
 
-// GET MODULES FOR DROPDOWN route
-assignmentRoute.get('/v1/module', getModules); // Use the getModules function from the controller
+// Get assignments by moduleID (all authenticated users can access)
+assignmentRoute.get('/v1/assignments/:moduleID', getAssignmentsByModule);
 
-// GET ASSIGNMENTS BASED ON MODULE ID route
-assignmentRoute.get('/v1/assignments/:moduleID', getAssignmentsByModule); // Use the getAssignmentsByModule function from the controller
+// Add an assignment to a module (Only Admin and Lecturer can access)
+assignmentRoute.post('/v1/assignments/:moduleID', authorizeRoles('Admin', 'Lecturer'), addAssignment);
+
+// Update an assignment by assignmentID (Only Admin and Lecturer can access)
+assignmentRoute.put('/v1/assignments/:assignmentID', authorizeRoles('Admin', 'Lecturer'), updateAssignment);
+
+// Delete an assignment by assignmentID (Only Admin and Lecturer can access)
+assignmentRoute.delete('/v1/assignments/:assignmentID', authorizeRoles('Admin', 'Lecturer'), deleteAssignment);
 
 export default assignmentRoute;

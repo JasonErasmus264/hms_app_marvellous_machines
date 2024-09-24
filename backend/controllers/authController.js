@@ -1,21 +1,49 @@
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import rateLimit from 'express-rate-limit';
 import nodemailer from 'nodemailer';
 import pool from '../db.js';
 
-// Login rate limiter
-export const loginLimiter = rateLimit({
-  windowMs: process.env.LOGIN_RATE_LIMIT_WINDOW * 60 * 1000,
-  max: process.env.LOGIN_RATE_LIMIT_MAX,
-  handler: (req, res) => {
-    res.status(429).json({ message: 'Too many login attempts from this IP, please try again later.' });
-  },
-});
+// Failed login attempts tracking (in-memory, per IP)
+const failedLoginAttempts = new Map();
+
+// Time window (in milliseconds) for login attempt tracking
+const LOGIN_ATTEMPT_WINDOW = process.env.LOGIN_RATE_LIMIT_WINDOW * 60 * 1000;
+const MAX_ATTEMPTS = process.env.LOGIN_RATE_LIMIT_MAX || 5; // Default to 5 if not set
+
+// Function to check and track failed attempts
+const trackFailedAttempt = (ip) => {
+  const currentTime = Date.now();
+  let attempts = failedLoginAttempts.get(ip) || { count: 0, lastAttemptTime: currentTime };
+
+  // If the window has passed, reset the counter
+  if (currentTime - attempts.lastAttemptTime > LOGIN_ATTEMPT_WINDOW) {
+    attempts = { count: 1, lastAttemptTime: currentTime };
+  } else {
+    attempts.count += 1;
+  }
+
+  failedLoginAttempts.set(ip, attempts);
+  return attempts.count >= MAX_ATTEMPTS;
+};
+
+// Function to reset failed attempts on successful login
+const resetFailedAttempts = (ip) => {
+  failedLoginAttempts.delete(ip);
+};
 
 // Login
 export const login = async (req, res) => {
   const { username, password } = req.body;
+  const userIP = req.ip; // Get user's IP address
+
+  // Check if the IP is already blocked due to too many attempts
+  const isBlocked = trackFailedAttempt(userIP);
+
+  if (isBlocked) {
+    return res.status(429).json({
+      message: 'Too many login attempts. Please try again later.',
+    });
+  }
 
   try {
     const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
@@ -30,6 +58,9 @@ export const login = async (req, res) => {
     if (!match) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    // Reset failed attempts on successful login
+    resetFailedAttempts(userIP);
 
     // Generate Access Token with userID and userType
     const accessToken = jwt.sign(
@@ -57,7 +88,8 @@ export const login = async (req, res) => {
     });
 
   } catch (error) {
-    
+    // Track failed login attempts on error
+    trackFailedAttempt(userIP);
     res.status(500).json({ message: 'An unexpected error occurred during login' });
   }
 };

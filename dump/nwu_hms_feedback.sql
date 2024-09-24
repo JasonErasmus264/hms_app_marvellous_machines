@@ -25,16 +25,16 @@ DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE `feedback` (
   `feedbackID` int NOT NULL AUTO_INCREMENT,
   `submissionID` int NOT NULL,
-  `userID` int NOT NULL,
+  `userID` int DEFAULT NULL,
   `comment` varchar(1000) DEFAULT NULL,
   `mark` decimal(5,2) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`feedbackID`),
   KEY `feedSubmissionID_idx` (`submissionID`),
   KEY `feedUserID_idx` (`userID`),
-  CONSTRAINT `feedSubmissionID` FOREIGN KEY (`submissionID`) REFERENCES `submission` (`submissionID`),
-  CONSTRAINT `feedUserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `feedSubmissionID` FOREIGN KEY (`submissionID`) REFERENCES `submission` (`submissionID`) ON DELETE CASCADE,
+  CONSTRAINT `feedUserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-18 10:59:45
+-- Dump completed on 2024-09-24 10:07:41

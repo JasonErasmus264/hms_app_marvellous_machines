@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `assignment`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `assignment` (
   `assignmentID` int NOT NULL AUTO_INCREMENT,
-  `userID` int NOT NULL,
+  `userID` int DEFAULT NULL,
   `moduleID` int NOT NULL,
   `assignName` varchar(45) NOT NULL,
   `assignDesc` varchar(1000) NOT NULL,
@@ -36,9 +36,9 @@ CREATE TABLE `assignment` (
   PRIMARY KEY (`assignmentID`),
   KEY `userID_idx` (`userID`),
   KEY `moduleID_idx` (`moduleID`),
-  CONSTRAINT `moduleID` FOREIGN KEY (`moduleID`) REFERENCES `module` (`moduleID`),
-  CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `assignModuleID` FOREIGN KEY (`moduleID`) REFERENCES `module` (`moduleID`) ON DELETE CASCADE,
+  CONSTRAINT `assignUserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `assignment` (
 
 LOCK TABLES `assignment` WRITE;
 /*!40000 ALTER TABLE `assignment` DISABLE KEYS */;
-INSERT INTO `assignment` VALUES (1,3,1,'Pushups','Record yourself doing pushups','2024-09-01 12:00:00','2024-11-01 23:00:00',100.00,'2024-09-01 19:40:26','2024-09-09 20:46:31'),(2,3,1,'Situps','Record yourself doing situps','2024-11-01 08:00:00','2024-11-08 23:00:00',30.00,'2024-09-02 12:58:23','2024-09-09 20:46:31');
+INSERT INTO `assignment` VALUES (1,3,1,'Pushups','Record yourself doing pushups','2024-09-01 12:00:00','2024-11-01 23:00:00',100.00,'2024-09-01 19:40:26','2024-09-09 20:46:31'),(2,3,1,'Situps','Record yourself doing situps','2024-11-01 08:00:00','2024-11-08 23:00:00',30.00,'2024-09-02 12:58:23','2024-09-09 20:46:31'),(7,1,1,'j','j\nj\nj\nj\nj','2024-09-22 19:11:00','2024-09-30 19:11:00',4.00,'2024-09-22 19:11:55','2024-09-22 19:11:55');
 /*!40000 ALTER TABLE `assignment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -60,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-18 10:59:45
+-- Dump completed on 2024-09-24 10:07:40

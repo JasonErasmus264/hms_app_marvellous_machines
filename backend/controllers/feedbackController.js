@@ -4,6 +4,75 @@ import XLSX from 'xlsx';
 
 
 
+// Add feedback
+export const addFeedback = async (req, res) => {
+  const { submissionID, userID, comment, mark } = req.body;
+
+  // Ensure all required fields are provided
+  if (!submissionID || !comment || mark === undefined) {
+    return res.status(400).json({ message: 'Submission ID, comment, and mark are required' });
+  }
+
+  try {
+    const result = await pool.execute(
+      'INSERT INTO feedback (submissionID, userID, comment, mark) VALUES (?, ?, ?, ?)',
+      [submissionID, userID || null, comment, mark]
+    );
+
+    res.status(201).json({ message: 'Feedback added successfully', feedbackID: result[0].insertId });
+  } catch (error) {
+    console.error('Error adding feedback:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Update feedback
+export const updateFeedback = async (req, res) => {
+  const { feedbackID } = req.params;
+  const { comment, mark } = req.body;
+
+  // Ensure both fields are provided
+  if (!comment || mark === undefined) {
+    return res.status(400).json({ message: 'Comment and mark are required' });
+  }
+
+  try {
+    const [result] = await pool.execute(
+      'UPDATE feedback SET comment = ?, mark = ? WHERE feedbackID = ?',
+      [comment, mark, feedbackID]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    res.status(200).json({ message: 'Feedback updated successfully' });
+  } catch (error) {
+    console.error('Error updating feedback:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Delete feedback
+export const deleteFeedback = async (req, res) => {
+  const { feedbackID } = req.params;
+
+  try {
+    const [result] = await pool.execute(
+      'DELETE FROM feedback WHERE feedbackID = ?',
+      [feedbackID]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    res.status(200).json({ message: 'Feedback deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting feedback:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 

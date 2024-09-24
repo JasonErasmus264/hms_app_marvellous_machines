@@ -38,6 +38,57 @@ export const getModules = async (req, res) => {
 
 
 
+// Add a new module
+export const addModule = async (req, res) => {
+  const { moduleName, moduleCode } = req.body;
+
+  if (!moduleName || !moduleCode) {
+    return res.status(400).json({ message: 'Module name and code are required' });
+  }
+
+  try {
+    const result = await pool.execute(
+      'INSERT INTO module (moduleName, moduleCode) VALUES (?, ?)',
+      [moduleName, moduleCode]
+    );
+
+    res.status(201).json({ message: 'Module added successfully' });
+  } catch (error) {
+    console.error('Error adding module:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
+// Update a module
+export const updateModule = async (req, res) => {
+  const { moduleID } = req.params;
+  const { moduleName, moduleCode } = req.body;
+
+  if (!moduleName || !moduleCode) {
+    return res.status(400).json({ message: 'Module name and code are required' });
+  }
+
+  try {
+    const [result] = await pool.execute(
+      'UPDATE module SET moduleName = ?, moduleCode = ? WHERE moduleID = ?',
+      [moduleName, moduleCode, moduleID]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Module not found' });
+    }
+
+    res.status(200).json({ message: 'Module updated successfully' });
+  } catch (error) {
+    console.error('Error updating module:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 
@@ -45,13 +96,7 @@ export const getModules = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
+// Delete a module 
 export const deleteModule = async (req, res) => {
     const { moduleID } = req.params;
   
@@ -63,7 +108,7 @@ export const deleteModule = async (req, res) => {
         return res.status(404).json({ message: 'Module not found' });
       }
   
-      res.status(200).json({ message: 'Module deleted successfully, along with related assignments, submissions, and feedback.' });
+      res.status(200).json({ message: 'Module deleted successfully, along with any related assignments, submissions, and feedback.' });
     } catch (error) {
       console.error('Error deleting module:', error.message);
       res.status(500).json({ message: 'Internal server error' });

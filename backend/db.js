@@ -7,7 +7,8 @@ const pool = mysql.createPool({
     user: process.env.MYSQL_USER || 'root',
     password: process.env.MYSQL_PASSWORD || 'hms',
     database: process.env.MYSQL_DATABASE || 'nwu_hms',
-    port: process.env.MYSQL_PORT || 3306
+    port: process.env.MYSQL_PORT || 3306,
+    waitForConnections: true,
 }).promise()
 
 export default pool;

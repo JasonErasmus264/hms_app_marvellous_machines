@@ -69,5 +69,33 @@ const userLogger = winston.createLogger({
   ]
 });
 
+// admin logger
+const adminLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,
+  transports: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+  ]
+});
+
+// module logger
+const moduleLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,
+  transports: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+  ]
+});
+
+// user module logger
+const userModuleLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,
+  transports: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+  ]
+});
+
+
 // export loggers
-export { authLogger, userLogger, assignmentLogger, feedbackLogger, submissionLogger };
+export { authLogger, userLogger, assignmentLogger, feedbackLogger, submissionLogger, adminLogger, moduleLogger, userModuleLogger};

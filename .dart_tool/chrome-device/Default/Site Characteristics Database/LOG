@@ -1,4 +1,40 @@
-2024/09/20-17:57:18.686 1764 Reusing MANIFEST C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.8cbb8cb1\flutter_tools_chrome_device.21a1bc1e\Default\Site Characteristics Database/MANIFEST-000001
-2024/09/20-17:57:18.691 1764 Recovering log #6
-2024/09/20-17:57:18.703 1764 Reusing old log C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.8cbb8cb1\flutter_tools_chrome_device.21a1bc1e\Default\Site Characteristics Database/000006.log 
-2024/09/20-17:57:18.785 1764 Delete type=0 #3
+2024/09/24-12:42:25.922 361c Reusing MANIFEST C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.cac01d87\flutter_tools_chrome_device.5f8be30e\Default\Site Characteristics Database/MANIFEST-000001
+2024/09/24-12:42:25.939 361c Recovering log #3
+2024/09/24-12:42:25.939 361c Level-0 table #37: started
+2024/09/24-12:42:26.125 361c Level-0 table #37: 191 bytes OK
+2024/09/24-12:42:26.126 361c Recovering log #6
+2024/09/24-12:42:26.128 361c Level-0 table #38: started
+2024/09/24-12:42:26.413 361c Level-0 table #38: 190 bytes OK
+2024/09/24-12:42:26.414 361c Recovering log #10
+2024/09/24-12:42:26.415 361c Level-0 table #39: started
+2024/09/24-12:42:26.454 361c Level-0 table #39: 296 bytes OK
+2024/09/24-12:42:26.454 361c Recovering log #19
+2024/09/24-12:42:26.455 361c Level-0 table #40: started
+2024/09/24-12:42:26.466 361c Level-0 table #40: 162 bytes OK
+2024/09/24-12:42:26.467 361c Recovering log #26
+2024/09/24-12:42:26.468 361c Level-0 table #41: started
+2024/09/24-12:42:26.601 361c Level-0 table #41: 162 bytes OK
+2024/09/24-12:42:26.602 361c Recovering log #34
+2024/09/24-12:42:26.603 361c Reusing old log C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.cac01d87\flutter_tools_chrome_device.5f8be30e\Default\Site Characteristics Database/000034.log 
+2024/09/24-12:42:26.612 361c Delete type=0 #3
+2024/09/24-12:42:26.612 361c Delete type=2 #4
+2024/09/24-12:42:26.612 361c Delete type=2 #6
+2024/09/24-12:42:26.612 361c Delete type=0 #6
+2024/09/24-12:42:26.612 361c Delete type=0 #10
+2024/09/24-12:42:26.613 361c Delete type=2 #11
+2024/09/24-12:42:26.613 361c Delete type=2 #13
+2024/09/24-12:42:26.613 361c Delete type=2 #14
+2024/09/24-12:42:26.613 361c Delete type=0 #19
+2024/09/24-12:42:26.613 361c Delete type=2 #20
+2024/09/24-12:42:26.613 361c Delete type=0 #26
+2024/09/24-12:42:26.613 361c Delete type=2 #27
+2024/09/24-12:42:26.618 e2c Compacting 5@0 + 1@1 files
+2024/09/24-12:42:26.629 e2c Generated table #42@0: 2 keys, 191 bytes
+2024/09/24-12:42:26.630 e2c Compacted 5@0 + 1@1 files => 191 bytes
+2024/09/24-12:42:26.633 e2c compacted to: files[ 0 1 0 0 0 0 0 ]
+2024/09/24-12:42:26.633 e2c Delete type=2 #35
+2024/09/24-12:42:26.634 e2c Delete type=2 #37
+2024/09/24-12:42:26.634 e2c Delete type=2 #38
+2024/09/24-12:42:26.634 e2c Delete type=2 #39
+2024/09/24-12:42:26.634 e2c Delete type=2 #40
+2024/09/24-12:42:26.634 e2c Delete type=2 #41

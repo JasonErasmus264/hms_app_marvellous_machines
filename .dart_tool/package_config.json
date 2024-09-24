@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "args",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/args-2.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "async",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
@@ -44,6 +50,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "chewie",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/chewie-1.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "clock",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1",
       "packageUri": "lib/",
@@ -84,6 +96,12 @@
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/data_table_2-2.5.10",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/dbus-0.7.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "dropdown_button2",
@@ -404,6 +422,18 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "package_info_plus",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/package_info_plus-8.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/package_info_plus_platform_interface-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "page_transition",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/page_transition-2.1.0",
       "packageUri": "lib/",
@@ -615,19 +645,19 @@
     },
     {
       "name": "url_launcher",
-      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.2.5",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.0",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "url_launcher_android",
-      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.0",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.4",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.4"
     },
     {
       "name": "url_launcher_ios",
-      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.2.5",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -710,6 +740,18 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "wakelock_plus",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/wakelock_plus-1.2.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "wakelock_plus_platform_interface",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/wakelock_plus_platform_interface-1.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "web",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1",
       "packageUri": "lib/",
@@ -728,13 +770,19 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "nwu_hms",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-09-20T14:19:53.290182Z",
+  "generated": "2024-09-24T10:26:16.262409Z",
   "generator": "pub",
   "generatorVersion": "3.4.4",
   "flutterRoot": "file:///C:/Users/Dale%20Blumrick/Desktop/NWU/Programs/flutter",

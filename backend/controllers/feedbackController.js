@@ -1,6 +1,6 @@
 import pool from '../db.js';  // Database connection
 import XLSX from 'xlsx';
-
+import { feedbackLogger } from '../middleware/logger.js'; // Import feedback logger
 
 
 
@@ -10,6 +10,8 @@ export const addFeedback = async (req, res) => {
 
   // Ensure all required fields are provided
   if (!submissionID || !comment || mark === undefined) {
+    // Log a warning if missing required fields (warning log)
+    feedbackLogger.warn('Missing required fields');
     return res.status(400).json({ message: 'Submission ID, comment, and mark are required' });
   }
 
@@ -19,9 +21,12 @@ export const addFeedback = async (req, res) => {
       [submissionID, userID || null, comment, mark]
     );
 
+    // Log success if feedback is added (information log)
+    feedbackLogger.info(`Feedback added: ${result[0].insertId} for submission ${submissionID}`);
     res.status(201).json({ message: 'Feedback added successfully', feedbackID: result[0].insertId });
   } catch (error) {
-    console.error('Error adding feedback:', error);
+    // Log error if adding feedback fails (error log)
+    feedbackLogger.error(`Error adding feedback for submission:${submissionID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -33,6 +38,8 @@ export const updateFeedback = async (req, res) => {
 
   // Ensure both fields are provided
   if (!comment || mark === undefined) {
+    // Log a warning if missing required fields (warning log)
+    feedbackLogger.warn(`Update Feedback: Missing required fields for feedbackID: ${feedbackID}`);
     return res.status(400).json({ message: 'Comment and mark are required' });
   }
 
@@ -43,12 +50,17 @@ export const updateFeedback = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
+      // Log no feedback found (information log)
+      feedbackLogger.info(`No feedback found for feedbackID: ${feedbackID}`);
       return res.status(404).json({ message: 'Feedback not found' });
     }
 
+    // Log success for updated feedback (information log)
+    feedbackLogger.info(`Feedback updated successfully for feedbackID: ${feedbackID}`);
     res.status(200).json({ message: 'Feedback updated successfully' });
   } catch (error) {
-    console.error('Error updating feedback:', error);
+    // Log error if updating feedback fails (error log)
+    feedbackLogger.error(`Error updating feedback: ${feedbackID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -64,12 +76,17 @@ export const deleteFeedback = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
+      // Log a warning if feedback not found (warning log)
+      feedbackLogger.warn(`Delete Feedback: Feedback not found for feedbackID: ${feedbackID}`);
       return res.status(404).json({ message: 'Feedback not found' });
     }
 
+    // Log success if feedback deleted (information log)
+    feedbackLogger.info(`Feedback deleted successfully for feedbackID: ${feedbackID}`);
     res.status(200).json({ message: 'Feedback deleted successfully' });
   } catch (error) {
-    console.error('Error deleting feedback:', error);
+    // Log error if deleting feedback fails (error log)
+    feedbackLogger.error(`Error deleting feedback: ${feedbackID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -129,6 +146,8 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
 
     // If no data is found
     if (rows.length === 0) {
+      // Log a warning if no marks found (warning log)
+      feedbackLogger.warn(`No marks found for moduleID: ${moduleID} and userID: ${userID}`);
       return res.status(404).json({ message: 'No marks found for the specified moduleID and userID' });
     }
 
@@ -142,11 +161,14 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
       };
     });
 
+    // Log success for fetched marks (information log)
+    feedbackLogger.info(`Successfully fetched marks for user: ${userID} in module: ${moduleID}`, { feedback });
     // Return the formatted data under the "feedback" key
     res.status(200).json({ feedback });
 
   } catch (error) {
-    console.error(error);
+    // Log error if fetching marks fails (error log)
+    feedbackLogger.error(`Error fetching marks for user: ${userID} in module ${moduleID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Error fetching marks', error });
   }
 };
@@ -204,6 +226,8 @@ export const downloadMarks = async (req, res) => {
 
     // Check if rows are returned
     if (rows.length === 0) {
+      // Log a warning if no data found (warning log)
+      feedbackLogger.warn(`No data found`);
       return res.status(404).send('No data found.');
     }
 
@@ -223,11 +247,14 @@ export const downloadMarks = async (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename=student_marks.xlsx');
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     
+    // Log success for downloading marks (information log)
+    feedbackLogger.info(`Successfully downloaded marks for user: ${userID}`)
     // Send the buffer as the response
     return res.send(buffer);
     
   } catch (error) {
-    console.error(error);
+    // Log error if downloading marks fails
+    feedbackLogger.error(`Error downloading marks: ${error.message}`, { error })
     res.status(500).send('Internal Server Error');
   }
 };
@@ -276,7 +303,7 @@ export const downloadMarksXLSX = async (req, res) => {
     res.attachment('student_marks.xlsx');
     res.send(buffer);
   } catch (error) {
-    // Log when no data is found (error log)
+    // Log error when no data is found (error log)
     feedbackLogger.error(`Error downloading XLSX for user: ${userID}: ${error.message}`, { error });
     res.status(500).send('Error downloading Excel file'); 
   } 
@@ -311,7 +338,7 @@ export const downloadMarksCSV = async (req, res) => {
     res.attachment('student_marks.csv');
     res.send(csv);
   } catch (error) {
-    // Log when no data is found (error log)
+    // Log error when no data is found (error log)
     feedbackLogger.error(`Error downloading CSV for user: ${userID}: ${error.message}`, { error });
     res.status(500).send('Error downloading CSV file'); 
   }

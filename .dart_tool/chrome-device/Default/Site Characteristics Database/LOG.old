@@ -1,0 +1,20 @@
+2024/09/23-16:52:02.866 56fc Log #3: 2 ops saved to Table #21 OK
+2024/09/23-16:52:02.873 56fc Archiving C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.5347b116\flutter_tools_chrome_device.de8b660a\Default\Site Characteristics Database/000003.log: OK
+2024/09/23-16:52:02.878 56fc Log #6: 2 ops saved to Table #22 OK
+2024/09/23-16:52:02.882 56fc Archiving C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.5347b116\flutter_tools_chrome_device.de8b660a\Default\Site Characteristics Database/000006.log: OK
+2024/09/23-16:52:02.886 56fc Log #10: 9 ops saved to Table #23 OK
+2024/09/23-16:52:02.891 56fc Archiving C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.5347b116\flutter_tools_chrome_device.de8b660a\Default\Site Characteristics Database/000010.log: OK
+2024/09/23-16:52:02.896 56fc Log #19: 1 ops saved to Table #24 OK
+2024/09/23-16:52:02.899 56fc Archiving C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.5347b116\flutter_tools_chrome_device.de8b660a\Default\Site Characteristics Database/000019.log: OK
+2024/09/23-16:52:02.899 56fc Table #4: 2 entries OK
+2024/09/23-16:52:02.900 56fc Table #6: 2 entries OK
+2024/09/23-16:52:02.900 56fc Table #11: 2 entries OK
+2024/09/23-16:52:02.902 56fc Table #13: 2 entries OK
+2024/09/23-16:52:02.902 56fc Table #14: 2 entries OK
+2024/09/23-16:52:02.903 56fc Table #20: 2 entries OK
+2024/09/23-16:52:02.903 56fc Table #21: 2 entries OK
+2024/09/23-16:52:02.903 56fc Table #22: 2 entries OK
+2024/09/23-16:52:02.904 56fc Table #23: 9 entries OK
+2024/09/23-16:52:02.904 56fc Table #24: 1 entries OK
+2024/09/23-16:52:02.908 56fc Archiving C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.5347b116\flutter_tools_chrome_device.de8b660a\Default\Site Characteristics Database/MANIFEST-000001: OK
+2024/09/23-16:52:02.918 56fc **** Repaired leveldb C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.5347b116\flutter_tools_chrome_device.de8b660a\Default\Site Characteristics Database; recovered 10 files; 1984 bytes. Some data may have been lost. ****

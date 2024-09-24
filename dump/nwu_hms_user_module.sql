@@ -27,8 +27,8 @@ CREATE TABLE `user_module` (
   `moduleID` int NOT NULL,
   PRIMARY KEY (`userID`,`moduleID`),
   KEY `umModuleID_idx` (`moduleID`),
-  CONSTRAINT `umModuleID` FOREIGN KEY (`moduleID`) REFERENCES `module` (`moduleID`),
-  CONSTRAINT `umUserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
+  CONSTRAINT `umModuleID` FOREIGN KEY (`moduleID`) REFERENCES `module` (`moduleID`) ON DELETE CASCADE,
+  CONSTRAINT `umUserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-18 10:59:45
+-- Dump completed on 2024-09-24 10:07:40

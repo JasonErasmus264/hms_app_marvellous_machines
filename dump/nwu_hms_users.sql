@@ -34,9 +34,12 @@ CREATE TABLE `users` (
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `refreshToken` varchar(255) DEFAULT NULL,
+  `resetCode` varchar(6) DEFAULT NULL,
+  `codeExpiry` bigint DEFAULT NULL,
+  `profilePicture` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`userID`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +48,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'267767','Jason','Erasmus','$2b$10$nL0uMUaTU4g4YMafLsf9nuHGqjzsmUh/.OdaK0NPOHJE5l9St8.yW','jason@example.com','0796946727','Admin','2024-08-19 17:02:49','2024-09-17 14:28:03','$2a$10$vZBFNkHV2JHIP0yIjdVUEOc7TSSzcY4rK00dGhTdlaqWUb5760Eyu'),(2,'254592','Bob','Stevens','$2a$10$u5PWa2B4ZNoAPyGp9PVcJ.BdupiACzOy.OplgmifE6W/IRHONS8eW','254592@mynwu.ac.za','0846942157','Student','2024-08-26 10:56:02','2024-09-13 13:32:44','$2a$10$Su8TZCiDJKUUnhTPkTLz.OcwVmoPkH2i1UNXuVsJf0yK6ZNnf27BK'),(3,'791253','Mark','Hemsworth','$2a$10$OUb5nN3hM/TkUaAGUEOCIuZe8DD9u7Z/7cMra1y.WNJRVLoGsCGF2','791253@mynwu.ac.za','0742346547','Lecturer','2024-08-26 11:10:42','2024-08-26 11:10:42',NULL),(7,'318863','Even','Smith','$2a$10$hCexppwgMYRBumuVaZzaqeAXMl/eZJ4jk28zs1cgdPUHBO7CIU5.i','318863@mynwu.ac.za','0756782113','Student','2024-08-26 11:38:43','2024-08-26 11:39:58','$2a$10$ej0xchtxohbMI.CTsBmu2u4l33QzfPGT1ERxuaQC11H4v9cbKZQRe'),(8,'954550','Diana','Stark','$2a$10$9Gl2soQafhZWWKxgJNqRoeFk4gG8K65jJNPndliF5FgFm4cB9hIJO','954550@mynwu.ac.za','0763214566','Lecturer','2024-08-26 12:02:40','2024-08-26 12:02:40',NULL);
+INSERT INTO `users` VALUES (1,'267767','Jason','Erasmus','$2a$10$ZYJNzkP5DN/j2npKQEcvD.IT2m3vNMrpizwv0VdWykz.Qfh/uEq4q','42811074@mynwu.ac.za','0796946727','Admin','2024-08-19 17:02:49','2024-09-23 23:33:38','$2a$10$NPHkzbD.HqLGIESD1J7zueq6q0CjvUN1vLl7Ox6tzBKBnTH0TM9eC',NULL,NULL,NULL),(2,'254592','Bob','Stevens','$2a$10$yEr/bvOHQhRyz06YiRgREeuGb1U0Wxr8.kEur5lmvJf.coUL2T/m2','254592@mynwu.ac.za','0846942157','Student','2024-08-26 10:56:02','2024-09-23 22:13:01',NULL,NULL,NULL,NULL),(3,'791253','Mark','Hemsworth','$2a$10$OUb5nN3hM/TkUaAGUEOCIuZe8DD9u7Z/7cMra1y.WNJRVLoGsCGF2','791253@mynwu.ac.za','0742346547','Lecturer','2024-08-26 11:10:42','2024-09-23 17:50:47','$2a$10$g6LYG3Gw7uS4m1BwqjZtb.hifGqOh088/qC46IOSiuXVyuqNYnduu',NULL,NULL,NULL),(7,'318863','Even','Smith','$2a$10$hCexppwgMYRBumuVaZzaqeAXMl/eZJ4jk28zs1cgdPUHBO7CIU5.i','318863@mynwu.ac.za','0756782113','Student','2024-08-26 11:38:43','2024-09-22 11:20:11',NULL,NULL,NULL,NULL),(8,'954550','Diana','Stark','$2a$10$9Gl2soQafhZWWKxgJNqRoeFk4gG8K65jJNPndliF5FgFm4cB9hIJO','954550@mynwu.ac.za','0763214566','Lecturer','2024-08-26 12:02:40','2024-08-26 12:02:40',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-18 10:59:45
+-- Dump completed on 2024-09-24 10:07:41

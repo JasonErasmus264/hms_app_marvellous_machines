@@ -15,7 +15,11 @@ class AddUserModel extends FlutterFlowModel<AddUserWidget> {
   String? _txtFirstNameTextControllerValidator(
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Please enter the users first name.';
+      return 'Enter your first name';
+    }
+
+    if (val.length > 45) {
+      return 'Maximum characters reached';
     }
 
     return null;
@@ -28,27 +32,31 @@ class AddUserModel extends FlutterFlowModel<AddUserWidget> {
   String? _txtLastNameTextControllerValidator(
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Please enter the users last name.';
+      return 'Enter your last name';
+    }
+
+    if (val.length > 45) {
+      return 'Maximum characters reached';
     }
 
     return null;
   }
 
-  // State field(s) for phoneNumber widget.
-  FocusNode? phoneNumberFocusNode;
-  TextEditingController? phoneNumberTextController;
-  String? Function(BuildContext, String?)? phoneNumberTextControllerValidator;
-  String? _phoneNumberTextControllerValidator(
+  // State field(s) for txtPhoneNum widget.
+  FocusNode? txtPhoneNumFocusNode;
+  TextEditingController? txtPhoneNumTextController;
+  String? Function(BuildContext, String?)? txtPhoneNumTextControllerValidator;
+  String? _txtPhoneNumTextControllerValidator(
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Field is required';
+      return 'Enter your phone number';
     }
 
     if (val.length < 10) {
-      return 'Not a valid phone number';
+      return 'Phone number too short';
     }
     if (val.length > 10) {
-      return 'Not a valid phone number';
+      return 'Phone number too long';
     }
 
     return null;
@@ -57,14 +65,14 @@ class AddUserModel extends FlutterFlowModel<AddUserWidget> {
   // State field(s) for DropDown widget.
   String? dropDownValue;
   FormFieldController<String>? dropDownValueController;
-  // Stores action output result for [Backend Call - API (Get User)] action in Button widget.
+  // Stores action output result for [Backend Call - API (Create User)] action in Button widget.
   ApiCallResponse? apiResult;
 
   @override
   void initState(BuildContext context) {
     txtFirstNameTextControllerValidator = _txtFirstNameTextControllerValidator;
     txtLastNameTextControllerValidator = _txtLastNameTextControllerValidator;
-    phoneNumberTextControllerValidator = _phoneNumberTextControllerValidator;
+    txtPhoneNumTextControllerValidator = _txtPhoneNumTextControllerValidator;
   }
 
   @override
@@ -75,7 +83,7 @@ class AddUserModel extends FlutterFlowModel<AddUserWidget> {
     txtLastNameFocusNode?.dispose();
     txtLastNameTextController?.dispose();
 
-    phoneNumberFocusNode?.dispose();
-    phoneNumberTextController?.dispose();
+    txtPhoneNumFocusNode?.dispose();
+    txtPhoneNumTextController?.dispose();
   }
 }

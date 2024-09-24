@@ -14,7 +14,7 @@ export const getUser = async (req, res) => {
 
     if (rows.length === 0) {
       // Log a warning if user not found (warning log)
-      userLogger.warn(`User not found: ${userID}`);
+      userLogger.warn(`User not found for user: ${username}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -24,7 +24,7 @@ export const getUser = async (req, res) => {
     const formattedCreatedAt = formatDate(new Date(user.createdAt));
 
     // Log success if user details recieved (information log)
-    userLogger.info(`User details retrieved successfully for userID: ${userID}`);
+    userLogger.info(`User details retrieved successfully for user: ${username}`);
 
     // Return the user's data including the formatted createdAt and phoneNum
     res.json({
@@ -35,7 +35,7 @@ export const getUser = async (req, res) => {
     });
   } catch (error) {
     // Log error when retrieving user fails (error log)
-    userLogger.error(`Error retrieving user: ${userID}, ${error.message}`, {error});
+    userLogger.error(`Error retrieving user: ${username}, ${error.message}`, {error});
     res.status(500).json({ error: error.message });
   }
 };
@@ -84,7 +84,7 @@ export const updateUser = async (req, res) => {
 
     if (rows.length === 0) {
       // Log a warning if user not found (warning log)
-      userLogger.warn(`User not found for update: ${userID}`);
+      userLogger.warn(`User not found for update with username: ${username}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -94,12 +94,12 @@ export const updateUser = async (req, res) => {
     );
 
     // Log success if user updated (information log)
-    userLogger.info(`User updated successfully: ${userID}`);
+    userLogger.info(`User updated successfully with username: ${username}`);
 
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     // Log error when updating user fails (error log)
-    userLogger.error(`Error updating user: ${userID}, ${error.message}`, {error});
+    userLogger.error(`Error updating user: ${username}, ${error.message}`, {error});
     res.status(500).json({ error: error.message });
   }
 };
@@ -122,21 +122,21 @@ export const changePassword = async (req, res) => {
     // Check if all fields are filled
     if (!username || !currentPassword || !newPassword || !confirmPassword) {
       // Log a warning if missing required fields (warning log)
-      userLogger.warn(`Password change request failed for userID: ${userID}, all fields are required`)
+      userLogger.warn(`Password change request failed for user: ${username}, all fields are required`)
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Check if newPassword and confirmPassword match
     if (newPassword !== confirmPassword) {
       // Log a warning if passwords don't match (warning log)
-      userLogger.warn(`Password change request failed for userID: ${userID}, new password and confirm password do not match`);
+      userLogger.warn(`Password change request failed for user: ${username}, new password and confirm password do not match`);
       return res.status(400).json({ message: 'New password and confirm password do not match' });
     }
 
     // Validate the new password using the regex
     if (!passwordRegex.test(newPassword)) {
       // Log a warning if requirements not met (warning log)
-      userLogger.warn(`Password change request failed for userID: ${userID}, new password does not meet requirements`);
+      userLogger.warn(`Password change request failed for user: ${username}, new password does not meet requirements`);
       return res.status(400).json({
         message: 'New password must be at least 8 characters, contain one uppercase, one lowercase, one number, and one special character.'
       });
@@ -148,14 +148,14 @@ export const changePassword = async (req, res) => {
 
     if (!user) {
       // Log a warning if user not found (warning log)
-      userLogger.warn(`User not found for password change: ${userID}`);
+      userLogger.warn(`User not found for password change, for user: ${username}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Check if the provided username matches the username in the database
     if (user.username !== username) {
       // Log a warning if username doesn't match (warning log)
-      userLogger.warn(`Password change request failed for userID: ${userID}, username does not match the authenticated user`);
+      userLogger.warn(`Password change request failed for user: ${username}, username does not match the authenticated user`);
       return res.status(401).json({ message: 'Username does not match the authenticated user' });
     }
 
@@ -163,14 +163,14 @@ export const changePassword = async (req, res) => {
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       // Log a warning if current password incorrect (warning log)
-      userLogger.warn(`Password change request failed for userID: ${userID}, current password is incorrect`);
+      userLogger.warn(`Password change request failed for user: ${username}, current password is incorrect`);
       return res.status(401).json({ message: 'Current password is incorrect' });
     }
 
     // Check if the new password is the same as the old password
     if (await bcrypt.compare(newPassword, user.password)) {
       // Log a warning if new password is same as old password (warning log)
-      userLogger.warn(`Password change request failed for userID: ${userID}, new password cannot be the same as the old password`);
+      userLogger.warn(`Password change request failed for user: ${username}, new password cannot be the same as the old password`);
       return res.status(400).json({ message: 'New password cannot be the same as the old password' });
     }
 
@@ -181,13 +181,13 @@ export const changePassword = async (req, res) => {
     await pool.execute('UPDATE users SET password = ? WHERE userID = ?', [hashedNewPassword, userID]);
 
     // Log success if password updated (information log)
-    userLogger.info(`Password updated successfully for userID: ${userID}`);
+    userLogger.info(`Password updated successfully for user: ${username}`);
 
     res.status(200).json({ message: 'Password updated successfully' });
 
   } catch (error) {
     // Log error when changing password fails (error log)
-    userLogger.error(`Error changing password for userID: ${userID}, ${error.message}`, { error });
+    userLogger.error(`Error changing password for user: ${username}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

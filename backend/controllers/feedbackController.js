@@ -82,11 +82,11 @@ export const deleteFeedback = async (req, res) => {
     }
 
     // Log success if feedback deleted (information log)
-    feedbackLogger.info(`Feedback deleted successfully for feedbackID: ${feedbackID}`);
+    feedbackLogger.info(`Feedback deleted successfully for user: ${username}, feedbackID: ${feedbackID}`);
     res.status(200).json({ message: 'Feedback deleted successfully' });
   } catch (error) {
     // Log error if deleting feedback fails (error log)
-    feedbackLogger.error(`Error deleting feedback: ${feedbackID}, ${error.message}`, { error });
+    feedbackLogger.error(`Error deleting feedback for user:${username}, ${feedbackID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -147,7 +147,7 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
     // If no data is found
     if (rows.length === 0) {
       // Log a warning if no marks found (warning log)
-      feedbackLogger.warn(`No marks found for moduleID: ${moduleID} and userID: ${userID}`);
+      feedbackLogger.warn(`No marks found for moduleID: ${moduleID} and username: ${username}`);
       return res.status(404).json({ message: 'No marks found for the specified moduleID and userID' });
     }
 
@@ -162,13 +162,13 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
     });
 
     // Log success for fetched marks (information log)
-    feedbackLogger.info(`Successfully fetched marks for user: ${userID} in module: ${moduleID}`, { feedback });
+    feedbackLogger.info(`Successfully fetched marks for user: ${username} in module: ${moduleID}`, { feedback });
     // Return the formatted data under the "feedback" key
     res.status(200).json({ feedback });
 
   } catch (error) {
     // Log error if fetching marks fails (error log)
-    feedbackLogger.error(`Error fetching marks for user: ${userID} in module ${moduleID}, ${error.message}`, { error });
+    feedbackLogger.error(`Error fetching marks for user: ${username} in module ${moduleID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Error fetching marks', error });
   }
 };
@@ -248,13 +248,13 @@ export const downloadMarks = async (req, res) => {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     
     // Log success for downloading marks (information log)
-    feedbackLogger.info(`Successfully downloaded marks for user: ${userID}`)
+    feedbackLogger.info(`Successfully downloaded marks for user: ${username}`)
     // Send the buffer as the response
     return res.send(buffer);
     
   } catch (error) {
     // Log error if downloading marks fails
-    feedbackLogger.error(`Error downloading marks: ${error.message}`, { error })
+    feedbackLogger.error(`Error downloading marks for user: ${username}, ${error.message}`, { error })
     res.status(500).send('Internal Server Error');
   }
 };
@@ -299,12 +299,12 @@ export const downloadMarksXLSX = async (req, res) => {
     const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
 
     // log successful data retrieval and CSV generation (information log)
-    feedbackLogger.info(`Successfully generated Excel file for user: ${userID}`);
+    feedbackLogger.info(`Successfully generated Excel file for user: ${username}`);
     res.attachment('student_marks.xlsx');
     res.send(buffer);
   } catch (error) {
     // Log error when no data is found (error log)
-    feedbackLogger.error(`Error downloading XLSX for user: ${userID}: ${error.message}`, { error });
+    feedbackLogger.error(`Error downloading XLSX for user: ${username}: ${error.message}`, { error });
     res.status(500).send('Error downloading Excel file'); 
   } 
 };
@@ -333,13 +333,13 @@ export const downloadMarksCSV = async (req, res) => {
     );
    
     // log successful data retrieval and CSV generation (information log)
-    feedbackLogger.info(`Successfully generated CSV for user: ${userID}`);
+    feedbackLogger.info(`Successfully generated CSV for user: ${username}`);
     const csv = parse(rows);
     res.attachment('student_marks.csv');
     res.send(csv);
   } catch (error) {
     // Log error when no data is found (error log)
-    feedbackLogger.error(`Error downloading CSV for user: ${userID}: ${error.message}`, { error });
+    feedbackLogger.error(`Error downloading CSV for user: ${username}: ${error.message}`, { error });
     res.status(500).send('Error downloading CSV file'); 
   }
 };

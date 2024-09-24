@@ -19,11 +19,11 @@ export const addUserToModule = async (req, res) => {
     );
 
     // Log success if user added (information log)
-    userModuleLogger.info(`User ${userID} successfully added to module ${moduleID}`);
+    userModuleLogger.info(`User: ${username}, successfully added to module: ${moduleID}`);
     res.status(201).json({ message: 'User successfully added to the module' });
   } catch (error) {
     // Log error when adding user fails (error log)
-    userModuleLogger.error(`Error adding user ${userID} to module ${moduleID}: ${error.message}`, { error });
+    userModuleLogger.error(`Error adding user: ${username}, to module: ${moduleID}: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -48,16 +48,16 @@ export const deleteUserFromModule = async (req, res) => {
 
     if (result.affectedRows === 0) {
       // Log a warning if user not found (warning log)
-      userModuleLogger.warn(`User ${userID} not found in module ${moduleID}`);
+      userModuleLogger.warn(`User: ${username}, not found in module: ${moduleID}`);
       return res.status(404).json({ message: 'User not found in the specified module' });
     }
 
     // Log success if user removed from module (information log)
-    userModuleLogger.info(`User ${userID} successfully removed from module ${moduleID}`);
+    userModuleLogger.info(`User: ${username}, successfully removed from module: ${moduleID}`);
     res.status(200).json({ message: 'User successfully removed from the module' });
   } catch (error) {
     // Log error when deleting user fails (error log)
-    userModuleLogger.error(`Error deleting user ${userID} from module ${moduleID}: ${error.message}`, { error });
+    userModuleLogger.error(`Error deleting user: ${username}, from module: ${moduleID}: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

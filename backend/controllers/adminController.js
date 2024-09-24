@@ -55,7 +55,7 @@ export const getUserInfo = async (req, res) => {
     // Return the detailed user info, excluding email
     
     // Log success message for fetching user info (information log)
-    adminLogger.info(`Fetched user info for userID: ${userID}`);
+    adminLogger.info(`Fetched user info for user: ${username}`);
     res.status(200).json({
       firstName: user.firstName,
       lastName: user.lastName,
@@ -64,7 +64,7 @@ export const getUserInfo = async (req, res) => {
     });
   } catch (error) {
     // Log error message when fetching user details fails (error log)
-    adminLogger.error(`Error fetching user details for userID: ${userID}, ${error.message}`, { error });
+    adminLogger.error(`Error fetching user details for user: ${username}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -154,7 +154,7 @@ export const updateUser = async (req, res) => {
 
     if (existingUser.length === 0) {
       // Log warning if the user is not found (warning log)
-      adminLogger.warn(`User not found with userID: ${userID}`);
+      adminLogger.warn(`User not found with username: ${username}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -165,11 +165,11 @@ export const updateUser = async (req, res) => {
     );
 
     // Log success message for user update (information log)
-    adminLogger.info(`User updated successfully with userID: ${userID}`);
+    adminLogger.info(`User updated successfully with username: ${username}`);
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     // Log error message when updating user fails (error log)
-    adminLogger.error(`Error updating user with userID: ${userID}, ${error.message}`, { error });
+    adminLogger.error(`Error updating user with username: ${username}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -196,11 +196,11 @@ export const deleteUser = async (req, res) => {
     await pool.execute('DELETE FROM users WHERE userID = ?', [userID]);
 
     // Log success message for user deletion (information log)
-    adminLogger.info(`User deleted successfully with userID: ${userID}`);
+    adminLogger.info(`Successully deleted user: ${username}`);
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     // Log error message when deleting user fails (error log)
-    adminLogger.error(`Error deleting user with userID: ${userID}, ${error.message}`, { error });
+    adminLogger.error(`Error deleting user with username: ${username}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

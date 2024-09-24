@@ -22,23 +22,23 @@ export const getModules = async (req, res) => {
       params = [userID];
 
       // Log user module request (information log)
-      moduleLogger.info(`User ${userID} requested modules they are enrolled in.`);
+      moduleLogger.info(`User ${username} requested modules they are enrolled in.`);
     }
 
     const [rows] = await pool.execute(query, params);
 
     if (rows.length === 0) {
       // Log a warning if no modules found (warning log)
-      moduleLogger.warn(`No modules found for user ${userID}.`);
+      moduleLogger.warn(`No modules found for user: ${username}.`);
       return res.status(404).json({ message: 'No modules found' });
     }
 
     // Log success for module retrieval (information log)
-    moduleLogger.info(`Modules successfully retrieved for user ${userID}.`);
+    moduleLogger.info(`Modules successfully retrieved for user: ${username}.`);
     res.json({ modules: rows });
   } catch (error) {
     // Log error when fetching modules fails (error log)
-    moduleLogger.error(`Error fetching modules for user ${req.user.userID}: ${error.message}`);
+    moduleLogger.error(`Error fetching modules for user: ${username}: ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while fetching modules' });
   }
 };
@@ -69,7 +69,7 @@ export const addModule = async (req, res) => {
     res.status(201).json({ message: 'Module added successfully' });
   } catch (error) {
     // Log error when adding module fails (error log)
-    moduleLogger.error(`Error adding module ${moduleName}: ${error.message}`, { error });
+    moduleLogger.error(`Error adding module: ${moduleName}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -103,11 +103,11 @@ export const updateModule = async (req, res) => {
     }
 
     // Log success if module updated (information log)
-    moduleLogger.info(`Module updated: ${moduleID} with new values (${moduleName}, ${moduleCode}).`);
+    moduleLogger.info(`Module updated: ${moduleID} with new values: (${moduleName}, ${moduleCode}).`);
     res.status(200).json({ message: 'Module updated successfully' });
   } catch (error) {
     // Log error when updating module fails
-    moduleLogger.error(`Error updating module ${moduleID}: ${error.message}`, { error });
+    moduleLogger.error(`Error updating module: ${moduleID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -128,7 +128,7 @@ export const deleteModule = async (req, res) => {
   
       if (result.affectedRows === 0) {
         // Log a warning if module not found (warning log)
-        moduleLogger.warn(`Module not found for deletion: ${moduleID}.`);
+        moduleLogger.warn(`Module not found for deletion, moduleID: ${moduleID}.`);
         return res.status(404).json({ message: 'Module not found' });
       }
       
@@ -137,7 +137,7 @@ export const deleteModule = async (req, res) => {
       res.status(200).json({ message: 'Module deleted successfully, along with any related assignments, submissions, and feedback.' });
     } catch (error) {
       // Log error when deleting module fails (error log)
-      moduleLogger.error(`Error deleting module ${moduleID}: ${error.message}`, { error });
+      moduleLogger.error(`Error deleting module: ${moduleID}, ${error.message}`, { error });
       res.status(500).json({ message: 'Internal server error' });
     }
   };

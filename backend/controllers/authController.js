@@ -180,11 +180,11 @@ export const logout = async (req, res) => {
     await pool.execute('UPDATE users SET refreshToken = NULL WHERE userID = ?', [userID]);
 
     // Log success when user logs out (information log)
-    authLogger.info(`User ${username} logged out successfully`);
+    authLogger.info(`User ${userID} logged out successfully`);
     return res.status(200).json({ message: 'Logged out successfully' });
   } catch (err) {
     // log error when logout fails (error log)
-    authLogger.error(`Logout error for user: ${username}: ${err.message}`, { err });
+    authLogger.error(`Logout error for user: ${userID}: ${err.message}`, { err });
     return res.status(500).json({ message: 'Error logging out' });
   }
 };
@@ -250,13 +250,13 @@ export const requestPasswordReset = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     // Log success when email is sent (information log)
-    authLogger.info(`Password reset code sent to user: ${username}`);
+    authLogger.info(`Password reset code sent to email: ${email}`);
     res.status(200).json({ 
       message: 'Password reset code sent to your email. Please check your inbox or junk folder.' 
     });
   } catch (error) {
     // Log error when password reset request fails (error log)
-    authLogger.error(`Error requesting password reset for user: ${username}, ${error.message}`, { error });
+    authLogger.error(`Error requesting password reset for user: ${userID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -272,7 +272,7 @@ export const verifyResetCode = async (req, res) => {
 
     if (rows.length === 0) {
       // Log a warning if email not found (warning log)
-      authLogger.warn(`Email not found for reset code verification for user: ${username}`);
+      authLogger.warn(`Email not found for reset code verification for user: ${userID}`);
       return res.status(404).json({ message: 'Email not found' });
     }
 
@@ -281,22 +281,22 @@ export const verifyResetCode = async (req, res) => {
     // Check if the reset code has expired
     if (Date.now() > codeExpiry) {
       // Log a warning for expired reset code (warning log)
-      authLogger.warn(`Reset code expired for user: ${username}`);
+      authLogger.warn(`Reset code expired for userID: ${userID}`);
       return res.status(400).json({ message: 'Reset code expired.' });
     }
 
     // Validate the reset code
     if (resetCode !== storedResetCode) {
       // Log a warning for invalid reset code (warning log)
-      authLogger.warn(`Invalid reset code for user: ${username}`);
+      authLogger.warn(`Invalid reset code for userID: ${userID}`);
       return res.status(400).json({ message: 'Invalid reset code.' });
     }
 
     // Log success for verified reset code (information log)
-    authLogger.info(`Reset code verified successfully for user: ${username}`);
+    authLogger.info(`Reset code verified successfully for userID: ${userID}`);
   } catch (error) {
     // Log error when verifying reset code fails (error log)
-    authLogger.error(`Error verifying reset code for user: ${username}, ${error.message}`, { error });
+    authLogger.error(`Error verifying reset code for userID: ${userID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -312,7 +312,7 @@ export const resetPassword = async (req, res) => {
 
   if (!passwordRegex.test(newPassword)) {
     // Log a warning for weak password (warning log)
-    authLogger.warn(`Weak password attempt for user: ${username}`);
+    authLogger.warn(`Weak password attempt.`);
     return res.status(400).json({
       message: 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
     });
@@ -324,7 +324,7 @@ export const resetPassword = async (req, res) => {
 
     if (rows.length === 0) {
       // Log a warning if email not found (warning log)
-      authLogger.warn(`Email not found for password reset for user: ${username}`);
+      authLogger.warn(`Email not found for password reset.`);
       return res.status(404).json({ message: 'Email not found' });
     }
 
@@ -337,11 +337,11 @@ export const resetPassword = async (req, res) => {
     await pool.execute('UPDATE users SET password = ?, resetCode = NULL, codeExpiry = NULL WHERE userID = ?', [hashedPassword, userID]);
 
     // Log success when password is updated (information log)
-    authLogger.info(`Password updated successfully for user: ${username}`);
+    authLogger.info(`Password updated successfully for userID: ${userID}`);
     res.status(200).json({ message: 'Password updated successfully.' });
   } catch (error) {
     // Log error when resetting password fails (error log)
-    authLogger.error(`Error resetting password for user: ${username}, ${error.message}`, { error });
+    authLogger.error(`Error resetting password for userID: ${userID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };

@@ -2,6 +2,7 @@ import winston from 'winston';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { performance } from 'perf_hooks';
 
 // Get the current directory name
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +21,17 @@ const logFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.errors({ stack: true }), // Include stack trace for errors
   winston.format.prettyPrint(), 
+);
+const performanceLogFormat = winston.format.combine(
+  winston.format.timestamp(),
+  winston.format.prettyPrint(({ timestamp, level, message, ...meta }) => {
+    return JSON.stringify({
+      timestamp,
+      level,
+      ...message,   
+      ...meta       
+    });
+  })
 );
 
 // Create Winston logger instances for each category
@@ -96,6 +108,32 @@ const userModuleLogger = winston.createLogger({
   ]
 });
 
+// performance logger
+const performanceLogger = winston.createLogger({
+  level: 'info',
+  format: performanceLogFormat,
+  transports: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'performance.log') })
+  ]
+});
+
+// Log performace
+export const logPerformance = (req, res, next) => {
+  const start = performance.now();  // More precise timing
+
+  res.on('finish', () => {
+    const duration = (performance.now() - start).toFixed(2);  // Convert to milliseconds with two decimals
+
+    performanceLogger.info({
+      method: req.method,
+      url: req.originalUrl,
+      statusCode: res.statusCode,
+      responseTime: `${duration}ms`
+    });
+  });
+
+  next();
+};
 
 // export loggers
-export { authLogger, userLogger, assignmentLogger, feedbackLogger, submissionLogger, adminLogger, moduleLogger, userModuleLogger};
+export { authLogger, userLogger, assignmentLogger, feedbackLogger, submissionLogger, adminLogger, moduleLogger, userModuleLogger, performanceLogger};

@@ -19,7 +19,7 @@ export const getAssignmentsByModule = async (req, res) => {
 
     if (rows.length === 0) {
       // Log info if no assignments are found (information log)
-      assignmentLogger.info(`No assignments found for user: ${username}, moduleID: ${moduleID}`);
+      assignmentLogger.info(`No assignments found for moduleID: ${moduleID}`);
       return res.status(404).json({ message: 'No assignments found for this module' });
     }
 
@@ -54,11 +54,11 @@ export const getAssignmentsByModule = async (req, res) => {
     });
 
     // Log success when assignments are fetched (information log)
-    assignmentLogger.info(`Assignments fetched successfully for user: ${username}, moduleID: ${moduleID}`);
+    assignmentLogger.info(`Assignments fetched successfully for moduleID: ${moduleID}`);
     res.json({ assignments: formattedAssignments });
   } catch (error) {
     // Log error when fetching assignments fails (error log)
-    assignmentLogger.error(`Error fetching assignments for user: ${username}, ${error.message}`, { error });
+    assignmentLogger.error(`Error fetching assignments: ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while fetching assignments' });
   }
 };

@@ -60,8 +60,6 @@ export const getSubmissionsByAssignment = async (req, res) => {
       };
     }));
 
-    // Log success for submission retrieval (information log)
-    submissionLogger.info(`Successfully fetched ${submissionList.length} submissions for assignmentID: ${assignmentID}`);
     // Return the structured response with the submission list
     res.json({
       submission: submissionList

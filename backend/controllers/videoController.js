@@ -63,6 +63,19 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
 };
 
 
+// Function to check video type and convert video to .mp4 if necessary
+const convertToMp4 = (filePath, outputFilePath) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg(filePath)
+      .output(outputFilePath)
+      .videoCodec('libx264')
+      .on('end', () => resolve(outputFilePath))
+      .on('error', (err) => reject(err))
+      .run();
+  });
+};
+
+
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
   const fileName = path.basename(filePath);
@@ -148,7 +161,6 @@ const getVideoUrl = async (nextcloudUrl, videoId) => {
 };
 
 
-
 // Main function to handle video upload and compression
 export const uploadVideo = (req, res) => {
   upload.single('video')(req, res, async (err) => {
@@ -171,13 +183,21 @@ export const uploadVideo = (req, res) => {
 
     const filePath = req.file.path;
     const fileSize = req.file.size;
+    const ext = path.extname(filePath).toLowerCase();  // Get file extension for extension type check
     let finalFilePath = filePath;
     let videoId;
 
     try {
-      // If the file exceeds the maximum allowed size, compress it
+      // If file is not .mp4, then convert it to .mp4
+      if (ext !== '.mp4') {
+        const mp4FilePath = `uploads/${path.basename(filePath, path.extname(filePath))}.mp4`;
+        finalFilePath = await convertToMp4(filePath, mp4FilePath);
+        fs.unlinkSync(filePath);  // Delete the original non-mp4 file after conversion
+      }
+
+      // If the file exceeds the maximum allowed size, then compress it
       if (fileSize > MAX_FILE_SIZE) {
-        const compressedFilePath = `uploads/compressed_${Date.now()}.mp4`;
+        const compressedFilePath = `uploads/${path.basename(filePath, path.extname(filePath))}.mp4`;
         finalFilePath = await compressVideo(filePath, compressedFilePath, MAX_FILE_SIZE);
 
         // Delete the original file after successful compression

@@ -6,14 +6,13 @@ import axios from 'axios';  // For Nextcloud upload
 import pool from '../db.js';
 import 'dotenv/config';
 
-
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  
 
 
 // Ensure 'uploads' directories exist
-/* if (!fs.existsSync('uploads')) {
+if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
-} */
+}
 
 
 // Multer configuration for file uploads
@@ -110,13 +109,13 @@ const uploadToNextcloud = async (filePath) => {
 
 
 // Store video metadata (public video link) in MySQL
-const storeMetadata = async (req, res, assignmentID, submissionVidPath ) => {
+const storeMetadata = async (req, res, assignmentID, submissionVidName, submissionVidPath ) => {
   try{
     const { userID } = req.user;
 
-    const query = 'INSERT INTO submission (assignmentID, userID, submissionVidPath) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO submission (assignmentID, userID, submissionVidName, submissionVidPath) VALUES (?, ?, ?, ?)';
 
-    await pool.execute(query, [assignmentID, userID, submissionVidPath]);
+    await pool.execute(query, [assignmentID, userID, submissionVidName, submissionVidPath]);
   } catch (error) {
     console.error('Error during metadata storing:', error);
     if (!res.headersSent) { return res.status(500).json({ message: 'Failed to store metadata', details: error.message }); }
@@ -130,7 +129,6 @@ const getVideoUrl = async (nextcloudUrl, videoId) => {
   const videoPath = `${nextcloudFolder}/${videoId}`;
 
   const shareUrl = `https://mia.nl.tab.digital/ocs/v2.php/apps/files_sharing/api/v1/shares`;
-
   try {
     const response = await axios.post(shareUrl, null, {
       auth: {
@@ -161,6 +159,45 @@ const getVideoUrl = async (nextcloudUrl, videoId) => {
 };
 
 
+// Delete the old video from Nextcloud
+const deleteOldVideoFromNextcloud = async (oldVideoPath) => {
+  try {
+    const response = await axios.delete(`${process.env.NEXTCLOUD_URL}${oldVideoPath}`, {
+      auth: {
+        username: process.env.NEXTCLOUD_USERNAME,
+        password: process.env.NEXTCLOUD_PASSWORD,
+      },
+    });
+
+    if (response.status !== 204) {
+      throw new Error('Failed to delete old video from Nextcloud');
+    }
+  } catch (error) {
+    console.error('Error deleting old video from Nextcloud:', error);
+    throw new Error(`Failed to delete old video: ${error.message}`);
+  }
+};
+
+
+// Update video metadata in MySQL
+const updateMetadata = async (req, res, assignmentID, newVideoId, publicLink) => {
+  try {
+    const { userID } = req.user;
+
+    const query = 'UPDATE submission SET submissionVidName = ?, submissionVidPath = ? WHERE assignmentID = ? AND userID = ?';
+
+    await pool.execute(query, [newVideoId, publicLink, assignmentID, userID]);
+  } catch (error) {
+    console.error('Error during metadata update:', error);
+    if (!res.headersSent) {
+      return res.status(500).json({ message: 'Failed to update metadata', details: error.message });
+    }
+  }
+};
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Main function to handle video upload and compression
 export const uploadVideo = (req, res) => {
   upload.single('video')(req, res, async (err) => {
@@ -212,15 +249,108 @@ export const uploadVideo = (req, res) => {
       const publicLink = await getVideoUrl(nextcloudUrl, videoId);
 
       // Store video metadata in the database, including assignmentID
-      await storeMetadata(req, res, assignmentID, publicLink);
+      await storeMetadata(req, res, assignmentID, videoId, publicLink);
 
       // Delete the local file after uploading to Nextcloud
       fs.unlinkSync(finalFilePath);
 
       res.status(200).json({ message: 'File uploaded successfully', publicLink });
     } catch (error) {
-      console.error('Error during video upload:', error);
-      res.status(500).json({ message: 'Failed to upload video', details: error.message });
+      console.error('Error:', error);
+      res.status(500).json({ message: 'Failed to process video', details: error.message });
+    } finally {
+      // Ensures that local file is always cleaned up
+      if (fs.existsSync(finalFilePath)) {
+        fs.unlinkSync(finalFilePath);
+      }
+    }
+  });
+};
+
+
+// Main function to handle video update
+export const updateVideo = (req, res) => {
+  upload.single('video')(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json({ message: 'File upload error', details: err.message });
+    } else if (err) {
+      return res.status(500).json({ message: 'Unexpected error during file upload', details: err.message });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    // Extract assignmentID and oldVideoName from the request body
+    const { assignmentID, oldVideoName } = req.body;
+
+    if (!assignmentID) {
+      return res.status(400).json({ message: 'Assignment ID is required' });
+    }
+
+    const filePath = req.file.path;
+    const fileSize = req.file.size;
+    const ext = path.extname(filePath).toLowerCase();  // Get file extension for extension type check
+    let finalFilePath = filePath;
+    let newVideoId;
+
+    try {
+      const { userID } = req.user;
+
+      // Retrieve the old video name from the database
+      const query = 'SELECT submissionVidName FROM submission WHERE assignmentID = ? AND userID = ?';
+      console.log('Running query with:', assignmentID, userID);
+      const [rows] = await pool.execute(query, [assignmentID, userID]);
+
+      if (rows.length === 0) {
+        console.log('No video found for assignmentID:', assignmentID, 'and userID:', userID);
+        return res.status(404).json({ message: 'No video found for the given assignment ID' });
+      }
+
+      const oldVideoName = rows[0].submissionVidName; // Get the old video name
+
+      // Check if the old video exists in Nextcloud and delete it
+      const oldVideoPath = `/HMS-Video-Uploads/${oldVideoName}`;
+      await deleteOldVideoFromNextcloud(oldVideoPath);
+
+      // If file is not .mp4, convert it to .mp4
+      if (ext !== '.mp4') {
+        const mp4FilePath = `uploads/${path.basename(filePath, path.extname(filePath))}.mp4`;
+        finalFilePath = await convertToMp4(filePath, mp4FilePath);
+        fs.unlinkSync(filePath);  // Delete the original non-mp4 file after conversion
+      }
+
+      // If the file exceeds the maximum allowed size, then compress it
+      if (fileSize > MAX_FILE_SIZE) {
+        const compressedFilePath = `uploads/${path.basename(filePath, path.extname(filePath))}.mp4`;
+        finalFilePath = await compressVideo(finalFilePath, compressedFilePath, MAX_FILE_SIZE);
+
+        // Delete the original file after successful compression
+        fs.unlinkSync(filePath);
+      }
+
+      // Upload the (compressed or original) video to Nextcloud and get link returned
+      const nextcloudUrl = await uploadToNextcloud(finalFilePath);
+
+      newVideoId = path.basename(nextcloudUrl); // Get the new videoId from the nextcloudUrl
+
+      const publicLink = await getVideoUrl(nextcloudUrl, newVideoId);
+
+      // Update video metadata in the database
+      await updateMetadata(req, res, assignmentID, newVideoId, publicLink);
+
+      // Delete the local file after uploading to Nextcloud
+      fs.unlinkSync(finalFilePath);
+
+      res.status(200).json({ message: 'File updated successfully', publicLink });
+    } catch (error) {
+      console.error('Error during video update:', error);
+      res.status(500).json({ message: 'Failed to update video', details: error.message });
+    } finally {
+      // Ensures that local file is always cleaned up
+      if (fs.existsSync(finalFilePath)) {
+        fs.unlinkSync(finalFilePath);
+      }
     }
   });
 };

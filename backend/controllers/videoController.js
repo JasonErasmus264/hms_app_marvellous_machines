@@ -62,7 +62,7 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
 };
 
 
-// Function to check video type and convert video to .mp4 if necessary
+// Check video type and convert to .mp4 if necessary
 const convertToMp4 = (filePath, outputFilePath) => {
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
@@ -124,11 +124,11 @@ const storeMetadata = async (req, res, assignmentID, submissionVidName, submissi
 
 
 // Retrieve video directly from Nextcloud by URL and return public video link
-const getVideoUrl = async (nextcloudUrl, videoId) => {
+const getVideoUrl = async (videoId) => {
   const nextcloudFolder = '/HMS-Video-Uploads';
   const videoPath = `${nextcloudFolder}/${videoId}`;
 
-  const shareUrl = `https://mia.nl.tab.digital/ocs/v2.php/apps/files_sharing/api/v1/shares`;
+  const shareUrl = process.env.NEXTCLOUD_SHARE_URL;
   try {
     const response = await axios.post(shareUrl, null, {
       auth: {
@@ -246,7 +246,8 @@ export const uploadVideo = (req, res) => {
 
       videoId = path.basename(nextcloudUrl); // Get the videoId from the nextcloudUrl
 
-      const publicLink = await getVideoUrl(nextcloudUrl, videoId);
+      // Get public link
+      const publicLink = await getVideoUrl(videoId);
 
       // Store video metadata in the database, including assignmentID
       await storeMetadata(req, res, assignmentID, videoId, publicLink);
@@ -334,7 +335,7 @@ export const updateVideo = (req, res) => {
 
       newVideoId = path.basename(nextcloudUrl); // Get the new videoId from the nextcloudUrl
 
-      const publicLink = await getVideoUrl(nextcloudUrl, newVideoId);
+      const publicLink = await getVideoUrl(newVideoId);
 
       // Update video metadata in the database
       await updateMetadata(req, res, assignmentID, newVideoId, publicLink);

@@ -31,10 +31,12 @@ app.use(userRoute);
 app.use(assignmentRoute);
 app.use(submissionRoute);
 app.use(feedbackRoute);
-app.use(videoRouter); 
+app.use(videoRouter);
+app.use(profileRouter);
 
 
 import { getStudentMarksByUserAndModule, downloadMarks } from './controllers/feedbackController.js';
+import profileRouter from './routes/profileRouter.js';
 
 app.get('/v1/download-marks', downloadMarks);
 

@@ -1,20 +1,19 @@
 import multer from 'multer';  // For file uploads
 import ffmpeg from 'fluent-ffmpeg';  // For video compression
-import fs from 'fs';  // File system operations
-import path from 'path';  // File path operations
+import fs from 'fs';  // For file system operations
+import path from 'path';  // For file path operations
 import axios from 'axios';  // For Nextcloud upload
-import pool from '../db.js';  // MySQL connection pool
-import 'dotenv/config';  // Load environment variables
+import pool from '../db.js';
+import 'dotenv/config';
 
 
-const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  // 50MB in bytes
-
+const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  
 
 
 // Ensure 'uploads' directories exist
-if (!fs.existsSync('uploads')) {
+/* if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
-}
+} */
 
 
 // Multer configuration for file uploads
@@ -36,20 +35,20 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
     ffmpeg(filePath)
       .output(outputFilePath)
       .videoCodec('libx264')
-      .size('?x360')  // Resize to height 360px while maintaining aspect ratio
-      .videoBitrate('800k')  // Set the video bitrate to 800 kbps
-      .audioBitrate('128k')  // Set audio bitrate to 128 kbps for better quality
-      .outputOptions('-crf 28')  // CRF value of 28 for medium compression
+      .size('?x360') // Rezize the height but maintain aspect ratio
+      .videoBitrate('800k')
+      .audioBitrate('128k')
+      .outputOptions('-crf 28')  // MEdium compression
       .on('end', async () => {
         try {
-          // Check if the compressed file size exceeds the maximum allowed size
+          // Check if the compressed file size exceeds the maximum allowed size because very large files might need to be compressed more than once
           const compressedSize = fs.statSync(outputFilePath).size;
           if (compressedSize > maxFileSize) {
             console.error('Compressed file still exceeds the maximum size.');
             return reject(new Error('Compressed file size exceeds the maximum allowed size'));
           }
 
-          // If compressed size is within the limit, resolve the promise
+          // If compressed size is within the limit, promise is resolved
           resolve(outputFilePath);
         } catch (err) {
           reject(err);
@@ -66,9 +65,9 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
 
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
-  const fileName = path.basename(filePath);  // Use the unique file name already generated
-  const nextcloudFolder = '/HMS-Video-Uploads';  // Specify the folder path
-  const nextcloudPath = `${nextcloudFolder}/${fileName}`;  // Upload to the folder
+  const fileName = path.basename(filePath);
+  const nextcloudFolder = '/HMS-Video-Uploads';
+  const nextcloudPath = `${nextcloudFolder}/${fileName}`;
   const fileStream = fs.createReadStream(filePath);
 
   try {
@@ -97,7 +96,7 @@ const uploadToNextcloud = async (filePath) => {
 };
 
 
-// Store video metadata in MySQL
+// Store video metadata (public video link) in MySQL
 const storeMetadata = async (req, res, assignmentID, submissionVidPath ) => {
   try{
     const { userID } = req.user;
@@ -111,20 +110,6 @@ const storeMetadata = async (req, res, assignmentID, submissionVidPath ) => {
   }
 }
 
-/* const storeMetadata = async (assignmentID, submissionVidPath) => {
-  const query = `
-    UPDATE submission 
-    SET submissionVidPath = ? 
-    WHERE assignmentID = ?`;
-  
-  const [result] = await pool.execute(query, [submissionVidPath, assignmentID]);
-
-  // Optionally, you can check if any rows were affected
-  if (result.affectedRows === 0) {
-    throw new Error('No rows were updated. Check if the assignmentID exist.');
-  }
-}; */
-
 
 // Retrieve video directly from Nextcloud by URL and return public video link
 const getVideoUrl = async (nextcloudUrl, videoId) => {
@@ -134,8 +119,6 @@ const getVideoUrl = async (nextcloudUrl, videoId) => {
   const shareUrl = `https://mia.nl.tab.digital/ocs/v2.php/apps/files_sharing/api/v1/shares`;
 
   try {
-    console.log('Requesting public link for:', videoPath); // Debugging log
-
     const response = await axios.post(shareUrl, null, {
       auth: {
         username: process.env.NEXTCLOUD_USERNAME,
@@ -146,12 +129,11 @@ const getVideoUrl = async (nextcloudUrl, videoId) => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       params: {
-        path: videoPath,  // Use full Nextcloud URL
-        shareType: 3,    // Public link share type
-        permissions: 1,   // Read-only permissions
+        path: videoPath,  // Use full Nextcloud URL for where video is saved
+        shareType: 3,    // Set Public link share type
+        permissions: 1,   // Set Read-only permissions
       },
     });
-    console.log('Response from Nextcloud:', response.data); // Debugging log
 
     if (response.data && response.data.ocs && response.data.ocs.data && response.data.ocs.data.url) {
       const publicLink = response.data.ocs.data.url;
@@ -221,74 +203,4 @@ export const uploadVideo = (req, res) => {
       res.status(500).json({ message: 'Failed to upload video', details: error.message });
     }
   });
-};
-
-
-
-// Retrieve video metadata from MySQL
-/* export const getVideoMetadata = async (req, res) => {
-  const videoId = req.params.id;
-
-  try {
-    const query = 'SELECT fileName, submissionVidPath FROM submission WHERE assignmentID = ?';
-    const [rows] = await pool.execute(query, [videoId]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Video not found' });
-    }
-
-    const videoData = rows[0];
-
-    res.status(200).json({
-      fileName: videoData.fileName,
-      nextcloudUrl: videoData.submissionVidPath,
-    });
-  } catch (error) {
-    console.error('Error retrieving video data:', error);
-    res.status(500).json({ error: 'Failed to retrieve video data', details: error.message });
-  }
-}; */
-
-export const getPublicUrl = async (req, res) => {
-  const videoId = req.params.id;  // Retrieve video ID from URL
-  const nextcloudFolder = '/HMS-Video-Uploads';  // Declare the variable here
-  const videoPath = `${nextcloudFolder}/${videoId}`;  // Use the declared variable
-
-  const shareUrl = 'https://mia.nl.tab.digital/ocs/v2.php/apps/files_sharing/api/v1/shares';
-
-  try {
-    console.log('Requesting public link for:', videoPath); // Debugging log
-
-    const response = await axios.post(shareUrl, null, {
-      auth: {
-        username: process.env.NEXTCLOUD_USERNAME,
-        password: process.env.NEXTCLOUD_PASSWORD,
-      },
-      headers: {
-        'OCS-APIRequest': true,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      params: {
-        path: videoPath,  // Use the full video path
-        shareType: 3,    // Public link share type
-        permissions: 1,   // Read-only permissions
-      },
-    });
-
-    console.log('Response from Nextcloud:', response.data); // Debugging log
-
-    if (response.data && response.data.ocs && response.data.ocs.data && response.data.ocs.data.url) {
-      const publicLink = response.data.ocs.data.url;
-
-      // Construct the final link
-      const fullLink = `${publicLink}/download/${videoId}`;
-
-      res.status(200).json({ publicLink: fullLink });
-    } else {
-      res.status(500).json({ error: 'Failed to generate public link' });
-    }
-  } catch (error) {
-    console.error('Error creating public link:', error); // Log the error details
-    res.status(500).json({ error: 'Failed to create public link', details: error.message });
-  }
 };

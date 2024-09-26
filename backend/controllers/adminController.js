@@ -52,7 +52,7 @@ export const getUserInfo = async (req, res) => {
 
     const user = rows[0];
 
-    // Return the detailed user info, excluding email
+    
     
     // Log success message for fetching user info (information log)
     adminLogger.info(`Fetched user info for userID: ${userID}`);
@@ -184,8 +184,12 @@ export const deleteUser = async (req, res) => {
 
   try {
     // Check if the user exists
-    const [existingUser] = await pool.execute('SELECT * FROM users WHERE userID = ?', [userID]);
+    const [existingUser] = await pool.execute(
+      'SELECT userID FROM users WHERE userID = ?',
+      [userID]
+    );
 
+    
     if (existingUser.length === 0) {
       // Log warning if the user is not found (warning log)
       adminLogger.warn(`User not found with userID: ${userID}`);

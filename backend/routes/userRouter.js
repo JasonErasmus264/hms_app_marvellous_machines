@@ -1,6 +1,6 @@
 import express from 'express';
 import verifyToken from '../middleware/verifyToken.js'; // Middleware to check JWT
-import { getUser, updateUser, changePassword } from '../controllers/userController.js';
+import { getUser, updateUser, changePassword, uploadProfilePicture } from '../controllers/userController.js';
 
 const userRoute = express.Router();
 
@@ -15,5 +15,7 @@ userRoute.put('/v1/users', updateUser);
 
 // Add route for changing password (available to all users)
 userRoute.put('/v1/users/change-password', changePassword);
+
+userRoute.post('/v1/upload-profile-picture', uploadProfilePicture);
 
 export default userRoute;

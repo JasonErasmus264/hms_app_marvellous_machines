@@ -49,8 +49,12 @@ export const login = async (req, res) => {
   }
 
   try {
-    const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
+    const [rows] = await pool.execute(
+      'SELECT userID, password, userType FROM users WHERE username = ? LIMIT 1', 
+      [username]
+    );
 
+    
     if (rows.length === 0) {
       // Log a warning for failed login attempt (warning log)
       authLogger.warn(`Failed login attempt`);
@@ -119,7 +123,10 @@ export const refreshToken = async (req, res) => {
   const refreshToken = authHeader.split(' ')[1];
 
   try {
-    const [rows] = await pool.execute('SELECT * FROM users WHERE refreshToken IS NOT NULL');
+    const [rows] = await pool.execute(
+      'SELECT userID, userType, refreshToken FROM users WHERE refreshToken IS NOT NULL'
+    );
+    
     const user = rows.find(u => bcryptjs.compareSync(refreshToken, u.refreshToken));
 
     if (!user) {

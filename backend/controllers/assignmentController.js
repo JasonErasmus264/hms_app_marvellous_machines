@@ -187,7 +187,7 @@ export const updateAssignment = async (req, res) => {
     res.json({ message: 'Assignment updated successfully' });
   } catch (error) {
     // log error when updating assignments fails (error log)
-    assignmentLogger.error(`Error updating assignment with ID: ${assignmentID}, ${error.message}`, { error });
+    assignmentLogger.error(`Error updating assignment: ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while updating the assignment' });
   }
 };
@@ -224,7 +224,7 @@ export const deleteAssignment = async (req, res) => {
     res.json({ message: 'Assignment deleted successfully' });
   } catch (error) {
     // Log error when deleting an assignment fails (error log)
-    assignmentLogger.error(`Error deleting assignment with ID: ${assignmentID}, ${error.message}`, { error });
+    assignmentLogger.error(`Error deleting assignment: ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while deleting the assignment' });
   }
 };

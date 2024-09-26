@@ -35,7 +35,7 @@ export const getUser = async (req, res) => {
     });
   } catch (error) {
     // Log error when retrieving user fails (error log)
-    userLogger.error(`Error retrieving user: ${userID}, ${error.message}`, {error});
+    userLogger.error(`Error retrieving user: ${error.message}`, {error});
     res.status(500).json({ error: error.message });
   }
 };
@@ -94,12 +94,12 @@ export const updateUser = async (req, res) => {
     );
 
     // Log success if user updated (information log)
-    userLogger.info(`User updated successfully: ${userID}`);
+    userLogger.info(`User: ${userID} updated successfully`);
 
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     // Log error when updating user fails (error log)
-    userLogger.error(`Error updating user: ${userID}, ${error.message}`, {error});
+    userLogger.error(`Error updating user: ${error.message}`, {error});
     res.status(500).json({ error: error.message });
   }
 };
@@ -187,7 +187,7 @@ export const changePassword = async (req, res) => {
 
   } catch (error) {
     // Log error when changing password fails (error log)
-    userLogger.error(`Error changing password for userID: ${userID}, ${error.message}`, { error });
+    userLogger.error(`Error changing password: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

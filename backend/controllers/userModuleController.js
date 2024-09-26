@@ -23,7 +23,7 @@ export const addUserToModule = async (req, res) => {
     res.status(201).json({ message: 'User successfully added to the module' });
   } catch (error) {
     // Log error when adding user fails (error log)
-    userModuleLogger.error(`Error adding user ${userID} to module ${moduleID}: ${error.message}`, { error });
+    userModuleLogger.error(`Error adding user to module: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -57,7 +57,7 @@ export const deleteUserFromModule = async (req, res) => {
     res.status(200).json({ message: 'User successfully removed from the module' });
   } catch (error) {
     // Log error when deleting user fails (error log)
-    userModuleLogger.error(`Error deleting user ${userID} from module ${moduleID}: ${error.message}`, { error });
+    userModuleLogger.error(`Error deleting user from module: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

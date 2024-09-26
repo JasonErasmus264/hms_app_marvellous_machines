@@ -66,7 +66,7 @@ export const getSubmissionsByAssignment = async (req, res) => {
     });
   } catch (error) {
     // log any errors that may occur while trying to fetch the submissions for an assignment (error log)
-    submissionLogger.error(`Error fetching submissions for assignmentID: ${assignmentID}: ${error.message}`, { error });
+    submissionLogger.error(`Error fetching submissions: ${error.message}`, { error });
     res.status(500).json({ error: 'An error occurred while fetching submissions.' });
   }
 };
@@ -100,7 +100,7 @@ export const getNotMarkedSubmissions = async (req, res) => {
       res.json({ submission });
     } catch (error) {
       // log any errors that may have occured while fetching unmarked submissions for an assignment (error log)
-      submissionLogger.error(`Error fetching unmarked submissions for assignmentID: ${assignmentID}: ${error.message}`, { error });
+      submissionLogger.error(`Error fetching unmarked submissions: ${error.message}`, { error });
       res.status(500).json({ message: 'Error fetching submissions to be marked.' });
     }
   };
@@ -131,7 +131,7 @@ export const getNotMarkedSubmissions = async (req, res) => {
       res.json({ submission });
     } catch (error) {
       // log any errors that may have occured whie fetching marked submissions for an assignment (error log)
-      submissionLogger.error(`Error fetching marked submissions for assignmentID: ${assignmentID}: ${error.message}`, { error });
+      submissionLogger.error(`Error fetching marked submissions: ${error.message}`, { error });
       res.status(500).json({ message: 'Error fetching marked submissions.' });
     }
   };

@@ -141,7 +141,7 @@ export const updateUser = async (req, res) => {
   // Validate that all required fields are provided
   if (!firstName || !lastName || !phoneNum || !userType) {
     // Log warning if required fields are missing (warning log)
-    adminLogger.warn('Missing required fields for updating user');
+    adminLogger.warn(`Missing required fields for updating user for: ${userID}`);
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -169,7 +169,7 @@ export const updateUser = async (req, res) => {
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     // Log error message when updating user fails (error log)
-    adminLogger.error(`Error updating user with userID: ${userID}, ${error.message}`, { error });
+    adminLogger.error(`Error updating user with userID: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -200,7 +200,7 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     // Log error message when deleting user fails (error log)
-    adminLogger.error(`Error deleting user with userID: ${userID}, ${error.message}`, { error });
+    adminLogger.error(`Error deleting user with user: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

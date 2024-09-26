@@ -38,7 +38,7 @@ export const getModules = async (req, res) => {
     res.json({ modules: rows });
   } catch (error) {
     // Log error when fetching modules fails (error log)
-    moduleLogger.error(`Error fetching modules for user ${req.user.userID}: ${error.message}`);
+    moduleLogger.error(`Error fetching modules: ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while fetching modules' });
   }
 };
@@ -69,7 +69,7 @@ export const addModule = async (req, res) => {
     res.status(201).json({ message: 'Module added successfully' });
   } catch (error) {
     // Log error when adding module fails (error log)
-    moduleLogger.error(`Error adding module ${moduleName}: ${error.message}`, { error });
+    moduleLogger.error(`Error adding module: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -86,7 +86,7 @@ export const updateModule = async (req, res) => {
 
   if (!moduleName || !moduleCode) {
     // Log a warning if unmatching name and code (warning log)
-    moduleLogger.warn('Module name and code are required for updating the module.');
+    moduleLogger.warn(`Module name and code are required for updating the module: ${moduleID}`);
     return res.status(400).json({ message: 'Module name and code are required' });
   }
 
@@ -107,7 +107,7 @@ export const updateModule = async (req, res) => {
     res.status(200).json({ message: 'Module updated successfully' });
   } catch (error) {
     // Log error when updating module fails
-    moduleLogger.error(`Error updating module ${moduleID}: ${error.message}`, { error });
+    moduleLogger.error(`Error updating module: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -137,7 +137,7 @@ export const deleteModule = async (req, res) => {
       res.status(200).json({ message: 'Module deleted successfully, along with any related assignments, submissions, and feedback.' });
     } catch (error) {
       // Log error when deleting module fails (error log)
-      moduleLogger.error(`Error deleting module ${moduleID}: ${error.message}`, { error });
+      moduleLogger.error(`Error deleting module: ${error.message}`, { error });
       res.status(500).json({ message: 'Internal server error' });
     }
   };

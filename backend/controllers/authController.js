@@ -99,7 +99,7 @@ export const login = async (req, res) => {
 
   } catch (error) {
     // Log error when login fails (error log)
-    authLogger.error(`Error during login for username: ${username}, ${error.message}`, { error });
+    authLogger.error(`Error during login: ${error.message}`, { error });
     // Track failed login attempts on error
     trackFailedAttempt(userIP);
     res.status(500).json({ message: 'An unexpected error occurred during login' });
@@ -112,7 +112,7 @@ export const refreshToken = async (req, res) => {
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     // Log a warning if no refresh token is provided (warning log)
-    authLogger.warn(`No refresh token provided for user: ${username}`);
+    authLogger.warn(`No refresh token provided`);
     return res.status(401).json({ message: 'No refresh token provided' });
   }
 
@@ -124,13 +124,13 @@ export const refreshToken = async (req, res) => {
 
     if (!user) {
       // Log a warning for invalid refresh token (warning log)
-      authLogger.warn(`Invalid refresh token for user: ${username}`);
+      authLogger.warn(`Invalid refresh token`);
       return res.status(403).json({ message: 'Invalid refresh token' });
     }
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, decoded) => {
       if (err) {
-        authLogger.warn(`Invalid or expired refresh token for user: ${username}`);
+        authLogger.warn(`Invalid or expired refresh token`);
         return res.status(403).json({ message: 'Invalid or expired refresh token' });
       }
 
@@ -163,7 +163,7 @@ export const refreshToken = async (req, res) => {
     });
   } catch (err) {
     // Log error when token refresh fails (error log)
-    authLogger.error(`Error during token refresh for user: ${username}: ${err.message}`, { err });
+    authLogger.error(`Error during token refresh: ${err.message}`, { err });
     return res.status(500).json({ message: 'Error refreshing token' });
   }
 };
@@ -202,7 +202,7 @@ export const requestPasswordReset = async (req, res) => {
 
     if (rows.length === 0) {
       // Log a warning if email is non-existent (warning log)
-      authLogger.warn(`Password reset requested for non-existent email for user: ${username}`);
+      authLogger.warn(`Password reset requested for non-existent email`);
       return res.status(404).json({ message: 'Email not found' });
     }
 
@@ -256,7 +256,7 @@ export const requestPasswordReset = async (req, res) => {
     });
   } catch (error) {
     // Log error when password reset request fails (error log)
-    authLogger.error(`Error requesting password reset for user: ${userID}, ${error.message}`, { error });
+    authLogger.error(`Error requesting password reset: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -272,7 +272,7 @@ export const verifyResetCode = async (req, res) => {
 
     if (rows.length === 0) {
       // Log a warning if email not found (warning log)
-      authLogger.warn(`Email not found for reset code verification for user: ${userID}`);
+      authLogger.warn(`Email not found for reset code verification`);
       return res.status(404).json({ message: 'Email not found' });
     }
 
@@ -281,22 +281,22 @@ export const verifyResetCode = async (req, res) => {
     // Check if the reset code has expired
     if (Date.now() > codeExpiry) {
       // Log a warning for expired reset code (warning log)
-      authLogger.warn(`Reset code expired for userID: ${userID}`);
+      authLogger.warn(`Reset code expired`);
       return res.status(400).json({ message: 'Reset code expired.' });
     }
 
     // Validate the reset code
     if (resetCode !== storedResetCode) {
       // Log a warning for invalid reset code (warning log)
-      authLogger.warn(`Invalid reset code for userID: ${userID}`);
+      authLogger.warn(`Invalid reset code`);
       return res.status(400).json({ message: 'Invalid reset code.' });
     }
 
     // Log success for verified reset code (information log)
-    authLogger.info(`Reset code verified successfully for userID: ${userID}`);
+    authLogger.info(`Reset code verified successfully for email: ${email}`);
   } catch (error) {
     // Log error when verifying reset code fails (error log)
-    authLogger.error(`Error verifying reset code for userID: ${userID}, ${error.message}`, { error });
+    authLogger.error(`Error verifying reset code: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -341,7 +341,7 @@ export const resetPassword = async (req, res) => {
     res.status(200).json({ message: 'Password updated successfully.' });
   } catch (error) {
     // Log error when resetting password fails (error log)
-    authLogger.error(`Error resetting password for userID: ${userID}, ${error.message}`, { error });
+    authLogger.error(`Error resetting password: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };

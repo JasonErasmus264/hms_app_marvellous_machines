@@ -1,6 +1,7 @@
 import pool from '../db.js';  // Database connection
 import XLSX from 'xlsx';
 import  {parse}  from 'json2csv';  
+import { feedbackLogger } from '../middleware/logger.js';
 //import { feedbackLogger } from '../logger.js'; // import feedback logger
 
 
@@ -10,6 +11,8 @@ export const addFeedback = async (req, res) => {
 
   // Ensure all required fields are provided
   if (!submissionID || !comment || mark === undefined) {
+    // Log warning for missing required fields (warning log)
+    feedbackLogger.warn('Missing required fields for adding feedback');
     return res.status(400).json({ message: 'Submission ID, comment, and mark are required' });
   }
 
@@ -18,10 +21,12 @@ export const addFeedback = async (req, res) => {
       'INSERT INTO feedback (submissionID, userID, comment, mark) VALUES (?, ?, ?, ?)',
       [submissionID, userID || null, comment, mark]
     );
-
+    // Log success for adding feedback (information log)
+    feedbackLogger.info('Feedback added successfully', { feedbackID: result[0].insertId });
     res.status(201).json({ message: 'Feedback added successfully', feedbackID: result[0].insertId });
   } catch (error) {
-    console.error('Error adding feedback:', error);
+    // Log error if adding feedback fails (error log)
+    feedbackLogger.error(`Error adding feedback: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -33,6 +38,8 @@ export const updateFeedback = async (req, res) => {
 
   // Ensure both fields are provided
   if (!comment || mark === undefined) {
+    // Log warning if missing required fields (warning log)
+    feedbackLogger.warn('Missing fields required for updating feedback');
     return res.status(400).json({ message: 'Comment and mark are required' });
   }
 
@@ -43,12 +50,17 @@ export const updateFeedback = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
+      // Log warning for feedback not found (warning log)
+      feedbackLogger.warn('Feedback not found for update', { feedbackID });
       return res.status(404).json({ message: 'Feedback not found' });
     }
 
+    // Log success for updated feedback (information log)
+    feedbackLogger.info('Feedback updated successfully', { feedbackID });
     res.status(200).json({ message: 'Feedback updated successfully' });
   } catch (error) {
-    console.error('Error updating feedback:', error);
+    // Log error when updating feedback fails (error log)
+    feedbackLogger.error(`Error updating feedback: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -64,12 +76,16 @@ export const deleteFeedback = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
+      // Log warning for feedback not found (warning log)
+      feedbackLogger.warn('Feedback not found for deletion:', { feedbackID });
       return res.status(404).json({ message: 'Feedback not found' });
     }
 
+    // Log success when feedback is deleted (information log)
+    feedbackLogger.info('Feedback deleted successfully', { feedbackID });
     res.status(200).json({ message: 'Feedback deleted successfully' });
   } catch (error) {
-    console.error('Error deleting feedback:', error);
+    feedbackLogger.error(`Error deleting feedback: ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -108,6 +124,8 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
 
     // If no data is found
     if (rows.length === 0) {
+      // Log warning if no marks found for module and user (warning log)
+      feedbackLogger.warn('No marks found for the specified moduleID and userID', { moduleID, userID });
       return res.status(404).json({ message: 'No marks found for the specified moduleID and userID' });
     }
 
@@ -121,16 +139,17 @@ export const getStudentMarksByUserAndModule = async (req, res) => {
       };
     });
 
+    //Log success if marks retrieved (information log)
+    feedbackLogger.info('Student marks retrieved successfully', { moduleID, userID });
     // Return the formatted data under the "feedback" key
     res.status(200).json({ feedback });
 
   } catch (error) {
-    console.error(error);
+    // Log error when fetching marks fails (error log)
+    feedbackLogger.error(`Error fetching marks: ${error.message}`, { error });
     res.status(500).json({ message: 'Error fetching marks', error });
   }
 };
-
-
 
 
 
@@ -167,6 +186,8 @@ export const downloadMarks = async (req, res) => {
 
     // Check if no data is returned
     if (rows.length === 0) {
+      // Log warning if no data found (warning log)
+      feedbackLogger.warn(`No data found for the given assignment: ${assignmentID}`);
       return res.status(404).json({ message: 'No data found for the given assignment.' });
 
     }
@@ -186,6 +207,8 @@ export const downloadMarks = async (req, res) => {
       res.setHeader('Content-Disposition', 'attachment; filename=student_marks.xlsx');
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       
+      // Log success if file generated (information log)
+      feedbackLogger.info(`XLSX file generated successfully for assignment: ${assignmentID}`);
       return res.send(buffer);
     }
 
@@ -199,17 +222,22 @@ export const downloadMarks = async (req, res) => {
       res.setHeader('Content-Disposition', 'attachment; filename=student_marks.csv');
       res.setHeader('Content-Type', 'text/csv');
 
+      // Log success if file generated (information log)
+      feedbackLogger.info(`CSV file generated successfully for assignment: ${assignmentID}`);
       return res.send(csv);
     } 
 
     // If the format is not supported
     else {
+      // Log warning for invalid format (warning log)
+      feedbackLogger.warn(`Invalid format specified for download: ${format}`);
       return res.status(400).json({ message: 'Invalid format specified. Use either "xlsx" or "csv".' });
 
     }
 
   } catch (error) {
-    console.error('Error exporting marks:', error);
+    // Log error when exporting marks fails (error log)
+    feedbackLogger.error(`Error exporting marks ${error.message}`, { error });
     res.status(500).json({ message: 'Internal Server Error'});
   }
 };

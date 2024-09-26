@@ -25,8 +25,8 @@ feedbackRoute.delete('/v1/feedback/:feedbackID', authorizeRoles('Admin', 'Lectur
 
 
 // Route for downloading commentary in specific format
-feedbackRoute.get('/v1/download-commentary/:assignmentID/:format', downloadMarks);
-feedbackRoute.get('/v1/download-marks', downloadMarks);
+feedbackRoute.get('/v1/download-marks/:assignmentID/:format', downloadMarks);
+
 
 
 

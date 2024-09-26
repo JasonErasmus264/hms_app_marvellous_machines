@@ -31,6 +31,9 @@ const resetFailedAttempts = (ip) => {
   failedLoginAttempts.delete(ip);
 };
 
+
+
+
 // Login
 export const login = async (req, res) => {
   const { username, password } = req.body;
@@ -46,7 +49,10 @@ export const login = async (req, res) => {
   }
 
   try {
-    const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
+    const [rows] = await pool.execute(
+      'SELECT userID, password, userType FROM users WHERE username = ? LIMIT 1', 
+      [username]
+    );
 
     if (rows.length === 0) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -94,7 +100,6 @@ export const login = async (req, res) => {
   }
 };
 
-// Refresh Token
 export const refreshToken = async (req, res) => {
   const authHeader = req.headers['authorization'];
 
@@ -105,7 +110,12 @@ export const refreshToken = async (req, res) => {
   const refreshToken = authHeader.split(' ')[1];
 
   try {
-    const [rows] = await pool.execute('SELECT * FROM users WHERE refreshToken IS NOT NULL');
+    // Only select the columns required for token validation and generation
+    const [rows] = await pool.execute(
+      'SELECT userID, userType, refreshToken FROM users WHERE refreshToken IS NOT NULL'
+    );
+    
+    // Find the user whose stored refreshToken matches the provided one
     const user = rows.find(u => bcryptjs.compareSync(refreshToken, u.refreshToken));
 
     if (!user) {
@@ -135,11 +145,10 @@ export const refreshToken = async (req, res) => {
       const hashedNewRefreshToken = bcryptjs.hashSync(newRefreshToken, 10);
       await pool.execute('UPDATE users SET refreshToken = ? WHERE userID = ?', [hashedNewRefreshToken, user.userID]);
 
-      // Respond without sending userID
       return res.json({
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
-        userType: user.userType, // No userID in the response
+        userType: user.userType,
       });
     });
   } catch (err) {

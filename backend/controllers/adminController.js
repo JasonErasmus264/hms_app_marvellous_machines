@@ -33,7 +33,7 @@ export const getUserInfo = async (req, res) => {
   const { userID } = req.params;
 
   try {
-    // Execute query to get detailed user info by userID, excluding the email
+    // Execute query to get detailed user info by userID
     const [rows] = await pool.execute(
       'SELECT firstName, lastName, phoneNum, userType FROM users WHERE userID = ?',
       [userID]
@@ -45,7 +45,7 @@ export const getUserInfo = async (req, res) => {
 
     const user = rows[0];
 
-    // Return the detailed user info, excluding email
+    // Return the detailed user info
     res.status(200).json({
       firstName: user.firstName,
       lastName: user.lastName,
@@ -138,7 +138,6 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Static update query
     await pool.execute(
       'UPDATE users SET firstName = ?, lastName = ?, phoneNum = ?, userType = ? WHERE userID = ?',
       [firstName, lastName, phoneNum, userType, userID]
@@ -161,8 +160,12 @@ export const deleteUser = async (req, res) => {
 
   try {
     // Check if the user exists
-    const [existingUser] = await pool.execute('SELECT * FROM users WHERE userID = ?', [userID]);
+    const [existingUser] = await pool.execute(
+      'SELECT userID FROM users WHERE userID = ?',
+      [userID]
+    );
 
+    
     if (existingUser.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }

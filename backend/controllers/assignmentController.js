@@ -12,8 +12,12 @@ export const getAssignmentsByModule = async (req, res) => {
     }
 
     // Fetch assignments based on the provided moduleID
-    const [rows] = await pool.execute('SELECT * FROM assignment WHERE moduleID = ?', [moduleID]);
+    const [rows] = await pool.execute(
+      'SELECT assignmentID, assignName, assignDesc, assignOpenDate, assignDueDate, assignTotalMarks FROM assignment WHERE moduleID = ?',
+      [moduleID]
+    );
 
+    // Return a 404 response if no assignments are found for the provided moduleID
     if (rows.length === 0) {
       return res.status(404).json({ message: 'No assignments found for this module' });
     }

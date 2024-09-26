@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import pool from '../db.js';
+import { userLogger } from '../middleware/logger.js'; // Import user logger
 
 export const getUser = async (req, res) => {
   try {
@@ -12,6 +13,8 @@ export const getUser = async (req, res) => {
     );
 
     if (rows.length === 0) {
+      // Log a warning if user not found (warning log)
+      userLogger.warn(`User not found: ${userID}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -19,6 +22,9 @@ export const getUser = async (req, res) => {
     
     // Format the createdAt field to the desired format (e.g., "July 12th, 2023")
     const formattedCreatedAt = formatDate(new Date(user.createdAt));
+
+    // Log success if user details recieved (information log)
+    userLogger.info(`User details retrieved successfully for userID: ${userID}`);
 
     // Return the user's data including the formatted createdAt and phoneNum
     res.json({
@@ -28,6 +34,8 @@ export const getUser = async (req, res) => {
       },
     });
   } catch (error) {
+    // Log error when retrieving user fails (error log)
+    userLogger.error(`Error retrieving user: ${userID}, ${error.message}`, {error});
     res.status(500).json({ error: error.message });
   }
 };
@@ -75,6 +83,8 @@ export const updateUser = async (req, res) => {
     const [rows] = await pool.execute('SELECT username FROM users WHERE userID = ?', [userID]);
 
     if (rows.length === 0) {
+      // Log a warning if user not found (warning log)
+      userLogger.warn(`User not found for update: ${userID}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -83,8 +93,13 @@ export const updateUser = async (req, res) => {
       [firstName, lastName, phoneNum, userID]
     );
 
+    // Log success if user updated (information log)
+    userLogger.info(`User updated successfully: ${userID}`);
+
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
+    // Log error when updating user fails (error log)
+    userLogger.error(`Error updating user: ${userID}, ${error.message}`, {error});
     res.status(500).json({ error: error.message });
   }
 };
@@ -106,16 +121,22 @@ export const changePassword = async (req, res) => {
   try {
     // Check if all fields are filled
     if (!username || !currentPassword || !newPassword || !confirmPassword) {
+      // Log a warning if missing required fields (warning log)
+      userLogger.warn(`Password change request failed for userID: ${userID}, all fields are required`)
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Check if newPassword and confirmPassword match
     if (newPassword !== confirmPassword) {
+      // Log a warning if passwords don't match (warning log)
+      userLogger.warn(`Password change request failed for userID: ${userID}, new password and confirm password do not match`);
       return res.status(400).json({ message: 'New password and confirm password do not match' });
     }
 
     // Validate the new password using the regex
     if (!passwordRegex.test(newPassword)) {
+      // Log a warning if requirements not met (warning log)
+      userLogger.warn(`Password change request failed for userID: ${userID}, new password does not meet requirements`);
       return res.status(400).json({
         message: 'New password must be at least 8 characters, contain one uppercase, one lowercase, one number, and one special character.'
       });
@@ -126,22 +147,30 @@ export const changePassword = async (req, res) => {
     const user = userRows[0];
 
     if (!user) {
+      // Log a warning if user not found (warning log)
+      userLogger.warn(`User not found for password change: ${userID}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Check if the provided username matches the username in the database
     if (user.username !== username) {
+      // Log a warning if username doesn't match (warning log)
+      userLogger.warn(`Password change request failed for userID: ${userID}, username does not match the authenticated user`);
       return res.status(401).json({ message: 'Username does not match the authenticated user' });
     }
 
     // Compare the old password with the stored password
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
+      // Log a warning if current password incorrect (warning log)
+      userLogger.warn(`Password change request failed for userID: ${userID}, current password is incorrect`);
       return res.status(401).json({ message: 'Current password is incorrect' });
     }
 
     // Check if the new password is the same as the old password
     if (await bcrypt.compare(newPassword, user.password)) {
+      // Log a warning if new password is same as old password (warning log)
+      userLogger.warn(`Password change request failed for userID: ${userID}, new password cannot be the same as the old password`);
       return res.status(400).json({ message: 'New password cannot be the same as the old password' });
     }
 
@@ -151,10 +180,14 @@ export const changePassword = async (req, res) => {
     // Update the password in the database
     await pool.execute('UPDATE users SET password = ? WHERE userID = ?', [hashedNewPassword, userID]);
 
+    // Log success if password updated (information log)
+    userLogger.info(`Password updated successfully for userID: ${userID}`);
+
     res.status(200).json({ message: 'Password updated successfully' });
 
   } catch (error) {
-    console.error('Error changing password:', error.message);
+    // Log error when changing password fails (error log)
+    userLogger.error(`Error changing password for userID: ${userID}, ${error.message}`, { error });
     res.status(500).json({ message: 'Internal server error' });
   }
 };

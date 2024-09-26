@@ -16,7 +16,7 @@ class UserGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -191,7 +191,7 @@ class AssignmentGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -384,7 +384,7 @@ class FeedbackGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -470,7 +470,7 @@ class SubmissionGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -596,7 +596,7 @@ class GetMarkedCall {
 /// Start Auth Group Code
 
 class AuthGroup {
-  static String getBaseUrl() => 'http://192.168.3.66:3000';
+  static String getBaseUrl() => 'http://192.168.0.17:3000';
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
   static RefreshTokenCall refreshTokenCall = RefreshTokenCall();
@@ -843,7 +843,7 @@ class VideoCompressionGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -964,7 +964,7 @@ class AdminGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -1220,7 +1220,7 @@ class ModuleGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://192.168.0.17:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };

@@ -1,4 +1,5 @@
 import pool from '../db.js';  // Assuming the database pool is set up
+import { submissionLogger } from '../middleware/logger.js'; // import submission logger
 
 // Function to format the date using native JS Intl.DateTimeFormat
 const formatDate = (date) => {
@@ -16,7 +17,8 @@ const formatDate = (date) => {
 // Controller function to fetch submissions for a specific assignment
 export const getSubmissionsByAssignment = async (req, res) => {
   const { assignmentID } = req.params;
-
+  // log information on fetching submissions for assignments (information log)
+  submissionLogger.info(`Fetching submissions for assignmentID: ${assignmentID}`);
   try {
     // Query to get the list of submissions for the given assignment ID
     const [submissions] = await pool.execute(
@@ -30,6 +32,8 @@ export const getSubmissionsByAssignment = async (req, res) => {
 
     // If no submissions are found
     if (submissions.length === 0) {
+      // log warning if no submissions are found for an assignment (warning log)
+      submissionLogger.warn(`No submissions found for assignmentID: ${assignmentID}`);
       return res.status(404).json({ message: 'No submissions found for this assignment.' });
     }
 
@@ -61,7 +65,8 @@ export const getSubmissionsByAssignment = async (req, res) => {
       submission: submissionList
     });
   } catch (error) {
-    console.error('Error fetching submissions:', error);
+    // log any errors that may occur while trying to fetch the submissions for an assignment (error log)
+    submissionLogger.error(`Error fetching submissions for assignmentID: ${assignmentID}: ${error.message}`, { error });
     res.status(500).json({ error: 'An error occurred while fetching submissions.' });
   }
 };
@@ -72,7 +77,9 @@ export const getSubmissionsByAssignment = async (req, res) => {
 // Function to get submissions that are "To be marked" (without feedback)
 export const getNotMarkedSubmissions = async (req, res) => {
     const { assignmentID } = req.params; // Get assignmentID from the request params
-  
+
+    // log information on fetching unmarked submissions for an assignment (information log)
+    submissionLogger.info(`Fetching unmarked submissions for assignmentID: ${assignmentID}`);
     try {
       // Query to get submissions that don't have feedback (i.e., "To be marked")
       const [rows] = await pool.execute(
@@ -88,10 +95,12 @@ export const getNotMarkedSubmissions = async (req, res) => {
         submissionVidPath: submission.submissionVidPath,
         uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
       }));
-  
+      // log successfully fetching unmarked submissions for an assignment (information log)
+      submissionLogger.info(`Successfully fetched unmarked submissions for assignmentID: ${assignmentID}`);
       res.json({ submission });
     } catch (error) {
-      console.error(error);
+      // log any errors that may have occured while fetching unmarked submissions for an assignment (error log)
+      submissionLogger.error(`Error fetching unmarked submissions for assignmentID: ${assignmentID}: ${error.message}`, { error });
       res.status(500).json({ message: 'Error fetching submissions to be marked.' });
     }
   };
@@ -100,7 +109,8 @@ export const getNotMarkedSubmissions = async (req, res) => {
   // Function to get submissions that are "Marked" (with feedback)
   export const getMarkedSubmissions = async (req, res) => {
     const { assignmentID } = req.params; // Get assignmentID from the request params
-  
+    // log information on fetching marked submissions for an assignment (information log)
+    submissionLogger.info(`Fetching marked submissions for assignmentID: ${assignmentID}`);
     try {
       // Query to get submissions that have feedback (i.e., "Marked")
       const [rows] = await pool.execute(
@@ -116,10 +126,12 @@ export const getNotMarkedSubmissions = async (req, res) => {
         submissionVidPath: submission.submissionVidPath,
         uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
       }));
-  
+      // log successfully fetching marked submissions for an assignment (information log)
+      submissionLogger.info(`Successfully fetched marked submissions for assignmentID: ${assignmentID}`);
       res.json({ submission });
     } catch (error) {
-      console.error(error);
+      // log any errors that may have occured whie fetching marked submissions for an assignment (error log)
+      submissionLogger.error(`Error fetching marked submissions for assignmentID: ${assignmentID}: ${error.message}`, { error });
       res.status(500).json({ message: 'Error fetching marked submissions.' });
     }
   };

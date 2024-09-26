@@ -94,6 +94,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           requireAuth: true,
           builder: (context, params) => const AssignmentWidget(),
         ),
+        
         FFRoute(
           name: 'addUser',
           path: '/addUser',

@@ -1,8 +1,8 @@
-import multer from 'multer';  // For file uploads
-import ffmpeg from 'fluent-ffmpeg';  // For video compression
-import fs from 'fs';  // For file system operations
-import path from 'path';  // For file path operations
-import axios from 'axios';  // For Nextcloud upload
+import multer from 'multer';  
+import ffmpeg from 'fluent-ffmpeg';  
+import fs from 'fs';  
+import path from 'path';  
+import axios from 'axios'; 
 import pool from '../db.js';
 import 'dotenv/config';
 

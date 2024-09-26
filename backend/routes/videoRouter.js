@@ -8,6 +8,6 @@ videoRouter.use(verifyToken);
 
 videoRouter.post('/v1/upload-video', uploadVideo);
 
-videoRouter.post('/v1/update-video', updateVideo);
+videoRouter.put('/v1/update-video', updateVideo);
 
 export default videoRouter;

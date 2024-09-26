@@ -1,6 +1,5 @@
 import bcryptjs from 'bcryptjs';
 import pool from '../db.js';
-import { adminLogger } from '../middleware/logger.js'; // Import admin logger
 
 
 // Get All Users
@@ -17,13 +16,9 @@ export const getAllUsers = async (req, res) => {
     }));
 
     // Return the list of users
-
-    // Log success message for fetching users (information log)
-    adminLogger.info('Fetched all users successfully');
     res.status(200).json({ users });
   } catch (error) {
-    // Log error message when fetching users fails (error log)
-    adminLogger.error(`Error fetching users: ${error.message}`, { error });
+    console.error('Error fetching users:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -45,17 +40,12 @@ export const getUserInfo = async (req, res) => {
     );
 
     if (rows.length === 0) {
-      // Log warning if the user is not found (warning log)
-      adminLogger.warn(`User not found with userID: ${userID}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
     const user = rows[0];
 
     // Return the detailed user info, excluding email
-    
-    // Log success message for fetching user info (information log)
-    adminLogger.info(`Fetched user info for userID: ${userID}`);
     res.status(200).json({
       firstName: user.firstName,
       lastName: user.lastName,
@@ -63,8 +53,7 @@ export const getUserInfo = async (req, res) => {
       userType: user.userType,
     });
   } catch (error) {
-    // Log error message when fetching user details fails (error log)
-    adminLogger.error(`Error fetching user details for userID: ${userID}, ${error.message}`, { error });
+    console.error('Error fetching user details:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -93,8 +82,6 @@ export const createUser = async (req, res) => {
   try {
     // Validate required fields
     if (!firstName || !lastName || !phoneNum || !userType) {
-       // Log warning if required fields are missing (warning log)
-      adminLogger.warn('Missing required fields for creating user');
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -117,14 +104,11 @@ export const createUser = async (req, res) => {
       [username, firstName, lastName, hashedPassword, email, phoneNum, userType]
     );
 
-    // Log success message for user creation (information log)
-    adminLogger.info(`User created successfully with username: ${username}`);
     // Send success response
     res.status(201).json({ message: 'User created successfully'});
   } catch (error) {
     // Handle any errors and send failure response
-    // Log error message when creating user fails (error log)
-    adminLogger.error(`Error creating user: ${error.message}`, { error });
+    console.error('Error creating user:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -140,8 +124,6 @@ export const updateUser = async (req, res) => {
 
   // Validate that all required fields are provided
   if (!firstName || !lastName || !phoneNum || !userType) {
-    // Log warning if required fields are missing (warning log)
-    adminLogger.warn('Missing required fields for updating user');
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -153,8 +135,6 @@ export const updateUser = async (req, res) => {
     );
 
     if (existingUser.length === 0) {
-      // Log warning if the user is not found (warning log)
-      adminLogger.warn(`User not found with userID: ${userID}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -164,12 +144,9 @@ export const updateUser = async (req, res) => {
       [firstName, lastName, phoneNum, userType, userID]
     );
 
-    // Log success message for user update (information log)
-    adminLogger.info(`User updated successfully with userID: ${userID}`);
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
-    // Log error message when updating user fails (error log)
-    adminLogger.error(`Error updating user with userID: ${userID}, ${error.message}`, { error });
+    console.error('Error updating user:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -187,20 +164,15 @@ export const deleteUser = async (req, res) => {
     const [existingUser] = await pool.execute('SELECT * FROM users WHERE userID = ?', [userID]);
 
     if (existingUser.length === 0) {
-      // Log warning if the user is not found (warning log)
-      adminLogger.warn(`User not found with userID: ${userID}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Execute the delete query
     await pool.execute('DELETE FROM users WHERE userID = ?', [userID]);
 
-    // Log success message for user deletion (information log)
-    adminLogger.info(`User deleted successfully with userID: ${userID}`);
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
-    // Log error message when deleting user fails (error log)
-    adminLogger.error(`Error deleting user with userID: ${userID}, ${error.message}`, { error });
+    console.error('Error deleting user:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

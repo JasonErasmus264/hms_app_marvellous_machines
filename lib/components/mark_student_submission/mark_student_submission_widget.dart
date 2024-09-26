@@ -11,8 +11,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
-import 'dart:html' as html; 
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'mark_student_submission_model.dart';
@@ -60,52 +58,6 @@ class _MarkStudentSubmissionWidgetState
 
     super.dispose();
   }
-
-  Future<void> downloadFile(String url, String fileName, String mimeType) async {
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        final blob = html.Blob([response.bodyBytes], mimeType);
-        final fileUrl = html.Url.createObjectUrlFromBlob(blob);
-        final anchor = html.AnchorElement(href: fileUrl)
-          ..setAttribute('download', fileName)
-          ..click();
-        html.Url.revokeObjectUrl(fileUrl);
-      } else {
-        print('Error: Failed to download file. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  Future<void> downloadXlsxFile() async {
-    await downloadFile(
-      'http://localhost:3000/api/v1/download/xlsx',
-      'student_marks.xlsx',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    );
-  }
-
-  Future<void> downloadCsvFile() async {
-    await downloadFile(
-      'http://localhost:3000/api/v1/download/csv',
-      'student_marks.csv',
-      'text/csv'
-    );
-  }
-
-  void handleDownload() {
-    if (_model.dropDownValue == 'Excel') {
-      downloadXlsxFile();
-    } else if (_model.dropDownValue == 'CSV') {
-      downloadCsvFile();
-    } else {
-      print('No file type selected or unsupported file type.');
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {

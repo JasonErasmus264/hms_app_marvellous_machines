@@ -1,5 +1,4 @@
 import pool from '../db.js';
-import { assignmentLogger } from '../middleware/logger.js'; // Import assignment logger
 
 
 // Function to get assignments based on module ID
@@ -9,8 +8,6 @@ export const getAssignmentsByModule = async (req, res) => {
   try {
     // Validate the moduleID
     if (!moduleID) {
-      // Log a warning if moduleID is not provided (warning log)
-      assignmentLogger.warn('Module ID is missing in the request');
       return res.status(400).json({ message: 'Module ID is required' });
     }
 
@@ -18,8 +15,6 @@ export const getAssignmentsByModule = async (req, res) => {
     const [rows] = await pool.execute('SELECT * FROM assignment WHERE moduleID = ?', [moduleID]);
 
     if (rows.length === 0) {
-      // Log info if no assignments are found (information log)
-      assignmentLogger.info(`No assignments found for moduleID: ${moduleID}`);
       return res.status(404).json({ message: 'No assignments found for this module' });
     }
 
@@ -53,12 +48,8 @@ export const getAssignmentsByModule = async (req, res) => {
       };
     });
 
-    // Log success when assignments are fetched (information log)
-    assignmentLogger.info(`Assignments fetched successfully for moduleID: ${moduleID}`);
     res.json({ assignments: formattedAssignments });
   } catch (error) {
-    // Log error when fetching assignments fails (error log)
-    assignmentLogger.error(`Error fetching assignments: ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while fetching assignments' });
   }
 };
@@ -77,15 +68,11 @@ export const addAssignment = async (req, res) => {
   try {
     // Validate the moduleID
     if (!moduleID) {
-      // Log a warning if moduleID is not provided (warning log)
-      assignmentLogger.warn('Module ID is missing in the request');
       return res.status(400).json({ message: 'Module ID is required' });
     }
 
     // Validate assignment details
     if (!assignName || !assignDesc || !assignOpenDate || !assignDueDate || assignTotalMarks == null) {
-      // Log warning for missing fields (warning log)
-      assignmentLogger.warn('Missing required fields for creating an assignment (title, description, open date, due date, total marks) are required');
       return res.status(400).json({ message: 'All fields (title, description, open date, due date, total marks) are required' });
     }
 
@@ -98,8 +85,6 @@ export const addAssignment = async (req, res) => {
 
     // Validate that the open date is before the due date
     if (new Date(assignOpenDate) >= new Date(assignDueDate)) {
-      // Log warning for date validation failure (warning log)
-      assignmentLogger.warn('Open date is after or the same as the due date');
       return res.status(400).json({ message: 'The assignment open date must be before the due date' });
     }
 
@@ -112,18 +97,13 @@ export const addAssignment = async (req, res) => {
 
     // Check if the assignment was inserted successfully
     if (result.affectedRows === 0) {
-      // Log error if the insertion failed (warning log)
-      assignmentLogger.error(`Failed to add assignment: ${error.message}`, { error });
       return res.status(500).json({ message: 'Failed to add assignment' });
     }
 
-    // Log success when assignment is added (information log)
-    assignmentLogger.info(`Assignment added successfully with name: ${assignName}`);
     // Return success response
     res.status(201).json({ message: 'Assignment added successfully'});
   } catch (error) {
-    // Log error when adding assignments fails (error log)
-    assignmentLogger.error(`Error adding assignment: ${error.message}`, { error });
+    console.error(error);
     res.status(500).json({ message: 'An error occurred while adding the assignment' });
   }
 };
@@ -142,15 +122,11 @@ export const updateAssignment = async (req, res) => {
   try {
     // Validate the assignmentID
     if (!assignmentID) {
-      // Log a warning if assignmentID is not provided (warning log)
-      assignmentLogger.warn('Assignment ID is missing in the request');
       return res.status(400).json({ message: 'Assignment ID is required' });
     }
 
     // Ensure all required fields are provided
     if (!assignName || !assignDesc || !assignOpenDate || !assignDueDate || assignTotalMarks == null) {
-      // Log warning for missing fields (warning log)
-      assignmentLogger.warn('Missing required fields for updating an assignment');
       return res.status(400).json({ message: 'All fields (title, description, open date, due date, total marks) are required' });
     }
 
@@ -163,8 +139,6 @@ export const updateAssignment = async (req, res) => {
 
     // Validate that the open date is before the due date
     if (new Date(assignOpenDate) >= new Date(assignDueDate)) {
-      // Log warning for date validation failure (warning log)
-      assignmentLogger.warn('Open date is after or the same as the due date');
       return res.status(400).json({ message: 'The assignment open date must be before the due date' });
     }
 
@@ -177,17 +151,11 @@ export const updateAssignment = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      // Log warning if no changes were made (warning log)
-      assignmentLogger.warn(`No changes made or assignment not found with ID: ${assignmentID}`);
       return res.status(404).json({ message: 'Assignment not found or no changes made' });
     }
 
-    // Log success when assignment is updated (information log)
-    assignmentLogger.info(`Assignment updated successfully with ID: ${assignmentID}`);
     res.json({ message: 'Assignment updated successfully' });
   } catch (error) {
-    // log error when updating assignments fails (error log)
-    assignmentLogger.error(`Error updating assignment with ID: ${assignmentID}, ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while updating the assignment' });
   }
 };
@@ -205,8 +173,6 @@ export const deleteAssignment = async (req, res) => {
   try {
     // Validate the assignmentID
     if (!assignmentID) {
-      // Log a warning if assignmentID is not provided (warning log)
-      assignmentLogger.warn('Assignment ID is missing in the request');
       return res.status(400).json({ message: 'Assignment ID is required' });
     }
 
@@ -214,17 +180,11 @@ export const deleteAssignment = async (req, res) => {
     const [result] = await pool.execute('DELETE FROM assignment WHERE assignmentID = ?', [assignmentID]);
 
     if (result.affectedRows === 0) {
-      // Log a warning if assignmentID is not found (warning log)
-      assignmentLogger.warn(`Assignment not found with ID: ${assignmentID}`);
       return res.status(404).json({ message: 'Assignment not found' });
     }
 
-    // Log success when an assignment is deleted (information log)
-    assignmentLogger.info(`Assignment deleted successfully with ID: ${assignmentID}`);
     res.json({ message: 'Assignment deleted successfully' });
   } catch (error) {
-    // Log error when deleting an assignment fails (error log)
-    assignmentLogger.error(`Error deleting assignment with ID: ${assignmentID}, ${error.message}`, { error });
     res.status(500).json({ message: 'An error occurred while deleting the assignment' });
   }
 };

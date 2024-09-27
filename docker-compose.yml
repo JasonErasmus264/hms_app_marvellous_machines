@@ -33,6 +33,7 @@ services:
     expose:
       - 3306
     environment:
+      MYSQL_HOST: mysql
       MYSQL_DATABASE: nwu_hms               # Initial database to create
       MYSQL_USER: admin                     # MySQL username
       MYSQL_PASSWORD: 'hms'                   # Set MySQL admin password

@@ -1,5 +1,5 @@
 # Use Node.js LTS version
-FROM node:20
+FROM node:20.16.0
 
 # Create and set the working directory inside the backend folder
 WORKDIR /app

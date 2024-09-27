@@ -17,7 +17,7 @@ export const getUser = async (req, res) => {
 
     // Fetch the user's data including createdAt and phoneNum fields
     const [rows] = await pool.execute(
-      'SELECT username, firstName, lastName, email, phoneNum, userType, createdAt FROM users WHERE userID = ?',
+      'SELECT username, firstName, lastName, email, phoneNum, userType, createdAt, profilePicture FROM users WHERE userID = ?',
       [userID]
     );
 

@@ -1,7 +1,16 @@
 services:
   nodejs:
     container_name: nodejs-container
-    build: ./backend                       # Build context is the backend folder
+    # You can choose between two methods for setting up the Node.js backend:
+    # 1. Build locally: If you want to build the backend from your local source, 
+    #    use the 'build: ./backend' option. 
+    #    - Ensure you cd and have run `npm i` inside the backend folder before building then go back to the root folder.
+    # 2. Pull from repository: Alternatively, use the pre-built image from Docker Hub
+    #    by specifying the 'image' option (as shown below) to pull the image directly.
+    #    - This method avoids building locally and pulls the image from a remote repo.
+    # Uncomment one of the following options based on your needs:
+    # build: ./backend # Build locally
+    image: jasonerasmus264/hms_app_marvellous_machines-nodejs:main  # Pull the image from Docker Hub
     ports:
       - "3000:3000"                        # Expose port 3000 for the Node.js backend
     expose:
@@ -18,7 +27,6 @@ services:
       - internalnet
     depends_on:
       - mysql                              # Wait for MySQL to be up before starting the backend
-
 
   mysql:
     container_name: mysql-container
@@ -41,11 +49,9 @@ services:
     networks:
       - internalnet
 
-
 networks:
-  internalnet:                              # Define a network for inter-container communication
-    driver: bridge                       # Use bridge driver
-    
+  internalnet:                              # Define a bridge network for inter-container communication
+    driver: bridge                          # Use the bridge driver for network isolation
 
 volumes:
   dev-mysql:                                # Named volume for MySQL persistence

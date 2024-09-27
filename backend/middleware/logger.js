@@ -35,7 +35,7 @@ const performanceLogFormat = winston.format.combine(
 // Create Winston logger instances for each category
 
 // auth logger
-const authLogger = winston.createLogger({
+export const authLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -44,7 +44,7 @@ const authLogger = winston.createLogger({
 });
 
 // assignment logger
-const assignmentLogger = winston.createLogger({
+export const assignmentLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -53,7 +53,7 @@ const assignmentLogger = winston.createLogger({
 });
 
 // feedback logger
-const feedbackLogger = winston.createLogger({
+export const feedbackLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -62,7 +62,7 @@ const feedbackLogger = winston.createLogger({
 });
 
 // submission logger
-const submissionLogger = winston.createLogger({
+export const submissionLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -71,7 +71,7 @@ const submissionLogger = winston.createLogger({
 });
 
 // user logger
-const userLogger = winston.createLogger({
+export const userLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -79,8 +79,9 @@ const userLogger = winston.createLogger({
   ]
 });
 
+
 // admin logger
-const adminLogger = winston.createLogger({
+export const adminLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -89,7 +90,7 @@ const adminLogger = winston.createLogger({
 });
 
 // module logger
-const moduleLogger = winston.createLogger({
+export const moduleLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -98,7 +99,7 @@ const moduleLogger = winston.createLogger({
 });
 
 // user module logger
-const userModuleLogger = winston.createLogger({
+export const userModuleLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
@@ -106,8 +107,10 @@ const userModuleLogger = winston.createLogger({
   ]
 });
 
-// performance logger
-const performanceLogger = winston.createLogger({
+
+
+// Performance logger
+export const performanceLogger = winston.createLogger({
   level: 'info',
   format: performanceLogFormat,
   transports: [
@@ -144,6 +147,3 @@ export const logPerformance = (req, res, next) => {
 
   next();
 };
-
-// export loggers
-export { authLogger, userLogger, assignmentLogger, feedbackLogger, submissionLogger, adminLogger, moduleLogger, userModuleLogger, performanceLogger};

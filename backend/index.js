@@ -1,54 +1,41 @@
-// IMPORTS FROM PACKAGES
+// Imports from packages
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv'; // Import dotenv for environment variables
+import dotenv from 'dotenv';
 
-
-// IMPORTS FROM OTHER FILES
+// Imports from other files
 import authRoute from './routes/authRouter.js';
+import adminRoute from './routes/adminRouter.js';
 import userRoute from './routes/userRouter.js';
+import moduleRoute from './routes/moduleRouter.js';
 import assignmentRoute from './routes/assignmentRouter.js';
 import videoRouter from './routes/videoRouter.js'; 
 import submissionRoute from './routes/submissionRouter.js';
 import feedbackRoute from './routes/feedbackRouter.js';
 
-// Load environment variables
+// Load Environment Variables
 dotenv.config();
 
-// INIT
+// Initialize
 const PORT = process.env.PORT || 3000;
 const app = express();
-
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-
 // Routes
 app.use(authRoute);
+app.use(adminRoute);
 app.use(userRoute);
+app.use(moduleRoute);
 app.use(assignmentRoute);
 app.use(submissionRoute);
 app.use(feedbackRoute);
 app.use(videoRouter);
 app.use(profileRouter);
 
-
-import { getStudentMarksByUserAndModule, downloadMarks } from './controllers/feedbackController.js';
-import profileRouter from './routes/profileRouter.js';
-
-app.get('/v1/download-marks', downloadMarks);
-
-
-
-app.get("/", (req, res) => {
-  res.send("Welcome to the Marvellous Machines API!");
-});
-
-
-
-// Start server
+// Start Server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Connected at port ${PORT}`);
 });

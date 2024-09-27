@@ -1,5 +1,5 @@
 # Use Node.js LTS version
-FROM node:20
+FROM node:20.16.0
 
 # Install FFmpeg
 RUN apt-get update && apt-get install -y ffmpeg

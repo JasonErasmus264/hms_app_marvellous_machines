@@ -25,6 +25,8 @@ class MarkStudentSubmissionModel
   // State field(s) for PaginatedDataTable widget.
   final paginatedDataTableController2 =
       FlutterFlowDataTableController<dynamic>();
+  // Stores action output result for [Backend Call - API (StreamVideo)] action in IconButton widget.
+  ApiCallResponse? apiResultURL;
 
   @override
   void initState(BuildContext context) {}

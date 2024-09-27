@@ -8,7 +8,6 @@ import 'dotenv/config';
 
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE);  
 
-
 // Ensure 'uploads' directories exist
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
@@ -300,11 +299,9 @@ export const updateVideo = (req, res) => {
 
       // Retrieve the old video name from the database
       const query = 'SELECT submissionVidName FROM submission WHERE assignmentID = ? AND userID = ?';
-      console.log('Running query with:', assignmentID, userID);
       const [rows] = await pool.execute(query, [assignmentID, userID]);
 
       if (rows.length === 0) {
-        console.log('No video found for assignmentID:', assignmentID, 'and userID:', userID);
         return res.status(404).json({ message: 'No video found for the given assignment ID' });
       }
 

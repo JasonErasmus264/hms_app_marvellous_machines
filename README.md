@@ -1,6 +1,6 @@
-# HMS App - Marvellous Machines
+# HMS App - Marvellous Machines 🤖
 
-## Table of Contents
+## Table of Contents 📚
 
 1. [Prerequisites](#prerequisites)
 2. [Getting Started](#getting-started)
@@ -9,22 +9,21 @@
    - [Option 2: Build Locally](#option-2-build-locally)
 4. [Database Setup](#database-setup)
 5. [Additional Assistance](#additional-assistance)
-6. [License](#license)
 
-## Prerequisites
+## Prerequisites ⚙️
 
 **Warning**: This application has been tested on Windows 10 and 11. If you encounter any issues, please refer to the appropriate documentation for your operating system.
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) - Ensure Docker is running.
+- 🐳 [Docker Desktop](https://www.docker.com/products/docker-desktop) - Ensure Docker is running.
 - If you plan to build the Node.js app locally:
-  - [Node.js](https://nodejs.org/en/) - Download the latest LTS version.
-  - [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) - Optional, for database management.
+  - 🌐 [Node.js](https://nodejs.org/en/) - Download the latest LTS version.
+  - 🛠️ [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) - Optional, for database management.
 
-### Important Note
+### Important Note ⚠️
 
 When cloning the repository, save it in a folder with **no special characters or spaces** in the path.
 
-## Getting Started
+## Getting Started 🚀
 
 **Clone the Repository**:
    ```bash
@@ -32,9 +31,9 @@ When cloning the repository, save it in a folder with **no special characters or
    cd hms_app_marvellous_machines
    ```
 
-## Running the Application
+## Running the Application 🏃‍♂️
 
-### Option 1: Use Docker (Recommended)
+### Option 1: Use Docker (Recommended) 🐋
 
 Using Docker is the simplest way to run the application. Just run the following command in the root directory:
 ```bash
@@ -51,7 +50,7 @@ To stop the application, use:
 docker-compose down
 ```
 
-### Option 2: Build Locally
+### Option 2: Build Locally 🖥️
 
 If you prefer to build the backend locally:
 1. Navigate to the `backend` directory:
@@ -108,7 +107,7 @@ If you prefer to build the backend locally:
    npm run dev
    ```
 
-## Database Setup
+## Database Setup 🗄️
 
 If you are running the application locally, you must have MySQL Workbench set up.
 
@@ -119,16 +118,16 @@ If you are running the application locally, you must have MySQL Workbench set up
    - Select the `dump` folder.
    - Click on the **Import Progress** tab and start the import.
 
-## Additional Assistance
+## Additional Assistance 🆘
 
 If you encounter any issues or need further assistance, here are some resources:
 
-- [Docker Documentation](https://docs.docker.com/get-started/)
-- [Node.js Documentation](https://nodejs.org/en/docs/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
+- 🐳 [Docker Documentation](https://docs.docker.com/get-started/)
+- 🌐 [Node.js Documentation](https://nodejs.org/en/docs/)
+- 🛠️ [MySQL Documentation](https://dev.mysql.com/doc/)
 
 For Windows-specific troubleshooting, consider visiting:
 
-- [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/)
-- [Windows 10/11 Git Bash Setup](https://www.atlassian.com/git/tutorials/git-bash)
+- 🐳 [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/)
+- 🖥️ [Windows 10/11 Git Bash Setup](https://www.atlassian.com/git/tutorials/git-bash)
 

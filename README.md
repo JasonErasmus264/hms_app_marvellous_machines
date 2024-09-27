@@ -12,7 +12,7 @@
 
 ## Prerequisites ⚙️
 
-**Warning**: This application has been tested on Windows 10 and 11. If you encounter any issues, please refer to the appropriate documentation for your operating system.
+🛑**Warning**: This application has been tested on Windows 10 and 11. If you encounter any issues, please refer to the appropriate documentation for your operating system.
 
 - 🐳 [Docker Desktop](https://www.docker.com/products/docker-desktop) - Ensure Docker is running.
 - If you plan to build the Node.js app locally:

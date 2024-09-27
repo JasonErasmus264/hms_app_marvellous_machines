@@ -1,6 +1,6 @@
 import express from 'express';
 import verifyToken from '../middleware/verifyToken.js';
-import authorizeRoles  from '../middleware/authorization.js';
+import { authorizeRoles }  from '../middleware/authorization.js';
 import { addUserToModule, deleteUserFromModule } from '../controllers/userModuleController.js';
 
 const userModuleRoute = express.Router();

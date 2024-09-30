@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
+import 'package:http/http.dart';
+
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallOptions, ApiCallResponse;
@@ -37,8 +39,9 @@ abstract class FFApiInterceptor {
 
   static Future<ApiCallResponse> makeApiCall(
     ApiCallOptions options,
-    List<FFApiInterceptor> interceptors,
-  ) async {
+    List<FFApiInterceptor> interceptors, {
+    Client? client,
+  }) async {
     final initialOptions = options.clone();
     // Update the options for each interceptor.
     for (final interceptor in interceptors) {
@@ -54,7 +57,7 @@ abstract class FFApiInterceptor {
       }
     }
     // Make the API call.
-    var response = await ApiManager.instance.call(options);
+    var response = await ApiManager.instance.call(options, client: client);
     // Update the response for each interceptor, applied in reverse order.
     for (final interceptor in interceptors.reversed) {
       response = await interceptor.onResponse(

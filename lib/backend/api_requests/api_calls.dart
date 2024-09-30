@@ -16,7 +16,7 @@ class UserGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://localhost:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -88,6 +88,10 @@ class GetUserCall {
   String? phoneNum(dynamic response) => castToType<String>(getJsonField(
         response,
         r'''$.user.phoneNum''',
+      ));
+  String? profilePicture(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.user.profilePicture''',
       ));
 }
 
@@ -191,7 +195,7 @@ class AssignmentGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://localhost:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -384,7 +388,7 @@ class FeedbackGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://localhost:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -435,6 +439,8 @@ class GetFeedbackCall {
 
 class DownloadMarksCall {
   Future<ApiCallResponse> call({
+    String? assignmentID = '',
+    String? format = '',
     String? token = '',
   }) async {
     final baseUrl = FeedbackGroup.getBaseUrl(
@@ -444,7 +450,7 @@ class DownloadMarksCall {
     return FFApiInterceptor.makeApiCall(
       ApiCallOptions(
         callName: 'Download Marks',
-        apiUrl: '$baseUrl/v1/download-marks',
+        apiUrl: '$baseUrl/v1/download-marks$assignmentID/$format',
         callType: ApiCallType.GET,
         headers: {
           'Authorization': 'Bearer $token',
@@ -470,13 +476,14 @@ class SubmissionGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://localhost:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
   static GetSubmissionCall getSubmissionCall = GetSubmissionCall();
   static GetNotMarkedCall getNotMarkedCall = GetNotMarkedCall();
   static GetMarkedCall getMarkedCall = GetMarkedCall();
+  static AddSubmissionCall addSubmissionCall = AddSubmissionCall();
 
   static final interceptors = [
     RefreshToken(),
@@ -591,12 +598,47 @@ class GetMarkedCall {
       ) as List?;
 }
 
+class AddSubmissionCall {
+  Future<ApiCallResponse> call({
+    FFUploadedFile? video,
+    int? assignmentID,
+    String? token = '',
+  }) async {
+    final baseUrl = SubmissionGroup.getBaseUrl(
+      token: token,
+    );
+
+    return FFApiInterceptor.makeApiCall(
+      ApiCallOptions(
+        callName: 'Add Submission',
+        apiUrl: '$baseUrl/v1/submissions',
+        callType: ApiCallType.POST,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        params: {
+          'video': video,
+          'assignmentID': assignmentID,
+        },
+        bodyType: BodyType.MULTIPART,
+        returnBody: true,
+        encodeBodyUtf8: false,
+        decodeUtf8: false,
+        cache: false,
+        isStreamingApi: false,
+        alwaysAllowBody: false,
+      ),
+      SubmissionGroup.interceptors,
+    );
+  }
+}
+
 /// End Submission Group Code
 
 /// Start Auth Group Code
 
 class AuthGroup {
-  static String getBaseUrl() => 'http://192.168.3.66:3000';
+  static String getBaseUrl() => 'http://localhost:3000';
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
   static RefreshTokenCall refreshTokenCall = RefreshTokenCall();
@@ -837,134 +879,13 @@ class ResetPasswordCall {
 
 /// End Auth Group Code
 
-/// Start VideoCompression Group Code
-
-class VideoCompressionGroup {
-  static String getBaseUrl({
-    String? token = '',
-  }) =>
-      'http://192.168.3.66:3000';
-  static Map<String, String> headers = {
-    'Authorization': 'Bearer [token]',
-  };
-  static PostVideoCall postVideoCall = PostVideoCall();
-  static StreamVideoCall streamVideoCall = StreamVideoCall();
-  static DownloadVideoCall downloadVideoCall = DownloadVideoCall();
-}
-
-class PostVideoCall {
-  Future<ApiCallResponse> call({
-    FFUploadedFile? video,
-    String? token = '',
-  }) async {
-    final baseUrl = VideoCompressionGroup.getBaseUrl(
-      token: token,
-    );
-
-    return ApiManager.instance.makeApiCall(
-      callName: 'PostVideo',
-      apiUrl: '$baseUrl/v1/video-upload',
-      callType: ApiCallType.POST,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      params: {
-        'video': video,
-      },
-      bodyType: BodyType.MULTIPART,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-
-  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.message''',
-      ));
-}
-
-class StreamVideoCall {
-  Future<ApiCallResponse> call({
-    String? videoID = '',
-    String? token = '',
-  }) async {
-    final baseUrl = VideoCompressionGroup.getBaseUrl(
-      token: token,
-    );
-
-    return ApiManager.instance.makeApiCall(
-      callName: 'StreamVideo',
-      apiUrl: '$baseUrl/v1/video/$videoID',
-      callType: ApiCallType.POST,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      params: {},
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-
-  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.message''',
-      ));
-  String? videoLink(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.publicLink''',
-      ));
-}
-
-class DownloadVideoCall {
-  Future<ApiCallResponse> call({
-    String? videoID = '',
-    String? token = '',
-  }) async {
-    final baseUrl = VideoCompressionGroup.getBaseUrl(
-      token: token,
-    );
-
-    return ApiManager.instance.makeApiCall(
-      callName: 'DownloadVideo',
-      apiUrl: '$baseUrl/v1/download-video/$videoID',
-      callType: ApiCallType.GET,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      params: {},
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-
-  dynamic errorMessage(dynamic response) => getJsonField(
-        response,
-        r'''$.message''',
-      );
-}
-
-/// End VideoCompression Group Code
-
 /// Start Admin Group Code
 
 class AdminGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://localhost:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -1220,7 +1141,7 @@ class ModuleGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://192.168.3.66:3000';
+      'http://localhost:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };

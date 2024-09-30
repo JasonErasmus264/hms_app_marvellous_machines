@@ -1,5 +1,3 @@
-import '/auth/custom_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -82,12 +80,15 @@ class _VideoStreamingWidgetState extends State<VideoStreamingWidget> {
                   children: [
                     Expanded(
                       child: Text(
-                        'videoAssignment1.mp4',
+                        valueOrDefault<String>(
+                          functions.getVideoName(widget.vidPath!),
+                          'video.mp4',
+                        ),
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               fontFamily: 'Manrope',
-                              fontSize: 23.0,
+                              fontSize: 16.0,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                             ),
                       ),
                     ),
@@ -141,60 +142,7 @@ class _VideoStreamingWidgetState extends State<VideoStreamingWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        _model.apiVidDownload =
-                            await VideoCompressionGroup.downloadVideoCall.call(
-                          token: currentAuthenticationToken,
-                        );
-
-                        if ((_model.apiVidDownload?.succeeded ?? true)) {
-                          await showDialog(
-                            context: context,
-                            builder: (alertDialogContext) {
-                              return AlertDialog(
-                                title: const Text('Video Downloaded'),
-                                content:
-                                    Text(VideoCompressionGroup.downloadVideoCall
-                                        .errorMessage(
-                                          (_model.apiVidDownload?.jsonBody ??
-                                              ''),
-                                        )
-                                        .toString()),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(alertDialogContext),
-                                    child: const Text('Ok'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          await showDialog(
-                            context: context,
-                            builder: (alertDialogContext) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content:
-                                    Text(VideoCompressionGroup.downloadVideoCall
-                                        .errorMessage(
-                                          (_model.apiVidDownload?.jsonBody ??
-                                              ''),
-                                        )
-                                        .toString()),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(alertDialogContext),
-                                    child: const Text('Ok'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-
-                        safeSetState(() {});
+                        await launchURL(widget.vidPath!);
                       },
                       text: 'Download',
                       icon: const Icon(

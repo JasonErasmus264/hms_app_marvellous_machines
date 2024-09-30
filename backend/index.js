@@ -9,7 +9,6 @@ import adminRoute from './routes/adminRouter.js';
 import userRoute from './routes/userRouter.js';
 import moduleRoute from './routes/moduleRouter.js';
 import assignmentRoute from './routes/assignmentRouter.js';
-import videoRouter from './routes/videoRouter.js'; 
 import submissionRoute from './routes/submissionRouter.js';
 import feedbackRoute from './routes/feedbackRouter.js';
 
@@ -32,8 +31,6 @@ app.use(moduleRoute);
 app.use(assignmentRoute);
 app.use(submissionRoute);
 app.use(feedbackRoute);
-app.use(videoRouter);
-app.use(profileRouter);
 
 // Start Server
 app.listen(PORT, "0.0.0.0", () => {

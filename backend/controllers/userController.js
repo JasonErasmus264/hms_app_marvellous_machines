@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import multer from 'multer';  // For file uploads
-import sharp from 'sharp';  // For image conversion
+import im from 'imagemagick'  // For image conversion
 import fs from 'fs';  // For file system operations
 import path from 'path';  // For file path operations
 import axios from 'axios';  // For Nextcloud upload
@@ -226,12 +226,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
  
 // Check image type and convert to .jpeg if necessary
-const convertToJpeg = async (filePath, outputFilePath) => {
-  return sharp(filePath)
-    .jpeg({ quality: 80 })
-    .toFile(outputFilePath);
+const convertToJpeg = (filePath, outputFilePath) => {
+  return new Promise((resolve, reject) => {
+    im.convert([filePath, '-quality', '80', outputFilePath], (err, stdout) => {
+      if (err) {
+        console.error(`Failed to convert image: ${err.message}`);
+        return reject(err);
+      }
+      console.log(`Successfully converted ${filePath} to JPEG format at ${outputFilePath}`);
+      resolve(outputFilePath);
+    });
+  });
 };
- 
+
 // Upload image to Nextcloud
 const uploadToNextcloud = async (filePath) => {
   const fileName = path.basename(filePath);

@@ -15,8 +15,12 @@ export const getAssignmentsByModule = async (req, res) => {
     }
 
     // Fetch assignments based on the provided moduleID
-    const [rows] = await pool.execute('SELECT * FROM assignment WHERE moduleID = ?', [moduleID]);
+    const [rows] = await pool.execute(
+      'SELECT assignmentID, assignName, assignDesc, assignOpenDate, assignDueDate, assignTotalMarks FROM assignment WHERE moduleID = ?',
+      [moduleID]
+    );
 
+    
     if (rows.length === 0) {
       // Log info if no assignments are found (information log)
       assignmentLogger.info(`No assignments found for moduleID: ${moduleID}`);

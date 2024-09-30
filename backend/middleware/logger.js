@@ -107,16 +107,9 @@ export const userModuleLogger = winston.createLogger({
   ]
 });
 
-// user profile logger
-export const profileLogger = winston.createLogger({
-  level: 'info',
-  format: logFormat,
-  transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'profile.log') })
-  ]
-});
 
-// performance logger
+
+// Performance logger
 export const performanceLogger = winston.createLogger({
   level: 'info',
   format: performanceLogFormat,
@@ -154,4 +147,3 @@ export const logPerformance = (req, res, next) => {
 
   next();
 };
-

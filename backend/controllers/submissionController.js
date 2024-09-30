@@ -195,7 +195,7 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
             submissionLogger.warn('Compressed file still exceeds the maximum size.');
             return reject(new Error('Compressed file size exceeds the maximum allowed size'));
           }
-          
+
           // Log success for video compression (information log)
           submissionLogger.info(`Video compressed successfully: ${outputFilePath}`);
           // If compressed size is within the limit, promise is resolved
@@ -235,7 +235,6 @@ const convertToMp4 = (filePath, outputFilePath) => {
       .run();
   });
 };
- 
 
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
@@ -328,7 +327,7 @@ const getVideoUrl = async (videoId) => {
       return res.status(500).json({ error: 'Failed to generate public link' });
     }
   } catch (error) {
-    // log error when creating public link fails (error log)
+    // Log error when creating public link fails (error log)
     submissionLogger.error(`Error creating public link: ${error.message}`, { error });
     throw new Error(`Failed to create public link: ${error.message}`);
   }
@@ -486,7 +485,17 @@ export const uploadVideo = (req, res) => {
   });
 };
  
- 
+
+
+
+
+
+
+
+
+
+
+
 // Main function to handle video update
 export const updateVideo = (req, res) => {
   upload.single('video')(req, res, async (err) => {

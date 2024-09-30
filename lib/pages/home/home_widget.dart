@@ -6,6 +6,7 @@ import '/components/profile/edit_profile/edit_profile_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'home_model.dart';
@@ -133,7 +134,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                           borderRadius:
                                               BorderRadius.circular(50.0),
                                           child: Image.network(
-                                            '',
+                                            functions.convertImagePath(UserGroup
+                                                .getUserCall
+                                                .profilePicture(
+                                              homeGetUserResponse.jsonBody,
+                                            ))!,
                                             width: 100.0,
                                             height: 100.0,
                                             fit: BoxFit.cover,

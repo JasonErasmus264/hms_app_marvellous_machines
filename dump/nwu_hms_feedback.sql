@@ -26,7 +26,7 @@ CREATE TABLE `feedback` (
   `feedbackID` int NOT NULL AUTO_INCREMENT,
   `submissionID` int NOT NULL,
   `userID` int DEFAULT NULL,
-  `comment` varchar(1000) DEFAULT NULL,
+  `comment` varchar(10000) DEFAULT NULL,
   `mark` decimal(5,2) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`feedbackID`),
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-24 10:07:41
+-- Dump completed on 2024-09-27 13:02:56

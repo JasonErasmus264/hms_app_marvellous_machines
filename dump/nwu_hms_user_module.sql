@@ -38,7 +38,7 @@ CREATE TABLE `user_module` (
 
 LOCK TABLES `user_module` WRITE;
 /*!40000 ALTER TABLE `user_module` DISABLE KEYS */;
-INSERT INTO `user_module` VALUES (2,1),(3,1);
+INSERT INTO `user_module` VALUES (2,1),(3,1),(13,1),(7,2),(8,2),(14,2),(17,2),(20,2),(21,2),(22,2),(15,3),(16,3),(18,3),(19,3);
 /*!40000 ALTER TABLE `user_module` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-24 10:07:40
+-- Dump completed on 2024-09-27 13:02:56

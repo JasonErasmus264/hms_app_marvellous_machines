@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `module`;
 CREATE TABLE `module` (
   `moduleID` int NOT NULL AUTO_INCREMENT,
   `moduleName` varchar(100) NOT NULL,
-  `moduleCode` varchar(45) NOT NULL,
+  `moduleCode` varchar(10) NOT NULL,
   PRIMARY KEY (`moduleID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-24 10:07:41
+-- Dump completed on 2024-09-27 13:02:56

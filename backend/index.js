@@ -2,7 +2,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { logPerformance } from './middleware/logger.js';
 
 // Imports from other files
 import authRoute from './routes/authRouter.js';
@@ -25,9 +24,6 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Performance tracking middleware
-app.use(logPerformance);
 
 // Routes
 app.use(authRoute);

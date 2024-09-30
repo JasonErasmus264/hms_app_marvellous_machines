@@ -1,4 +1,3 @@
-import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
@@ -17,16 +16,12 @@ class MarkStudentSubmissionModel
   // State field(s) for PaginatedDataTable widget.
   final paginatedDataTableController1 =
       FlutterFlowDataTableController<dynamic>();
-  // Stores action output result for [Backend Call - API (Download Marks)] action in Button widget.
-  ApiCallResponse? apiResults;
   // State field(s) for DropDown widget.
   String? dropDownValue;
   FormFieldController<String>? dropDownValueController;
   // State field(s) for PaginatedDataTable widget.
   final paginatedDataTableController2 =
       FlutterFlowDataTableController<dynamic>();
-  // Stores action output result for [Backend Call - API (StreamVideo)] action in IconButton widget.
-  ApiCallResponse? apiResultURL;
 
   @override
   void initState(BuildContext context) {}

@@ -9,8 +9,8 @@ import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'mark_student_submission_model.dart';
@@ -58,8 +58,6 @@ class _MarkStudentSubmissionWidgetState
 
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -313,8 +311,29 @@ class _MarkStudentSubmissionWidgetState
                                                 .info,
                                             size: 24.0,
                                           ),
-                                          onPressed: () {
-                                            print('IconButton pressed ...');
+                                          onPressed: () async {
+                                            await showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              enableDrag: false,
+                                              useSafeArea: true,
+                                              context: context,
+                                              builder: (context) {
+                                                return Padding(
+                                                  padding:
+                                                      MediaQuery.viewInsetsOf(
+                                                          context),
+                                                  child: VideoStreamingWidget(
+                                                    vidPath: getJsonField(
+                                                      notMarkedItem,
+                                                      r'''$.submissionVidPath''',
+                                                    ).toString(),
+                                                  ),
+                                                );
+                                              },
+                                            ).then(
+                                                (value) => safeSetState(() {}));
                                           },
                                         ),
                                       ),
@@ -369,97 +388,21 @@ class _MarkStudentSubmissionWidgetState
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          FFButtonWidget(
-                            onPressed: () async {
-                              await launchURL(
-                                  'http://localhost:3000/v1/download-marks');
-                            },
-                            text: 'Button',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Manrope',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 0.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              _model.apiResults =
-                                  await FeedbackGroup.downloadMarksCall.call(
-                                token: currentAuthenticationToken,
-                              );
-
-                              if ((_model.apiResults?.succeeded ?? true)) {
-                                var confirmDialogResponse =
-                                    await showDialog<bool>(
-                                          context: context,
-                                          builder: (alertDialogContext) {
-                                            return AlertDialog(
-                                              title: const Text('esf'),
-                                              content: const Text('eaf'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext,
-                                                          false),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          alertDialogContext,
-                                                          true),
-                                                  child: const Text('Confirm'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ) ??
-                                        false;
-                              }
-
-                              safeSetState(() {});
-                            },
-                            text: 'try cust action',
-                            options: FFButtonOptions(
-                              height: 40.0,
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Manrope',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 0.0,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 0.0, 20.0, 0.0, 10.0),
                             child: FlutterFlowDropDown<String>(
                               controller: _model.dropDownValueController ??=
                                   FormFieldController<String>(null),
-                              options: const ['Excel', 'CSV'],
-                              onChanged: (val) => safeSetState(
-                                  () => _model.dropDownValue = val),
+                              options: const ['xlsx', 'csv'],
+                              onChanged: (val) async {
+                                safeSetState(() => _model.dropDownValue = val);
+                                await actions.downloadMarks(
+                                  widget.assignmentID!,
+                                  _model.dropDownValue!,
+                                  currentAuthenticationToken!,
+                                );
+                              },
                               width: 283.0,
                               height: 40.0,
                               textStyle: FlutterFlowTheme.of(context)
@@ -705,100 +648,29 @@ class _MarkStudentSubmissionWidgetState
                                                   size: 24.0,
                                                 ),
                                                 onPressed: () async {
-                                                  _model.apiResultURL =
-                                                      await VideoCompressionGroup
-                                                          .streamVideoCall
-                                                          .call(
-                                                    token:
-                                                        currentAuthenticationToken,
-                                                  );
-
-                                                  if ((_model.apiResultURL
-                                                          ?.succeeded ??
-                                                      true)) {
-                                                    await showDialog(
-                                                      context: context,
-                                                      builder:
-                                                          (alertDialogContext) {
-                                                        return AlertDialog(
-                                                          title:
-                                                              const Text('Success'),
-                                                          content: Text(
-                                                              VideoCompressionGroup
-                                                                  .streamVideoCall
-                                                                  .errorMessage(
-                                                            (_model.apiResultURL
-                                                                    ?.jsonBody ??
-                                                                ''),
-                                                          )!),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      alertDialogContext),
-                                                              child: const Text('Ok'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                    await showModalBottomSheet(
-                                                      isScrollControlled: true,
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      enableDrag: false,
-                                                      useSafeArea: true,
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return Padding(
-                                                          padding: MediaQuery
-                                                              .viewInsetsOf(
-                                                                  context),
-                                                          child:
-                                                              VideoStreamingWidget(
-                                                            vidPath:
-                                                                VideoCompressionGroup
-                                                                    .streamVideoCall
-                                                                    .videoLink(
-                                                              (_model.apiResultURL
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ).then((value) =>
-                                                        safeSetState(() {}));
-                                                  } else {
-                                                    await showDialog(
-                                                      context: context,
-                                                      builder:
-                                                          (alertDialogContext) {
-                                                        return AlertDialog(
-                                                          title:
-                                                              const Text('ErrorURL'),
-                                                          content: Text(
-                                                              VideoCompressionGroup
-                                                                  .streamVideoCall
-                                                                  .errorMessage(
-                                                            (_model.apiResultURL
-                                                                    ?.jsonBody ??
-                                                                ''),
-                                                          )!),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      alertDialogContext),
-                                                              child: const Text('Ok'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  }
-
-                                                  safeSetState(() {});
+                                                  await showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    enableDrag: false,
+                                                    useSafeArea: true,
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Padding(
+                                                        padding: MediaQuery
+                                                            .viewInsetsOf(
+                                                                context),
+                                                        child:
+                                                            VideoStreamingWidget(
+                                                          vidPath: getJsonField(
+                                                            markedItem,
+                                                            r'''$.submissionVidPath''',
+                                                          ).toString(),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).then((value) =>
+                                                      safeSetState(() {}));
                                                 },
                                               ),
                                             ),

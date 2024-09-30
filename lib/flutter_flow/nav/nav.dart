@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '/backend/schema/structs/index.dart';
@@ -9,7 +8,6 @@ import '/backend/schema/structs/index.dart';
 import '/auth/custom_auth/custom_auth_user_provider.dart';
 
 import '/index.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
 export 'package:go_router/go_router.dart';
@@ -94,7 +92,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           requireAuth: true,
           builder: (context, params) => const AssignmentWidget(),
         ),
-        
         FFRoute(
           name: 'addUser',
           path: '/addUser',
@@ -308,14 +305,11 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: SpinKitFadingCube(
-                      color: FlutterFlowTheme.of(context).tertiary,
-                      size: 50.0,
-                    ),
+              ? Container(
+                  color: const Color(0xFF57045E),
+                  child: Image.asset(
+                    'assets/images/splash.png',
+                    fit: BoxFit.contain,
                   ),
                 )
               : page;

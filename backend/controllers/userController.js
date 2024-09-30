@@ -226,18 +226,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
  
 // Check image type and convert to .jpeg if necessary
-const convertToJpeg = (filePath, outputFilePath) => {
-  return new Promise((resolve, reject) => {
-    im.convert([filePath, '-quality', '80', outputFilePath], (err, stdout) => {
-      if (err) {
-        console.error(`Failed to convert image: ${err.message}`);
-        return reject(err);
-      }
-      console.log(`Successfully converted ${filePath} to JPEG format at ${outputFilePath}`);
-      resolve(outputFilePath);
+const convertToJpeg = async (filePath, outputFilePath) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      im.convert([filePath, '-quality', '80', outputFilePath], (err, stdout) => {
+        if (err) {
+          return reject(new Error(`Image conversion failed: ${err.message}`));
+        }
+        resolve(outputFilePath);
+      });
     });
-  });
+  } catch (error) {
+    throw new Error(`Conversion process encountered an issue: ${error.message}`);
+  }
 };
+
 
 // Upload image to Nextcloud
 const uploadToNextcloud = async (filePath) => {

@@ -1236,19 +1236,21 @@ class _AssignmentDetailedViewWidgetState
                                 }
                               }
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Video Selected',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
-                                  ),
-                                  duration: const Duration(milliseconds: 3000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).secondary,
-                                ),
+                              await showDialog(
+                                context: context,
+                                builder: (alertDialogContext) {
+                                  return AlertDialog(
+                                    title: const Text('Success'),
+                                    content: const Text('Video Selected'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(alertDialogContext),
+                                        child: const Text('Ok'),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
                             text: 'Select Video',
@@ -1284,62 +1286,7 @@ class _AssignmentDetailedViewWidgetState
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 16.0, 0.0, 16.0),
                           child: FFButtonWidget(
-                            onPressed: () async {
-                              _model.apiVideoResult =
-                                  await VideoCompressionGroup.postVideoCall
-                                      .call(
-                                video: _model.uploadedLocalFile,
-                                token: currentAuthenticationToken,
-                              );
-
-                              if (_model.isDataUploading) {
-                                await showDialog(
-                                  context: context,
-                                  builder: (alertDialogContext) {
-                                    return AlertDialog(
-                                      title: const Text('Video  Uploaded'),
-                                      content: Text(VideoCompressionGroup
-                                          .postVideoCall
-                                          .errorMessage(
-                                        (_model.apiVideoResult?.jsonBody ?? ''),
-                                      )!),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(alertDialogContext),
-                                          child: const Text('Ok'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-
-                                context.pushNamed('assignment');
-                              } else {
-                                await showDialog(
-                                  context: context,
-                                  builder: (alertDialogContext) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: Text(VideoCompressionGroup
-                                          .postVideoCall
-                                          .errorMessage(
-                                        (_model.apiVideoResult?.jsonBody ?? ''),
-                                      )!),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(alertDialogContext),
-                                          child: const Text('Ok'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-
-                              safeSetState(() {});
-                            },
+                            onPressed: () async {},
                             text: 'Submit',
                             options: FFButtonOptions(
                               width: double.infinity,

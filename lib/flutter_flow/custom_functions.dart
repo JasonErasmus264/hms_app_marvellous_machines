@@ -77,6 +77,10 @@ String? formatTextForJson(String inputText) {
   return inputText.trim().replaceAll('\n', '\\n');
 }
 
+String? convertImagePath(String? imagePath) {
+  return imagePath;
+}
+
 String? convertVidPath(String? submissionVidPath) {
   return submissionVidPath;
 }
@@ -95,4 +99,13 @@ DateTime? convertDate(String? formattedDate) {
     print('Error parsing date: $e');
     return null;
   }
+}
+
+int convertStringToInt(String assignID) {
+  return int.tryParse(assignID) ?? 0;
+}
+
+String getVideoName(String vidPath) {
+  final parts = vidPath.split('/');
+  return parts.isNotEmpty ? parts.last : '';
 }

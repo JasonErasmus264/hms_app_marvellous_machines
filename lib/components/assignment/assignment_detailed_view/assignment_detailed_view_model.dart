@@ -62,9 +62,6 @@ class AssignmentDetailedViewModel
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
 
-  // Stores action output result for [Backend Call - API (PostVideo)] action in Button widget.
-  ApiCallResponse? apiVideoResult;
-
   @override
   void initState(BuildContext context) {
     textController1Validator = _textController1Validator;

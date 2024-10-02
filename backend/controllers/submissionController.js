@@ -159,7 +159,9 @@ if (!fs.existsSync('uploads')) {
   // Log creation of directory (information log)
   submissionLogger.info('Uploads directory created');
 }
- 
+
+
+
  
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
@@ -168,11 +170,11 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     // Log file recieved for upload (information log)
-    submissionLogger.info(`File received for upload: ${filename}`);
+    submissionLogger.info(`File received for upload: ${file.originalname}`);
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
- 
+
 const upload = multer({ storage });
  
  

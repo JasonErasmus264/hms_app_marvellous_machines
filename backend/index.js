@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
 
 // Imports from other files
 import authRoute from './routes/authRouter.js';
@@ -11,6 +12,7 @@ import moduleRoute from './routes/moduleRouter.js';
 import assignmentRoute from './routes/assignmentRouter.js';
 import submissionRoute from './routes/submissionRouter.js';
 import feedbackRoute from './routes/feedbackRouter.js';
+//import pushRoute from './routes/pushRouter.js';
 
 // Load Environment Variables
 dotenv.config();
@@ -23,6 +25,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(bodyParser.json()); // Parse incoming request bodies as JSON
+
 // Routes
 app.use(authRoute);
 app.use(adminRoute);
@@ -31,6 +35,7 @@ app.use(moduleRoute);
 app.use(assignmentRoute);
 app.use(submissionRoute);
 app.use(feedbackRoute);
+//app.use(pushRoute);
 
 // Start Server
 app.listen(PORT, "0.0.0.0", () => {

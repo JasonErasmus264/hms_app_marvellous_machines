@@ -23,63 +23,38 @@ const formatDate = (date) => {
   return new Intl.DateTimeFormat('en-GB', options).format(date).replace(',', ' at');
 };
 
-// Controller function to fetch submissions for a specific assignment
-export const getSubmissionsByAssignment = async (req, res) => {
+// Controller function to fetch a single submission for a specific assignment for a specific user
+export const getSubmissionByAssignmentForUser = async (req, res) => {
   const { assignmentID } = req.params;
-  // log information on fetching submissions for assignments (information log)
-  submissionLogger.info(`Fetching submissions for assignmentID: ${assignmentID}`);
+  const { userID } = req.user; // Extract userID from the request
+
+  submissionLogger.info(`Fetching submission for assignmentID: ${assignmentID} by userID: ${userID}`);
+  
   try {
-    // Query to get the list of submissions for the given assignment ID
     const [submissions] = await pool.execute(
-      `SELECT s.submissionID, s.submissionVidPath, s.uploadedAt, 
-              u.firstName, u.lastName, u.username
+      `SELECT s.submissionVidName, s.submissionVidPath, s.uploadedAt
        FROM submission s
-       JOIN users u ON s.userID = u.userID
-       WHERE s.assignmentID = ?`,
-      [assignmentID]
+       WHERE s.assignmentID = ? AND s.userID = ?`,
+      [assignmentID, userID]
     );
 
-    // If no submissions are found
     if (submissions.length === 0) {
-      // log warning if no submissions are found for an assignment (warning log)
-      submissionLogger.warn(`No submissions found for assignmentID: ${assignmentID}`);
-      return res.status(404).json({ message: 'No submissions found for this assignment.' });
+      submissionLogger.warn(`No submissions found for assignmentID: ${assignmentID} by userID: ${userID}`);
+      return res.status(404).json({ message: 'No submission found for this assignment for the specified user.' });
     }
 
-    // Process each submission and check if feedback exists
-    const submissionList = await Promise.all(submissions.map(async (submission) => {
-      // Query to check if feedback exists for the current submission
-      const [feedback] = await pool.execute(
-        `SELECT feedbackID FROM feedback WHERE submissionID = ?`,
-        [submission.submissionID]
-      );
-
-      // Determine if the submission is marked or to be marked based on feedback presence
-      const status = feedback.length === 0 ? 'To be marked' : 'Marked';
-
-      // Format the submission datetime
-      const formattedDate = formatDate(new Date(submission.uploadedAt));
-
-      // Return the formatted submission object
-      return {
-        studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
-        submissionVidPath: submission.submissionVidPath,
-        uploadedAt: formattedDate,
-        status: status
-      };
-    }));
-
-    // Return the structured response with the submission list
+    // Return the first submission found
+    const submission = submissions[0];
     res.json({
-      submission: submissionList
+      submissionVidName: submission.submissionVidName,
+      submissionVidPath: submission.submissionVidPath,
+      uploadedAt: submission.uploadedAt
     });
   } catch (error) {
-    // log any errors that may occur while trying to fetch the submissions for an assignment (error log)
-    submissionLogger.error(`Error fetching submissions: ${error.message}`, { error });
-    res.status(500).json({ error: 'An error occurred while fetching submissions.' });
+    submissionLogger.error(`Error fetching submission: ${error.message}`, { error });
+    res.status(500).json({ message: 'An error occurred while fetching the submission.' });
   }
 };
-
 
 
 

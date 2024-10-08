@@ -1,6 +1,6 @@
 import express from 'express';
 import verifyToken from '../middleware/verifyToken.js';
-import { getSubmissionsByAssignment, getNotMarkedSubmissions, getMarkedSubmissions, uploadVideo, updateVideo } from '../controllers/submissionController.js';  // Import the controller function
+import { getSubmissionByAssignmentForUser, getNotMarkedSubmissions, getMarkedSubmissions, uploadVideo, updateVideo } from '../controllers/submissionController.js';  // Import the controller function
 
 const submissionRoute = express.Router();
 
@@ -8,7 +8,7 @@ const submissionRoute = express.Router();
 submissionRoute.use(verifyToken);
 
 // Route to get the submissions for a specific student
-submissionRoute.get('/v1/assignment/:assignmentID/submissions', getSubmissionsByAssignment);
+submissionRoute.get('/v1/submissions/:assignmentID', getSubmissionByAssignmentForUser);
 
 // Route for getting submissions "To be marked"
 submissionRoute.get('/v1/submissions/not-marked/:assignmentID', getNotMarkedSubmissions);

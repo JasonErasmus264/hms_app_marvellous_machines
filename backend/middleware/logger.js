@@ -4,6 +4,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { performance } from 'perf_hooks';
 import os from 'os';
+import 'winston-daily-rotate-file';
 
 // Get the current directory name
 const __filename = fileURLToPath(import.meta.url);
@@ -21,100 +22,105 @@ if (!fs.existsSync(logDirectory)) {
 const logFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.errors({ stack: true }), // Include stack trace for errors
-  winston.format.prettyPrint(), 
+  winston.format.prettyPrint()
 );
 
-// Performance Format
-const performanceLogFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.printf(({ timestamp, level, message }) => {
-    return `Time Stamp: ${timestamp}\nLevel: ${level}\n${JSON.stringify(message, null, 2)}`;
-  })
-);
+// Configure rotating file transport for log rotation
+const rotatingFileTransport = (filename) => new winston.transports.DailyRotateFile({
+  filename: path.join(logDirectory, filename),
+  datePattern: 'YYYY-MM-DD',      // Rotate daily based on date
+  zippedArchive: true,            // Compress old logs
+  maxSize: '20m',                 // Rotate when log reaches 20MB
+  maxFiles: '14d'                 // Keep logs for 14 days
+});
 
-// Create Winston logger instances for each category
-
-// auth logger
+// auth logger 
 export const authLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'auth.log') })
+    rotatingFileTransport('auth-%DATE%.log')
   ]
 });
 
-// assignment logger
+// assignment logger 
 export const assignmentLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'assignments.log') })
+    rotatingFileTransport('assignments-%DATE%.log')
   ]
 });
 
-// feedback logger
+// feedback logger 
 export const feedbackLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'feedback.log') })
+    rotatingFileTransport('feedback-%DATE%.log')
   ]
 });
 
-// submission logger
+// submission logger 
 export const submissionLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'submissions.log') })
+    rotatingFileTransport('submissions-%DATE%.log')
   ]
 });
 
-// user logger
+// user logger 
 export const userLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'user.log') })
+    rotatingFileTransport('user-%DATE%.log')
   ]
 });
 
-
-// admin logger
+// admin logger 
 export const adminLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'admin.log') })
+    rotatingFileTransport('admin-%DATE%.log')
   ]
 });
 
-// module logger
+// module logger 
 export const moduleLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'module.log') })
+    rotatingFileTransport('module-%DATE%.log')
   ]
 });
 
-// user module logger
+// user module logger 
 export const userModuleLogger = winston.createLogger({
   level: 'info',
   format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'userModule.log') })
+    rotatingFileTransport('userModule-%DATE%.log')
   ]
 });
 
-
-
-// Performance logger
+// Performance logger 
 export const performanceLogger = winston.createLogger({
   level: 'info',
-  format: performanceLogFormat,
+  format: logFormat,
   transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'performance.log') })
+    rotatingFileTransport('performance-%DATE%.log')
+  ]
+});
+
+// Load test logger 
+export const loadTestLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,
+  transports: [
+    rotatingFileTransport('loadTest-%DATE%.log')
   ]
 });
 
@@ -123,9 +129,9 @@ export const logPerformance = (req, res, next) => {
   const start = performance.now();  // Start timing
 
   res.on('finish', () => {
-    const duration = (performance.now() - start).toFixed(2);  
+    const duration = (performance.now() - start).toFixed(2);
     const memoryUsage = process.memoryUsage();
-    const cpuUsage = os.loadavg(); 
+    const cpuUsage = os.loadavg();
 
     performanceLogger.info({
       method: req.method,
@@ -148,11 +154,5 @@ export const logPerformance = (req, res, next) => {
   next();
 };
 
-export const loadTestLogger = winston.createLogger({
-  level: 'info',
-  format: logFormat,  // You can use the same format or define a new one
-  transports: [
-    new winston.transports.File({ filename: path.join(logDirectory, 'loadTest.log') })
-  ]
-});
+
 

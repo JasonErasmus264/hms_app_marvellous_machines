@@ -7,6 +7,8 @@ config:
       arrivalRate: 10  # Increase to 10 new users per second
     - duration: 300  # Final 5 minutes
       arrivalRate: 1  # Gradually decrease to 1 user per second
+    
+
   defaults:
     headers:
       content-type: "application/json"
@@ -23,11 +25,24 @@ scenarios:
           validate:
             - status: 200
             - json: "$.token"
-          retries:
-            max: 3
-            on:
-              - status: 429
+          extract:
+            token: "$.token"  # Save the token for future requests
 
+      # Get all users (Admin only)
+      - get:
+          url: "/v1/admin"
+          headers:
+            Authorization: "Bearer {{ token }}"  # Pass the access token
+          validate:
+            - status: 200
+
+      # Get current user info
+      - get:
+          url: "/v1/users"
+          headers:
+            Authorization: "Bearer {{ token }}"  # Pass the access token
+          validate:
+            - status: 200
 
 report:
-  output: "loadTestReport.json"  
+  output: "loadTestReport.json"

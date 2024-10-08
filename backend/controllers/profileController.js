@@ -5,7 +5,7 @@ import path from 'path';  // For file path operations
 import axios from 'axios';  // For Nextcloud upload
 import pool from '../db.js';
 import 'dotenv/config';
-import { profileLogger, submissionLogger } from '../middleware/logger.js';
+
  
 // Ensure 'uploads' directory exists
 if (!fs.existsSync('uploads')) {

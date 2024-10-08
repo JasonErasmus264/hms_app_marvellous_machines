@@ -147,3 +147,12 @@ export const logPerformance = (req, res, next) => {
 
   next();
 };
+
+export const loadTestLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,  // You can use the same format or define a new one
+  transports: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'loadTest.log') })
+  ]
+});
+

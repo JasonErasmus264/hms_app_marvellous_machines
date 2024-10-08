@@ -152,16 +152,13 @@ export const getNotMarkedSubmissions = async (req, res) => {
 
 
  
- 
 // Ensure 'uploads' directories exist
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
   // Log creation of directory (information log)
   submissionLogger.info('Uploads directory created');
 }
-
-
-
+ 
  
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
@@ -174,15 +171,17 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
-const upload = multer({ storage });
  
+const upload = multer({ storage });
+
  
 // Video compression function
 const compressVideo = (filePath, outputFilePath, maxFileSize) => {
+  const newOutputFilePath = outputFilePath.replace(/([^\/]+)$/, '1$1');
+
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
-      .output(outputFilePath)
+      .output(newOutputFilePath)
       .videoCodec('libx264')
       .size('?x360') // Rezize the height but maintain aspect ratio
       .videoBitrate('800k')
@@ -191,7 +190,7 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
       .on('end', async () => {
         try {
           // Check if the compressed file size exceeds the maximum allowed size because very large files might need to be compressed more than once
-          const compressedSize = fs.statSync(outputFilePath).size;
+          const compressedSize = fs.statSync(newOutputFilePath).size;
           if (compressedSize > maxFileSize) {
             // Log warning if file exceeds maximum size (warning log)
             submissionLogger.warn('Compressed file still exceeds the maximum size.');
@@ -199,9 +198,9 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
           }
 
           // Log success for video compression (information log)
-          submissionLogger.info(`Video compressed successfully: ${outputFilePath}`);
+          submissionLogger.info(`Video compressed successfully: ${newOutputFilePath}`);
           // If compressed size is within the limit, promise is resolved
-          resolve(outputFilePath);
+          resolve(newOutputFilePath);
         } catch (err) {
           // Log error when compression fails (error log)
           submissionLogger.error(`Error during compression size check: ${err.message}`, { err });
@@ -231,12 +230,13 @@ const convertToMp4 = (filePath, outputFilePath) => {
       })
       .on('error', (err) => {
         // Log error when conversion fails (error log)
-        submissionLogger.error(`Error during video conversion: ${err.message}`, { err });
+        submissionLogger.error(`Error during video conversion:`,  err );
         reject(err);
       })
       .run();
   });
 };
+
 
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
@@ -317,7 +317,7 @@ const getVideoUrl = async (videoId) => {
         permissions: 1,   // Set Read-only permissions
       },
     });
- 
+
     if (response.data && response.data.ocs && response.data.ocs.data && response.data.ocs.data.url) {
       const publicLink = response.data.ocs.data.url;
       // Log success when public link generated (information log)
@@ -334,8 +334,8 @@ const getVideoUrl = async (videoId) => {
     throw new Error(`Failed to create public link: ${error.message}`);
   }
 };
- 
- 
+
+
 // Delete the old video from Nextcloud
 const deleteOldVideoFromNextcloud = async (oldVideoPath) => {
   try {
@@ -346,15 +346,15 @@ const deleteOldVideoFromNextcloud = async (oldVideoPath) => {
       },
     });
  
-    if (response.status !== 204) {
-      // Log error when deleting old video fails (error log)
-      submissionLogger.error('Failed to delete old video from Nextcloud');
-      throw new Error('Failed to delete old video from Nextcloud');
+    if (response.status === 204) {
+      submissionLogger.info(`Successfully deleted old video from Nextcloud: ${oldVideoPath}`);
+    } else if (response.status === 404) {
+      submissionLogger.warn(`Old video not found in Nextcloud: ${oldVideoPath}`);
+      // Decide whether to throw an error here or simply continue
+    } else {
+      throw new Error('Unexpected response from Nextcloud during deletion');
     }
-    // Log success when deleting old video (information log)
-    submissionLogger.info(`Successfully deleted old video from Nextcloud: ${oldVideoPath}`);
   } catch (error) {
-    // Log error when deleting old video fails (error log)
     submissionLogger.error(`Error deleting old video from Nextcloud: ${error.message}`, { error });
     throw new Error(`Failed to delete old video: ${error.message}`);
   }
@@ -380,13 +380,6 @@ const updateMetadata = async (req, res, assignmentID, newVideoId, publicLink) =>
   }
 };
  
- 
- 
-
-
-
-
-
 
 
 
@@ -487,14 +480,6 @@ export const uploadVideo = (req, res) => {
   });
 };
  
-
-
-
-
-
-
-
-
 
 
 

@@ -4,7 +4,10 @@ FROM node:20.16.0
 # Create and set the working directory inside the backend folder
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Install FFmpeg and GraphicsMagick in one RUN command
+RUN apt-get update && apt-get install -y ffmpeg graphicsmagick && apt-get clean
+
+# Copy package.json to the working directory
 COPY package.json ./
 
 # Install dependencies

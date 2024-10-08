@@ -1,11 +1,11 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';  // For password hashing
 import multer from 'multer';  // For file uploads
-import im from 'imagemagick'  // For image conversion
+import gm from 'gm'; // For image conversions
 import fs from 'fs';  // For file system operations
 import path from 'path';  // For file path operations
 import axios from 'axios';  // For Nextcloud upload
-import pool from '../db.js';
-import 'dotenv/config';
+import pool from '../db.js';  // Importing database connection pool
+import 'dotenv/config';  // Load environment variables
 
 import { userLogger } from '../middleware/logger.js'; // Import user logger
 
@@ -211,6 +211,8 @@ export const changePassword = async (req, res) => {
 // Ensure 'uploads' directory exists
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
+  // Log creation of directory (information log)
+  userLogger.info('Uploads directory created');
 }
  
 // Multer configuration for file uploads
@@ -219,23 +221,30 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
+    userLogger.info(`File received for upload: ${file.originalname}`);
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
  
 const upload = multer({ storage });
+
  
 // Check image type and convert to .jpeg if necessary
 const convertToJpeg = async (filePath, outputFilePath) => {
   try {
-    return await new Promise((resolve, reject) => {
-      im.convert([filePath, '-quality', '80', outputFilePath], (err, stdout) => {
+    // Convert image to.jpeg
+    return new Promise((resolve, reject) => {
+    gm(filePath)
+      .setFormat('jpeg')
+      .quality(80)
+      .write(outputFilePath, (err) => {
         if (err) {
           return reject(new Error(`Image conversion failed: ${err.message}`));
         }
         resolve(outputFilePath);
       });
     });
+    
   } catch (error) {
     throw new Error(`Conversion process encountered an issue: ${error.message}`);
   }
@@ -283,26 +292,26 @@ const uploadToNextcloud = async (filePath) => {
  
 // Store picture metadata (public picture link) in MySQL
 const storeMetadata = async (req, res, pictureLink) => {
-    try {
-      const { userID } = req.user;
- 
-      // Check if pictureLink and userID are defined
-      if (!userID) {
-        // Log warning for invalid userID (warning log)
-        userLogger.warn(`Invalid userID: ${userID}`)
-        throw new Error('Invalid user ID');
-      }
- 
-      const query = 'UPDATE users SET profilePicture = ? WHERE userID = ?';
-      await pool.execute(query, [pictureLink, userID]);
-      // Log success for updated profile picture (information log)
-      userLogger.info(`Updated profile picture for userID: ${userID}`);
-    } catch (error) {
-      // Log error when storing metadata fails 
-      profileLogger.error(`Error during metadata storing: ${error.message}`, { error });
-      if (!res.headersSent) { return res.status(500).json({ message: 'Failed to store metadata', details: error.message }); }
+  try {
+    const { userID } = req.user;
+
+    // Check if pictureLink and userID are defined
+    if (!userID) {
+      // Log warning for invalid userID (warning log)
+      userLogger.warn(`Invalid userID: ${userID}`)
+      throw new Error('Invalid user ID');
     }
-  };
+
+    const query = 'UPDATE users SET profilePicture = ? WHERE userID = ?';
+    await pool.execute(query, [pictureLink, userID]);
+    // Log success for updated profile picture (information log)
+    userLogger.info(`Updated profile picture for userID: ${userID}`);
+  } catch (error) {
+    // Log error when storing metadata fails 
+    userLogger.error(`Error during metadata storing: ${error.message}`, { error });
+    if (!res.headersSent) { return res.status(500).json({ message: 'Failed to store metadata', details: error.message }); }
+  }
+};
  
  
  

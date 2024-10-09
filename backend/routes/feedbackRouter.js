@@ -11,7 +11,7 @@ feedbackRoute.use(verifyToken);
 // Get student feedback for Gradebook
 feedbackRoute.get('/v1/feedback/:moduleID/gradebook', getStudentMarksByUserAndModule);
 
-// Get feedback for student
+// Get feedback (Admins or Lecturers)
 feedbackRoute.get('/v1/feedback/:submissionID', authorizeRoles('Admin', 'Lecturer'), getFeedback);
 
 // Add feedback (Admins or Lecturers)
@@ -23,7 +23,7 @@ feedbackRoute.put('/v1/feedback/:feedbackID', authorizeRoles('Admin', 'Lecturer'
 // Delete feedback (Admins or Lecturers)
 feedbackRoute.delete('/v1/feedback/:feedbackID', authorizeRoles('Admin', 'Lecturer'), deleteFeedback);
 
-// Route for downloading feedback in specific format
+// Route for downloading feedback in specific format (Admins or Lecturers)
 feedbackRoute.get('/v1/download-marks/:assignmentID/:format', authorizeRoles('Admin', 'Lecturer'), downloadMarks);
 
 export default feedbackRoute;

@@ -69,13 +69,16 @@ export const getNotMarkedSubmissions = async (req, res) => {
   // log information on fetching unmarked submissions for an assignment (information log)
   submissionLogger.info(`Fetching unmarked submissions for assignmentID: ${assignmentID}`);
   try {
-    // Query to get submissions that don't have feedback (i.e., "To be marked")
+    // Query to get submissions that don't have feedback (i.e., "To be marked"), including total marks for the assignment
     const [rows] = await pool.execute(
-      `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidName, s.submissionVidPath, s.uploadedAt
-        FROM submission s
-        JOIN users u ON s.userID = u.userID
-        LEFT JOIN feedback f ON s.submissionID = f.submissionID
-        WHERE s.assignmentID = ? AND f.submissionID IS NULL`, [assignmentID]);
+      `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidName, s.submissionVidPath, s.uploadedAt, a.assignTotalMarks
+       FROM submission s
+       JOIN users u ON s.userID = u.userID
+       LEFT JOIN feedback f ON s.submissionID = f.submissionID
+       JOIN assignment a ON s.assignmentID = a.assignmentID
+       WHERE s.assignmentID = ? AND f.submissionID IS NULL`,
+      [assignmentID]
+    );
 
     // Format the submission list
     const submission = rows.map(submission => ({
@@ -84,31 +87,38 @@ export const getNotMarkedSubmissions = async (req, res) => {
       submissionVidName: submission.submissionVidName,
       submissionVidPath: submission.submissionVidPath,
       uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
+      totalMarks: submission.assignTotalMarks, // Include total marks for the assignment
     }));
+
     // log successfully fetching unmarked submissions for an assignment (information log)
     submissionLogger.info(`Successfully fetched unmarked submissions for assignmentID: ${assignmentID}`);
     res.json({ submission });
   } catch (error) {
-    // log any errors that may have occured while fetching unmarked submissions for an assignment (error log)
+    // log any errors that may have occurred while fetching unmarked submissions for an assignment (error log)
     submissionLogger.error(`Error fetching unmarked submissions: ${error.message}`, { error });
     res.status(500).json({ message: 'Error fetching submissions to be marked.' });
   }
 };
 
 
+
 // Function to get submissions that are "Marked" (with feedback)
 export const getMarkedSubmissions = async (req, res) => {
   const { assignmentID } = req.params; // Get assignmentID from the request params
+
   // log information on fetching marked submissions for an assignment (information log)
   submissionLogger.info(`Fetching marked submissions for assignmentID: ${assignmentID}`);
   try {
-    // Query to get submissions that have feedback (i.e., "Marked")
+    // Query to get submissions that have feedback (i.e., "Marked"), including total marks for the assignment
     const [rows] = await pool.execute(
-      `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidName, s.submissionVidPath, s.uploadedAt
-        FROM submission s
-        JOIN users u ON s.userID = u.userID
-        JOIN feedback f ON s.submissionID = f.submissionID
-        WHERE s.assignmentID = ?`, [assignmentID]);
+      `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidName, s.submissionVidPath, s.uploadedAt, a.assignTotalMarks
+       FROM submission s
+       JOIN users u ON s.userID = u.userID
+       JOIN feedback f ON s.submissionID = f.submissionID
+       JOIN assignment a ON s.assignmentID = a.assignmentID
+       WHERE s.assignmentID = ?`,
+      [assignmentID]
+    );
 
     // Format the submission list
     const submission = rows.map(submission => ({
@@ -117,16 +127,19 @@ export const getMarkedSubmissions = async (req, res) => {
       submissionVidName: submission.submissionVidName,
       submissionVidPath: submission.submissionVidPath,
       uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
+      totalMarks: submission.assignTotalMarks, // Include total marks for the assignment
     }));
+
     // log successfully fetching marked submissions for an assignment (information log)
     submissionLogger.info(`Successfully fetched marked submissions for assignmentID: ${assignmentID}`);
     res.json({ submission });
   } catch (error) {
-    // log any errors that may have occured whie fetching marked submissions for an assignment (error log)
+    // log any errors that may have occurred while fetching marked submissions for an assignment (error log)
     submissionLogger.error(`Error fetching marked submissions: ${error.message}`, { error });
     res.status(500).json({ message: 'Error fetching marked submissions.' });
   }
 };
+
 
 
 

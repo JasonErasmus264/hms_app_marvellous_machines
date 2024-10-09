@@ -1,7 +1,7 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/components/empty_lists/empty_gradebook/empty_gradebook_widget.dart';
-import '/components/feedback_comment/feedback_comment_widget.dart';
+import '/components/feedback/feedback_comment/feedback_comment_widget.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -43,10 +43,9 @@ class _GradebookWidgetState extends State<GradebookWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ApiCallResponse>(
-      future: FeedbackGroup.getFeedbackCall.call(
+      future: FeedbackGroup.getFeedbackForGradebookCall.call(
         token: currentAuthenticationToken,
         moduleID: _model.dropDownValue,
-        userID: currentUserUid,
       ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
@@ -65,7 +64,7 @@ class _GradebookWidgetState extends State<GradebookWidget> {
             ),
           );
         }
-        final gradebookGetFeedbackResponse = snapshot.data!;
+        final gradebookGetFeedbackForGradebookResponse = snapshot.data!;
 
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -113,7 +112,7 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
                     child: FutureBuilder<ApiCallResponse>(
-                      future: ModuleGroup.getModuleCall.call(
+                      future: ModuleGroup.getModuleForDropdownCall.call(
                         token: currentAuthenticationToken,
                       ),
                       builder: (context, snapshot) {
@@ -130,17 +129,19 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                             ),
                           );
                         }
-                        final dropDownGetModuleResponse = snapshot.data!;
+                        final dropDownGetModuleForDropdownResponse =
+                            snapshot.data!;
 
                         return FlutterFlowDropDown<int>(
                           controller: _model.dropDownValueController ??=
                               FormFieldController<int>(null),
-                          options:
-                              List<int>.from(ModuleGroup.getModuleCall.moduleID(
-                            dropDownGetModuleResponse.jsonBody,
+                          options: List<int>.from(
+                              ModuleGroup.getModuleForDropdownCall.moduleID(
+                            dropDownGetModuleForDropdownResponse.jsonBody,
                           )!),
-                          optionLabels: ModuleGroup.getModuleCall.moduleCode(
-                            dropDownGetModuleResponse.jsonBody,
+                          optionLabels:
+                              ModuleGroup.getModuleForDropdownCall.moduleCode(
+                            dropDownGetModuleForDropdownResponse.jsonBody,
                           )!,
                           onChanged: (val) =>
                               safeSetState(() => _model.dropDownValue = val),
@@ -193,13 +194,14 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                                   10.0, 0.0, 10.0, 0.0),
                               child: Builder(
                                 builder: (context) {
-                                  final feedback = FeedbackGroup.getFeedbackCall
-                                          .feedback(
-                                            gradebookGetFeedbackResponse
-                                                .jsonBody,
-                                          )
-                                          ?.toList() ??
-                                      [];
+                                  final feedback =
+                                      FeedbackGroup.getFeedbackForGradebookCall
+                                              .feedback(
+                                                gradebookGetFeedbackForGradebookResponse
+                                                    .jsonBody,
+                                              )
+                                              ?.toList() ??
+                                          [];
                                   if (feedback.isEmpty) {
                                     return const EmptyGradebookWidget();
                                   }

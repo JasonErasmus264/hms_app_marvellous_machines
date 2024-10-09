@@ -10,7 +10,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'assignment_model.dart';
@@ -32,9 +31,6 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => AssignmentModel());
-
-    _model.searchBarTextController ??= TextEditingController();
-    _model.searchBarFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -106,7 +102,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           10.0, 10.0, 10.0, 10.0),
                       child: FutureBuilder<ApiCallResponse>(
-                        future: ModuleGroup.getModuleCall.call(
+                        future: ModuleGroup.getModuleForDropdownCall.call(
                           token: currentAuthenticationToken,
                         ),
                         builder: (context, snapshot) {
@@ -123,17 +119,19 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                               ),
                             );
                           }
-                          final dropDownGetModuleResponse = snapshot.data!;
+                          final dropDownGetModuleForDropdownResponse =
+                              snapshot.data!;
 
                           return FlutterFlowDropDown<int>(
                             controller: _model.dropDownValueController ??=
                                 FormFieldController<int>(null),
                             options: List<int>.from(
-                                ModuleGroup.getModuleCall.moduleID(
-                              dropDownGetModuleResponse.jsonBody,
+                                ModuleGroup.getModuleForDropdownCall.moduleID(
+                              dropDownGetModuleForDropdownResponse.jsonBody,
                             )!),
-                            optionLabels: ModuleGroup.getModuleCall.moduleCode(
-                              dropDownGetModuleResponse.jsonBody,
+                            optionLabels:
+                                ModuleGroup.getModuleForDropdownCall.moduleCode(
+                              dropDownGetModuleForDropdownResponse.jsonBody,
                             )!,
                             onChanged: (val) =>
                                 safeSetState(() => _model.dropDownValue = val),
@@ -242,121 +240,6 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                 ),
                               ),
                             ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 10.0, 10.0, 0.0),
-                                  child: TextFormField(
-                                    controller: _model.searchBarTextController,
-                                    focusNode: _model.searchBarFocusNode,
-                                    onChanged: (_) => EasyDebounce.debounce(
-                                      '_model.searchBarTextController',
-                                      const Duration(milliseconds: 1),
-                                      () => safeSetState(() {}),
-                                    ),
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelText: 'Search Assignments...',
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'Manrope',
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .tertiary,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      contentPadding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              24.0, 24.0, 20.0, 24.0),
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        size: 16.0,
-                                      ),
-                                      suffixIcon: _model
-                                              .searchBarTextController!
-                                              .text
-                                              .isNotEmpty
-                                          ? InkWell(
-                                              onTap: () async {
-                                                _model.searchBarTextController
-                                                    ?.clear();
-                                                safeSetState(() {});
-                                              },
-                                              child: const Icon(
-                                                Icons.clear,
-                                                color: Color(0xFF757575),
-                                                size: 22.0,
-                                              ),
-                                            )
-                                          : null,
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Manrope',
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                    validator: _model
-                                        .searchBarTextControllerValidator
-                                        .asValidator(context),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
@@ -587,6 +470,11 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                                                         assignmentItem,
                                                                         r'''$.assignDueDate''',
                                                                       ).toString(),
+                                                                      hasSubmitted:
+                                                                          getJsonField(
+                                                                        assignmentItem,
+                                                                        r'''$.hasSubmitted''',
+                                                                      ).toString(),
                                                                     ),
                                                                   ),
                                                                 );
@@ -595,7 +483,12 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                                                 safeSetState(
                                                                     () {}));
                                                           },
-                                                          text: 'View Details',
+                                                          text: functions
+                                                              .hasSubmittedText(
+                                                                  getJsonField(
+                                                            assignmentItem,
+                                                            r'''$.hasSubmitted''',
+                                                          ).toString()),
                                                           options:
                                                               FFButtonOptions(
                                                             width:

@@ -79,6 +79,7 @@ export const getNotMarkedSubmissions = async (req, res) => {
 
     // Format the submission list
     const submission = rows.map(submission => ({
+      submissionID: submission.submissionID,
       studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
       submissionVidName: submission.submissionVidName,
       submissionVidPath: submission.submissionVidPath,

@@ -4,6 +4,57 @@ import  {parse}  from 'json2csv';
 import { feedbackLogger } from '../middleware/logger.js';
 
 
+
+// Get feedback for a specific submission, including the assignment's total marks
+export const getFeedback = async (req, res) => {
+  const { submissionID } = req.params; // Get submissionID from URL parameters
+
+  // Ensure submissionID is provided
+  if (!submissionID) {
+    // Log a warning if submissionID is missing
+    feedbackLogger.warn('Missing submissionID for fetching feedback');
+    return res.status(400).json({ message: 'Submission ID is required' });
+  }
+
+  try {
+    // Fetch feedback and assignment total marks based on the submissionID
+    const [feedback] = await pool.execute(
+      `SELECT f.feedbackID, f.comment, f.mark, a.assignTotalMarks 
+       FROM feedback f 
+       JOIN submission s ON f.submissionID = s.submissionID
+       JOIN assignment a ON s.assignmentID = a.assignmentID
+       WHERE f.submissionID = ?`,
+      [submissionID]
+    );
+
+    // Check if feedback exists
+    if (feedback.length === 0) {
+      // Log information if no feedback is found
+      feedbackLogger.info(`No feedback found for submissionID: ${submissionID}`);
+      return res.status(200).json({ feedbackExists: 'f', message: 'No feedback found' });
+    }
+
+    // Log success for retrieving feedback
+    feedbackLogger.info(`Feedback retrieved successfully for submissionID: ${submissionID}`);
+
+    // Respond with the feedback (comment, mark, total marks) and flag that feedback exists
+    res.json({
+      feedbackExists: 't', // 't' indicates that feedback exists
+      feedbackID: feedback[0].feedbackID,
+      comment: feedback[0].comment,
+      mark: feedback[0].mark,
+      totalMarks: feedback[0].assignTotalMarks // Include the total marks for the assignment
+    });
+  } catch (error) {
+    // Log error if fetching feedback fails
+    feedbackLogger.error(`Error fetching feedback for submissionID ${submissionID}: ${error.message}`, { error });
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
 // Add feedback
 export const addFeedback = async (req, res) => {
   const { submissionID, comment, mark } = req.body;

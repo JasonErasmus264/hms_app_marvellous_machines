@@ -12,9 +12,11 @@ class VideoStreamingWidget extends StatefulWidget {
   const VideoStreamingWidget({
     super.key,
     this.vidPath,
+    this.vidName,
   });
 
   final String? vidPath;
+  final String? vidName;
 
   @override
   State<VideoStreamingWidget> createState() => _VideoStreamingWidgetState();
@@ -81,8 +83,8 @@ class _VideoStreamingWidgetState extends State<VideoStreamingWidget> {
                     Expanded(
                       child: Text(
                         valueOrDefault<String>(
-                          functions.getVideoName(widget.vidPath!),
-                          'video.mp4',
+                          widget.vidName,
+                          'name',
                         ),
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               fontFamily: 'Manrope',
@@ -140,37 +142,41 @@ class _VideoStreamingWidgetState extends State<VideoStreamingWidget> {
                       thickness: 2.0,
                       color: FlutterFlowTheme.of(context).primaryBackground,
                     ),
-                    FFButtonWidget(
-                      onPressed: () async {
-                        await launchURL(widget.vidPath!);
-                      },
-                      text: 'Download',
-                      icon: const Icon(
-                        Icons.cloud_download_rounded,
-                        size: 15.0,
-                      ),
-                      options: FFButtonOptions(
-                        width: 130.0,
-                        height: 36.0,
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconPadding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleSmall
-                            .override(
-                              fontFamily: 'Manrope',
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              fontSize: 14.0,
-                              letterSpacing: 0.0,
-                            ),
-                        elevation: 0.0,
-                        borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).primary,
-                          width: 2.0,
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          await launchURL(widget.vidPath!);
+                        },
+                        text: 'Download',
+                        icon: const Icon(
+                          Icons.cloud_download_rounded,
+                          size: 15.0,
                         ),
-                        borderRadius: BorderRadius.circular(12.0),
+                        options: FFButtonOptions(
+                          width: 130.0,
+                          height: 36.0,
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleSmall
+                              .override(
+                                fontFamily: 'Manrope',
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 14.0,
+                                letterSpacing: 0.0,
+                              ),
+                          elevation: 0.0,
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).primary,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
                       ),
                     ),
                   ],

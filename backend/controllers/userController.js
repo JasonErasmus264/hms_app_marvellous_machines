@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import multer from 'multer';  // For file uploads
-import im from 'imagemagick'  // For image conversion
+import im from 'imagemagick';  // For image conversion
 import fs from 'fs';  // For file system operations
 import path from 'path';  // For file path operations
 import axios from 'axios';  // For Nextcloud upload
@@ -229,7 +229,7 @@ const upload = multer({ storage });
 const convertToJpeg = async (filePath, outputFilePath) => {
   try {
     return await new Promise((resolve, reject) => {
-      im.convert([filePath, '-quality', '80', outputFilePath], (err, stdout) => {
+      im.convert([filePath, '-quality', '80', outputFilePath], (err) => {
         if (err) {
           return reject(new Error(`Image conversion failed: ${err.message}`));
         }
@@ -380,7 +380,7 @@ export const uploadProfilePicture = (req, res) => {
 
     try {
       // Convert to JPEG if not already a JPEG
-      if (ext !== '.jpeg' && ext !== '.jpg') {
+      if (ext !== '.jpeg') {
         const jpegFilePath = `uploads/${path.basename(filePath, path.extname(filePath))}.jpeg`;
         await convertToJpeg(filePath, jpegFilePath);
         finalFilePath = jpegFilePath;

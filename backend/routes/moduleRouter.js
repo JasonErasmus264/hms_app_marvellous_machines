@@ -11,8 +11,6 @@ moduleRoute.use(verifyToken);
 // Get modules for dropdown 
 moduleRoute.get('/v1/module', getModules);
 
-moduleRoute.post('/v1/module', authorizeRoles('Admin'), addModule);
-
 // Add a new module (Admins only)
 moduleRoute.post('/v1/module', authorizeRoles('Admin'), addModule);
 

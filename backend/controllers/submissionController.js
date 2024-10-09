@@ -23,7 +23,7 @@ const formatDate = (date) => {
   return new Intl.DateTimeFormat('en-GB', options).format(date).replace(',', ' at');
 };
 
-// Controller function to fetch a single submission for a specific assignment for a specific user
+// Controller function to fetch a single submission for a specific assignment for a specific user 
 export const getSubmissionByAssignmentForUser = async (req, res) => {
   const { assignmentID } = req.params;
   const { userID } = req.user; // Extract userID from the request
@@ -45,8 +45,12 @@ export const getSubmissionByAssignmentForUser = async (req, res) => {
 
     // Return the first submission found
     const submission = submissions[0];
+    
+    // Extract the desired video name (the name after the last hyphen)
+    const videoName = submission.submissionVidName.split('-').pop().split('.').shift();
+
     res.json({
-      submissionVidName: submission.submissionVidName,
+      submissionVidName: videoName, // Use the extracted video name
       submissionVidPath: submission.submissionVidPath,
       uploadedAt: submission.uploadedAt
     });
@@ -60,65 +64,68 @@ export const getSubmissionByAssignmentForUser = async (req, res) => {
 
 // Function to get submissions that are "To be marked" (without feedback)
 export const getNotMarkedSubmissions = async (req, res) => {
-    const { assignmentID } = req.params; // Get assignmentID from the request params
+  const { assignmentID } = req.params; // Get assignmentID from the request params
 
-    // log information on fetching unmarked submissions for an assignment (information log)
-    submissionLogger.info(`Fetching unmarked submissions for assignmentID: ${assignmentID}`);
-    try {
-      // Query to get submissions that don't have feedback (i.e., "To be marked")
-      const [rows] = await pool.execute(
-        `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidPath, s.uploadedAt
-         FROM submission s
-         JOIN users u ON s.userID = u.userID
-         LEFT JOIN feedback f ON s.submissionID = f.submissionID
-         WHERE s.assignmentID = ? AND f.submissionID IS NULL`, [assignmentID]);
-  
-      // Format the submission list
-      const submission = rows.map(submission => ({
-        studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
-        submissionVidPath: submission.submissionVidPath,
-        uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
-      }));
-      // log successfully fetching unmarked submissions for an assignment (information log)
-      submissionLogger.info(`Successfully fetched unmarked submissions for assignmentID: ${assignmentID}`);
-      res.json({ submission });
-    } catch (error) {
-      // log any errors that may have occured while fetching unmarked submissions for an assignment (error log)
-      submissionLogger.error(`Error fetching unmarked submissions: ${error.message}`, { error });
-      res.status(500).json({ message: 'Error fetching submissions to be marked.' });
-    }
-  };
-  
+  // log information on fetching unmarked submissions for an assignment (information log)
+  submissionLogger.info(`Fetching unmarked submissions for assignmentID: ${assignmentID}`);
+  try {
+    // Query to get submissions that don't have feedback (i.e., "To be marked")
+    const [rows] = await pool.execute(
+      `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidName, s.submissionVidPath, s.uploadedAt
+        FROM submission s
+        JOIN users u ON s.userID = u.userID
+        LEFT JOIN feedback f ON s.submissionID = f.submissionID
+        WHERE s.assignmentID = ? AND f.submissionID IS NULL`, [assignmentID]);
 
-  // Function to get submissions that are "Marked" (with feedback)
-  export const getMarkedSubmissions = async (req, res) => {
-    const { assignmentID } = req.params; // Get assignmentID from the request params
-    // log information on fetching marked submissions for an assignment (information log)
-    submissionLogger.info(`Fetching marked submissions for assignmentID: ${assignmentID}`);
-    try {
-      // Query to get submissions that have feedback (i.e., "Marked")
-      const [rows] = await pool.execute(
-        `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidPath, s.uploadedAt
-         FROM submission s
-         JOIN users u ON s.userID = u.userID
-         JOIN feedback f ON s.submissionID = f.submissionID
-         WHERE s.assignmentID = ?`, [assignmentID]);
-  
-      // Format the submission list
-      const submission = rows.map(submission => ({
-        studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
-        submissionVidPath: submission.submissionVidPath,
-        uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
-      }));
-      // log successfully fetching marked submissions for an assignment (information log)
-      submissionLogger.info(`Successfully fetched marked submissions for assignmentID: ${assignmentID}`);
-      res.json({ submission });
-    } catch (error) {
-      // log any errors that may have occured whie fetching marked submissions for an assignment (error log)
-      submissionLogger.error(`Error fetching marked submissions: ${error.message}`, { error });
-      res.status(500).json({ message: 'Error fetching marked submissions.' });
-    }
-  };
+    // Format the submission list
+    const submission = rows.map(submission => ({
+      studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
+      submissionVidName: submission.submissionVidName,
+      submissionVidPath: submission.submissionVidPath,
+      uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
+    }));
+    // log successfully fetching unmarked submissions for an assignment (information log)
+    submissionLogger.info(`Successfully fetched unmarked submissions for assignmentID: ${assignmentID}`);
+    res.json({ submission });
+  } catch (error) {
+    // log any errors that may have occured while fetching unmarked submissions for an assignment (error log)
+    submissionLogger.error(`Error fetching unmarked submissions: ${error.message}`, { error });
+    res.status(500).json({ message: 'Error fetching submissions to be marked.' });
+  }
+};
+
+
+// Function to get submissions that are "Marked" (with feedback)
+export const getMarkedSubmissions = async (req, res) => {
+  const { assignmentID } = req.params; // Get assignmentID from the request params
+  // log information on fetching marked submissions for an assignment (information log)
+  submissionLogger.info(`Fetching marked submissions for assignmentID: ${assignmentID}`);
+  try {
+    // Query to get submissions that have feedback (i.e., "Marked")
+    const [rows] = await pool.execute(
+      `SELECT s.submissionID, u.firstName, u.lastName, u.username, s.submissionVidName, s.submissionVidPath, s.uploadedAt
+        FROM submission s
+        JOIN users u ON s.userID = u.userID
+        JOIN feedback f ON s.submissionID = f.submissionID
+        WHERE s.assignmentID = ?`, [assignmentID]);
+
+    // Format the submission list
+    const submission = rows.map(submission => ({
+      submissionID: submission.submissionID,
+      studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
+      submissionVidName: submission.submissionVidName,
+      submissionVidPath: submission.submissionVidPath,
+      uploadedAt: formatDate(new Date(submission.uploadedAt)), // Use formatDate function
+    }));
+    // log successfully fetching marked submissions for an assignment (information log)
+    submissionLogger.info(`Successfully fetched marked submissions for assignmentID: ${assignmentID}`);
+    res.json({ submission });
+  } catch (error) {
+    // log any errors that may have occured whie fetching marked submissions for an assignment (error log)
+    submissionLogger.error(`Error fetching marked submissions: ${error.message}`, { error });
+    res.status(500).json({ message: 'Error fetching marked submissions.' });
+  }
+};
 
 
 
@@ -133,20 +140,28 @@ if (!fs.existsSync('uploads')) {
   // Log creation of directory (information log)
   submissionLogger.info('Uploads directory created');
 }
- 
- 
+
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+      cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    // Log file recieved for upload (information log)
-    submissionLogger.info(`File received for upload: ${file.originalname}`);
-    cb(null, `${Date.now()}-${file.originalname}`);
+      const timestamp = Date.now();
+      const randomString = Math.random().toString(36).substring(7);
+      // Extract vidName from request body
+      const { vidName } = req.body; // Ensure this name is sanitized for file safety
+      const sanitizedVidName = vidName.replace(/[^a-zA-Z0-9-_]/g, ''); // Remove invalid characters
+
+      // Use vidName in the filename, appending timestamp and random string
+      const newFileName = `${timestamp}-${randomString}-${sanitizedVidName}.mp4`; 
+      
+      // Log file received for upload (information log)
+      submissionLogger.info(`File received for upload: ${file.originalname}`);
+      cb(null, newFileName);
   },
 });
- 
+
 const upload = multer({ storage });
 
  
@@ -161,7 +176,7 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
       .size('?x360') // Rezize the height but maintain aspect ratio
       .videoBitrate('800k')
       .audioBitrate('128k')
-      .outputOptions('-crf 28')  // MEdium compression
+      .outputOptions('-crf 28')  // Medium compression
       .on('end', async () => {
         try {
           // Check if the compressed file size exceeds the maximum allowed size because very large files might need to be compressed more than once

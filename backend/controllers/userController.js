@@ -9,6 +9,7 @@ import 'dotenv/config';  // Load environment variables
 
 import { userLogger } from '../middleware/logger.js'; // Import user logger
 
+// Get current user's info
 export const getUser = async (req, res) => {
   try {
     const { userID } = req.user; // Extract userID from JWT
@@ -30,22 +31,33 @@ export const getUser = async (req, res) => {
     // Format the createdAt field to the desired format (e.g., "July 12th, 2023")
     const formattedCreatedAt = formatDate(new Date(user.createdAt));
 
-    // Log success if user details recieved (information log)
+    // Fetch the count of notifications for the user
+    const [notificationCountRows] = await pool.execute(
+      'SELECT COUNT(*) AS count FROM notification WHERE userID = ?',
+      [userID]
+    );
+
+    const notificationCount = notificationCountRows[0].count;
+
+    // Log success if user details received (information log)
     userLogger.info(`User details retrieved successfully for userID: ${userID}`);
 
-    // Return the user's data including the formatted createdAt and phoneNum
+    // Return the user's data including the formatted createdAt, phoneNum, and notification count
     res.json({
       user: {
         ...user,
         createdAt: formattedCreatedAt, // Include the formatted createdAt
+        notificationCount: notificationCount, // Include notification count
       },
     });
   } catch (error) {
     // Log error when retrieving user fails (error log)
-    userLogger.error(`Error retrieving user: ${error.message}`, {error});
+    userLogger.error(`Error retrieving user: ${error.message}`, { error });
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 // Function to format dates to 'July 12th, 2023'
 const formatDate = (date) => {
@@ -228,7 +240,7 @@ const storage = multer.diskStorage({
  
 const upload = multer({ storage });
 
- 
+
 // Check image type and convert to .jpeg if necessary
 const convertToJpeg = async (filePath, outputFilePath) => {
   try {

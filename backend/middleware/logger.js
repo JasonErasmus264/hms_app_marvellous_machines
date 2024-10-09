@@ -107,6 +107,15 @@ export const userModuleLogger = winston.createLogger({
   ]
 });
 
+// notification logger
+export const notificationLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,
+  transports: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'notification.log') })
+  ]
+});
+
 
 
 // Performance logger

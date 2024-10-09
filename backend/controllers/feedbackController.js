@@ -2,12 +2,60 @@ import pool from '../db.js';  // Database connection
 import XLSX from 'xlsx';
 import  {parse}  from 'json2csv';  
 import { feedbackLogger } from '../middleware/logger.js';
-//import { feedbackLogger } from '../logger.js'; // import feedback logger
+
+
+
+// Get feedback for a specific submission
+export const getFeedback = async (req, res) => {
+  const { submissionID } = req.params; // Get submissionID from URL parameters
+
+  // Ensure submissionID is provided
+  if (!submissionID) {
+    // Log a warning if submissionID is missing
+    feedbackLogger.warn('Missing submissionID for fetching feedback');
+    return res.status(400).json({ message: 'Submission ID is required' });
+  }
+
+  try {
+    // Fetch feedback based on the submissionID
+    const [feedback] = await pool.execute(
+      `SELECT feedbackID, comment, mark 
+       FROM feedback 
+       WHERE submissionID = ?`,
+      [submissionID]
+    );
+
+    // Check if feedback exists
+    if (feedback.length === 0) {
+      // Log information if no feedback is found
+      feedbackLogger.info(`No feedback found for submissionID: ${submissionID}`);
+      return res.status(200).json({ feedbackExists: 'f', message: 'No feedback found' });
+    }
+
+    // Log success for retrieving feedback
+    feedbackLogger.info(`Feedback retrieved successfully for submissionID: ${submissionID}`);
+
+    // Respond with the feedback (comment, mark) and flag that feedback exists
+    res.json({
+      feedbackExists: 't', // 't' indicates that feedback exists
+      feedbackID: feedback[0].feedbackID,
+      comment: feedback[0].comment,
+      mark: feedback[0].mark
+    });
+  } catch (error) {
+    // Log error if fetching feedback fails
+    feedbackLogger.error(`Error fetching feedback for submissionID ${submissionID}: ${error.message}`, { error });
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 
 
 // Add feedback
 export const addFeedback = async (req, res) => {
-  const { submissionID, userID, comment, mark } = req.body;
+  const { submissionID, comment, mark } = req.body;
+  const { userID } = req.user;
 
   // Ensure all required fields are provided
   if (!submissionID || !comment || mark === undefined) {
@@ -100,7 +148,8 @@ export const deleteFeedback = async (req, res) => {
 
 // Get student marks based on moduleID and student userID
 export const getStudentMarksByUserAndModule = async (req, res) => {
-  const { moduleID, userID } = req.params;  // Extract moduleID (for the module) and userID (for the student)
+  const { moduleID} = req.params;  // Extract moduleID (for the module) and userID (for the student)
+  const { userID } = req.user;  // Extract userID (for the student)
 
   try {
     // Query to get assignment name, student mark, comment, and total marks

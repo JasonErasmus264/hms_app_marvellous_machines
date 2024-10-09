@@ -1662,7 +1662,7 @@ class NotificationGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://localhost:3000';
+      'http://192.168.3.66:3000';
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };

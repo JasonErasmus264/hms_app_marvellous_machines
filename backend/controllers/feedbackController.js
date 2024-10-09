@@ -2,12 +2,12 @@ import pool from '../db.js';  // Database connection
 import XLSX from 'xlsx';
 import  {parse}  from 'json2csv';  
 import { feedbackLogger } from '../middleware/logger.js';
-//import { feedbackLogger } from '../logger.js'; // import feedback logger
 
 
 // Add feedback
 export const addFeedback = async (req, res) => {
-  const { submissionID, userID, comment, mark } = req.body;
+  const { submissionID, comment, mark } = req.body;
+  const { userID } = req.user;
 
   // Ensure all required fields are provided
   if (!submissionID || !comment || mark === undefined) {
@@ -100,7 +100,8 @@ export const deleteFeedback = async (req, res) => {
 
 // Get student marks based on moduleID and student userID
 export const getStudentMarksByUserAndModule = async (req, res) => {
-  const { moduleID, userID } = req.params;  // Extract moduleID (for the module) and userID (for the student)
+  const { moduleID} = req.params;  // Extract moduleID (for the module) and userID (for the student)
+  const { userID } = req.user;  // Extract userID (for the student)
 
   try {
     // Query to get assignment name, student mark, comment, and total marks

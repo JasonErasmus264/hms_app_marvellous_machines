@@ -9,7 +9,7 @@ const feedbackRoute = express.Router();
 feedbackRoute.use(verifyToken);
 
 // Get student feedback
-feedbackRoute.get('/v1/feedback/:moduleID/:userID', getStudentMarksByUserAndModule);
+feedbackRoute.get('/v1/feedback/:moduleID', getStudentMarksByUserAndModule);
 
 // Add feedback (Admins or Lecturers)
 feedbackRoute.post('/v1/feedback', authorizeRoles('Admin', 'Lecturer'), addFeedback);

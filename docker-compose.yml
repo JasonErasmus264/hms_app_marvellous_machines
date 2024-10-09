@@ -9,8 +9,8 @@ services:
     #    by specifying the 'image' option (as shown below) to pull the image directly.
     #    - This method avoids building locally and pulls the image from a remote repo.
     # Uncomment one of the following options based on your needs:
-    # build: ./backend # Build locally
-    image: jasonerasmus264/hms_app_marvellous_machines-nodejs:main  # Pull the image from Docker Hub
+    build: ./backend # Build locally
+    #image: jasonerasmus264/hms_app_marvellous_machines-nodejs:main  # Pull the image from Docker Hub
     ports:
       - "3000:3000"                        # Expose port 3000 for the Node.js backend
     expose:

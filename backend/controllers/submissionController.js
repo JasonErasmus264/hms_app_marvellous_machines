@@ -23,63 +23,38 @@ const formatDate = (date) => {
   return new Intl.DateTimeFormat('en-GB', options).format(date).replace(',', ' at');
 };
 
-// Controller function to fetch submissions for a specific assignment
-export const getSubmissionsByAssignment = async (req, res) => {
+// Controller function to fetch a single submission for a specific assignment for a specific user
+export const getSubmissionByAssignmentForUser = async (req, res) => {
   const { assignmentID } = req.params;
-  // log information on fetching submissions for assignments (information log)
-  submissionLogger.info(`Fetching submissions for assignmentID: ${assignmentID}`);
+  const { userID } = req.user; // Extract userID from the request
+
+  submissionLogger.info(`Fetching submission for assignmentID: ${assignmentID} by userID: ${userID}`);
+  
   try {
-    // Query to get the list of submissions for the given assignment ID
     const [submissions] = await pool.execute(
-      `SELECT s.submissionID, s.submissionVidPath, s.uploadedAt, 
-              u.firstName, u.lastName, u.username
+      `SELECT s.submissionVidName, s.submissionVidPath, s.uploadedAt
        FROM submission s
-       JOIN users u ON s.userID = u.userID
-       WHERE s.assignmentID = ?`,
-      [assignmentID]
+       WHERE s.assignmentID = ? AND s.userID = ?`,
+      [assignmentID, userID]
     );
 
-    // If no submissions are found
     if (submissions.length === 0) {
-      // log warning if no submissions are found for an assignment (warning log)
-      submissionLogger.warn(`No submissions found for assignmentID: ${assignmentID}`);
-      return res.status(404).json({ message: 'No submissions found for this assignment.' });
+      submissionLogger.warn(`No submissions found for assignmentID: ${assignmentID} by userID: ${userID}`);
+      return res.status(404).json({ message: 'No submission found for this assignment for the specified user.' });
     }
 
-    // Process each submission and check if feedback exists
-    const submissionList = await Promise.all(submissions.map(async (submission) => {
-      // Query to check if feedback exists for the current submission
-      const [feedback] = await pool.execute(
-        `SELECT feedbackID FROM feedback WHERE submissionID = ?`,
-        [submission.submissionID]
-      );
-
-      // Determine if the submission is marked or to be marked based on feedback presence
-      const status = feedback.length === 0 ? 'To be marked' : 'Marked';
-
-      // Format the submission datetime
-      const formattedDate = formatDate(new Date(submission.uploadedAt));
-
-      // Return the formatted submission object
-      return {
-        studentName: `${submission.firstName} ${submission.lastName} (${submission.username})`,
-        submissionVidPath: submission.submissionVidPath,
-        uploadedAt: formattedDate,
-        status: status
-      };
-    }));
-
-    // Return the structured response with the submission list
+    // Return the first submission found
+    const submission = submissions[0];
     res.json({
-      submission: submissionList
+      submissionVidName: submission.submissionVidName,
+      submissionVidPath: submission.submissionVidPath,
+      uploadedAt: submission.uploadedAt
     });
   } catch (error) {
-    // log any errors that may occur while trying to fetch the submissions for an assignment (error log)
-    submissionLogger.error(`Error fetching submissions: ${error.message}`, { error });
-    res.status(500).json({ error: 'An error occurred while fetching submissions.' });
+    submissionLogger.error(`Error fetching submission: ${error.message}`, { error });
+    res.status(500).json({ message: 'An error occurred while fetching the submission.' });
   }
 };
-
 
 
 
@@ -152,7 +127,6 @@ export const getNotMarkedSubmissions = async (req, res) => {
 
 
  
- 
 // Ensure 'uploads' directories exist
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
@@ -168,19 +142,21 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     // Log file recieved for upload (information log)
-    submissionLogger.info(`File received for upload: ${filename}`);
+    submissionLogger.info(`File received for upload: ${file.originalname}`);
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
  
 const upload = multer({ storage });
- 
+
  
 // Video compression function
 const compressVideo = (filePath, outputFilePath, maxFileSize) => {
+  const newOutputFilePath = outputFilePath.replace(/([^\/]+)$/, '1$1');
+
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
-      .output(outputFilePath)
+      .output(newOutputFilePath)
       .videoCodec('libx264')
       .size('?x360') // Rezize the height but maintain aspect ratio
       .videoBitrate('800k')
@@ -189,7 +165,7 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
       .on('end', async () => {
         try {
           // Check if the compressed file size exceeds the maximum allowed size because very large files might need to be compressed more than once
-          const compressedSize = fs.statSync(outputFilePath).size;
+          const compressedSize = fs.statSync(newOutputFilePath).size;
           if (compressedSize > maxFileSize) {
             // Log warning if file exceeds maximum size (warning log)
             submissionLogger.warn('Compressed file still exceeds the maximum size.');
@@ -197,9 +173,9 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
           }
 
           // Log success for video compression (information log)
-          submissionLogger.info(`Video compressed successfully: ${outputFilePath}`);
+          submissionLogger.info(`Video compressed successfully: ${newOutputFilePath}`);
           // If compressed size is within the limit, promise is resolved
-          resolve(outputFilePath);
+          resolve(newOutputFilePath);
         } catch (err) {
           // Log error when compression fails (error log)
           submissionLogger.error(`Error during compression size check: ${err.message}`, { err });
@@ -229,12 +205,13 @@ const convertToMp4 = (filePath, outputFilePath) => {
       })
       .on('error', (err) => {
         // Log error when conversion fails (error log)
-        submissionLogger.error(`Error during video conversion: ${err.message}`, { err });
+        submissionLogger.error(`Error during video conversion:`,  err );
         reject(err);
       })
       .run();
   });
 };
+
 
 // Upload video to Nextcloud
 const uploadToNextcloud = async (filePath) => {
@@ -315,7 +292,7 @@ const getVideoUrl = async (videoId) => {
         permissions: 1,   // Set Read-only permissions
       },
     });
- 
+
     if (response.data && response.data.ocs && response.data.ocs.data && response.data.ocs.data.url) {
       const publicLink = response.data.ocs.data.url;
       // Log success when public link generated (information log)
@@ -332,8 +309,8 @@ const getVideoUrl = async (videoId) => {
     throw new Error(`Failed to create public link: ${error.message}`);
   }
 };
- 
- 
+
+
 // Delete the old video from Nextcloud
 const deleteOldVideoFromNextcloud = async (oldVideoPath) => {
   try {
@@ -344,15 +321,15 @@ const deleteOldVideoFromNextcloud = async (oldVideoPath) => {
       },
     });
  
-    if (response.status !== 204) {
-      // Log error when deleting old video fails (error log)
-      submissionLogger.error('Failed to delete old video from Nextcloud');
-      throw new Error('Failed to delete old video from Nextcloud');
+    if (response.status === 204) {
+      submissionLogger.info(`Successfully deleted old video from Nextcloud: ${oldVideoPath}`);
+    } else if (response.status === 404) {
+      submissionLogger.warn(`Old video not found in Nextcloud: ${oldVideoPath}`);
+      // Decide whether to throw an error here or simply continue
+    } else {
+      throw new Error('Unexpected response from Nextcloud during deletion');
     }
-    // Log success when deleting old video (information log)
-    submissionLogger.info(`Successfully deleted old video from Nextcloud: ${oldVideoPath}`);
   } catch (error) {
-    // Log error when deleting old video fails (error log)
     submissionLogger.error(`Error deleting old video from Nextcloud: ${error.message}`, { error });
     throw new Error(`Failed to delete old video: ${error.message}`);
   }
@@ -378,13 +355,6 @@ const updateMetadata = async (req, res, assignmentID, newVideoId, publicLink) =>
   }
 };
  
- 
- 
-
-
-
-
-
 
 
 
@@ -485,14 +455,6 @@ export const uploadVideo = (req, res) => {
   });
 };
  
-
-
-
-
-
-
-
-
 
 
 

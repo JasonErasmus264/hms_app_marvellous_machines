@@ -5,6 +5,7 @@ import { assignmentLogger } from '../middleware/logger.js'; // Import assignment
 // Function to get assignments based on module ID
 export const getAssignmentsByModule = async (req, res) => {
   const { moduleID } = req.params; // Get the moduleID from the URL path
+  const { userID } = req.user; // Get userID from the authenticated user
 
   try {
     // Validate the moduleID
@@ -15,24 +16,32 @@ export const getAssignmentsByModule = async (req, res) => {
     }
 
     // Fetch assignments based on the provided moduleID
-    const [rows] = await pool.execute(
+    const [assignments] = await pool.execute(
       'SELECT assignmentID, assignName, assignDesc, assignOpenDate, assignDueDate, assignTotalMarks FROM assignment WHERE moduleID = ?',
       [moduleID]
     );
 
-    
-    if (rows.length === 0) {
+    if (assignments.length === 0) {
       // Log info if no assignments are found (information log)
       assignmentLogger.info(`No assignments found for moduleID: ${moduleID}`);
       return res.status(404).json({ message: 'No assignments found for this module' });
     }
 
-    // Format the assignOpenDate and assignDueDate for each assignment
-    const formattedAssignments = rows.map(assignment => {
+    // Check submission status for each assignment for the logged-in user
+    const formattedAssignments = await Promise.all(assignments.map(async (assignment) => {
+      // Check if the user has submitted this assignment
+      const [submission] = await pool.execute(
+        'SELECT submissionID FROM submission WHERE assignmentID = ? AND userID = ?',
+        [assignment.assignmentID, userID]
+      );
+
+      // Determine the submission status: 't' if submitted, 'f' if not
+      const hasSubmitted = submission.length > 0 ? 't' : 'f';
+
       // Parse the dates from the input string
       const assignOpenDate = new Date(assignment.assignOpenDate);
       const assignDueDate = new Date(assignment.assignDueDate);
-    
+
       // Function to format dates to '01 September 2024 at 12:00'
       const formatDate = (date) => {
         const options = {
@@ -43,19 +52,20 @@ export const getAssignmentsByModule = async (req, res) => {
           minute: '2-digit',
           hour12: false,
         };
-    
+
         // Format the date
         const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
         return formattedDate.replace(',', ' at'); // Replace the comma with ' at'
       };
-    
-      // Return the assignment with formatted open and due dates
+
+      // Return the assignment with formatted dates and submission status
       return {
         ...assignment,
         assignOpenDate: formatDate(assignOpenDate),
         assignDueDate: formatDate(assignDueDate),
+        hasSubmitted: hasSubmitted, // 't' if submitted, 'f' if not
       };
-    });
+    }));
 
     // Log success when assignments are fetched (information log)
     assignmentLogger.info(`Assignments fetched successfully for moduleID: ${moduleID}`);
@@ -66,7 +76,6 @@ export const getAssignmentsByModule = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching assignments' });
   }
 };
-
 
 
 

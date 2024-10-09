@@ -106,7 +106,18 @@ export const userModuleLogger = winston.createLogger({
   ]
 });
 
-// Performance logger 
+// notification logger
+export const notificationLogger = winston.createLogger({
+  level: 'info',
+  format: logFormat,
+  transports: [
+    rotatingFileTransport('notification-%DATE%.log')
+  ]
+});
+
+
+
+// Performance logger
 export const performanceLogger = winston.createLogger({
   level: 'info',
   format: logFormat,

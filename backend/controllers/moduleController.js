@@ -48,6 +48,52 @@ export const getModules = async (req, res) => {
 
 
 
+
+// Get a specific module by moduleID
+export const getModuleByID = async (req, res) => {
+  const { moduleID } = req.params; // Get moduleID from URL parameters
+
+  // Ensure moduleID is provided
+  if (!moduleID) {
+    // Log a warning if moduleID is missing (warning log)
+    moduleLogger.warn('Module ID is required for fetching module details.');
+    return res.status(400).json({ message: 'Module ID is required' });
+  }
+
+  try {
+    // Fetch module details based on the moduleID
+    const [module] = await pool.execute(
+      'SELECT moduleName, moduleCode FROM module WHERE moduleID = ?',
+      [moduleID]
+    );
+
+    // Check if the module exists
+    if (module.length === 0) {
+      // Log information if no module is found
+      moduleLogger.info(`No module found for moduleID: ${moduleID}`);
+      return res.status(404).json({ message: 'Module not found' });
+    }
+
+    // Log success for retrieving the module
+    moduleLogger.info(`Module retrieved successfully for moduleID: ${moduleID}`);
+
+    // Respond with the module name and code
+    res.json({
+      moduleName: module[0].moduleName,
+      moduleCode: module[0].moduleCode
+    });
+  } catch (error) {
+    // Log error if fetching the module fails (error log)
+    moduleLogger.error(`Error fetching module for moduleID ${moduleID}: ${error.message}`, { error });
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
 // Add a new module
 export const addModule = async (req, res) => {
   const { moduleName, moduleCode } = req.body;

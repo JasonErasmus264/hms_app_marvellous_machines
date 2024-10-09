@@ -1,7 +1,7 @@
 import express from 'express';
 import verifyToken from '../middleware/verifyToken.js';
 import { authorizeRoles } from '../middleware/authorization.js'; // Import the authorization middleware
-import { getModules, addModule, updateModule, deleteModule} from '../controllers/moduleController.js';
+import { getModules, getModuleByID, addModule, updateModule, deleteModule} from '../controllers/moduleController.js';
 
 const moduleRoute = express.Router();
 
@@ -9,9 +9,10 @@ const moduleRoute = express.Router();
 moduleRoute.use(verifyToken);
 
 // Get modules for dropdown 
-moduleRoute.get('/v1/module', getModules);
+moduleRoute.get('/v1/module/dropdown', getModules);
 
-moduleRoute.post('/v1/module', authorizeRoles('Admin'), addModule);
+// Get module (Admins only)
+moduleRoute.get('/v1/module/:moduleID', authorizeRoles('Admin'), getModuleByID);
 
 // Add a new module (Admins only)
 moduleRoute.post('/v1/module', authorizeRoles('Admin'), addModule);

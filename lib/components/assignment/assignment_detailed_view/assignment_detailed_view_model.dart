@@ -54,13 +54,14 @@ class AssignmentDetailedViewModel
   FocusNode? textFieldFocusNode4;
   TextEditingController? textController4;
   String? Function(BuildContext, String?)? textController4Validator;
-  // State field(s) for TextField widget.
-  FocusNode? textFieldFocusNode5;
-  TextEditingController? textController5;
-  String? Function(BuildContext, String?)? textController5Validator;
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
+
+  // Stores action output result for [Backend Call - API (Update Submission)] action in Button widget.
+  ApiCallResponse? updateSub;
+  // Stores action output result for [Backend Call - API (Add Submission)] action in Button widget.
+  ApiCallResponse? addSub;
 
   @override
   void initState(BuildContext context) {
@@ -82,8 +83,5 @@ class AssignmentDetailedViewModel
 
     textFieldFocusNode4?.dispose();
     textController4?.dispose();
-
-    textFieldFocusNode5?.dispose();
-    textController5?.dispose();
   }
 }

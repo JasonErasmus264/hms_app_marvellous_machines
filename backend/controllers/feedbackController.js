@@ -5,7 +5,7 @@ import { feedbackLogger } from '../middleware/logger.js';
 
 
 
-// Get feedback for a specific submission, including the assignment's total marks
+// Get feedback for a specific submission
 export const getFeedback = async (req, res) => {
   const { submissionID } = req.params; // Get submissionID from URL parameters
 
@@ -17,13 +17,11 @@ export const getFeedback = async (req, res) => {
   }
 
   try {
-    // Fetch feedback and assignment total marks based on the submissionID
+    // Fetch feedback based on the submissionID
     const [feedback] = await pool.execute(
-      `SELECT f.feedbackID, f.comment, f.mark, a.assignTotalMarks 
-       FROM feedback f 
-       JOIN submission s ON f.submissionID = s.submissionID
-       JOIN assignment a ON s.assignmentID = a.assignmentID
-       WHERE f.submissionID = ?`,
+      `SELECT feedbackID, comment, mark 
+       FROM feedback 
+       WHERE submissionID = ?`,
       [submissionID]
     );
 
@@ -37,13 +35,12 @@ export const getFeedback = async (req, res) => {
     // Log success for retrieving feedback
     feedbackLogger.info(`Feedback retrieved successfully for submissionID: ${submissionID}`);
 
-    // Respond with the feedback (comment, mark, total marks) and flag that feedback exists
+    // Respond with the feedback (comment, mark) and flag that feedback exists
     res.json({
       feedbackExists: 't', // 't' indicates that feedback exists
       feedbackID: feedback[0].feedbackID,
       comment: feedback[0].comment,
-      mark: feedback[0].mark,
-      totalMarks: feedback[0].assignTotalMarks // Include the total marks for the assignment
+      mark: feedback[0].mark
     });
   } catch (error) {
     // Log error if fetching feedback fails

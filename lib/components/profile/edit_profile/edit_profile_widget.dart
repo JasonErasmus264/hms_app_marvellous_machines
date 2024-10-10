@@ -1,10 +1,10 @@
 import '/auth/custom_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/components/profile/edit_profile_pic/edit_profile_pic_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/upload_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,6 +19,7 @@ class EditProfileWidget extends StatefulWidget {
     this.phoneNum,
     this.email,
     this.createdAt,
+    this.profilePicture,
   });
 
   final String? firstName;
@@ -26,6 +27,7 @@ class EditProfileWidget extends StatefulWidget {
   final String? phoneNum;
   final String? email;
   final String? createdAt;
+  final String? profilePicture;
 
   @override
   State<EditProfileWidget> createState() => _EditProfileWidgetState();
@@ -133,19 +135,24 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 0.0, 0.0),
-                      child: Text(
-                        'Edit Profile',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              fontFamily: 'Urbanist',
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              24.0, 16.0, 0.0, 0.0),
+                          child: Text(
+                            'Edit Profile',
+                            style: FlutterFlowTheme.of(context)
+                                .headlineMedium
+                                .override(
+                                  fontFamily: 'Urbanist',
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding:
@@ -196,9 +203,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF101213),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Padding(
@@ -207,7 +213,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                             borderRadius:
                                                 BorderRadius.circular(50.0),
                                             child: Image.network(
-                                              '',
+                                              widget.profilePicture!,
                                               width: 100.0,
                                               height: 100.0,
                                               fit: BoxFit.cover,
@@ -221,48 +227,23 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  final selectedMedia =
-                                      await selectMediaWithSourceBottomSheet(
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    enableDrag: false,
+                                    useSafeArea: true,
                                     context: context,
-                                    maxWidth: 110.00,
-                                    maxHeight: 110.00,
-                                    allowPhoto: true,
-                                  );
-                                  if (selectedMedia != null &&
-                                      selectedMedia.every((m) =>
-                                          validateFileFormat(
-                                              m.storagePath, context))) {
-                                    safeSetState(
-                                        () => _model.isDataUploading = true);
-                                    var selectedUploadedFiles =
-                                        <FFUploadedFile>[];
-
-                                    try {
-                                      selectedUploadedFiles = selectedMedia
-                                          .map((m) => FFUploadedFile(
-                                                name: m.storagePath
-                                                    .split('/')
-                                                    .last,
-                                                bytes: m.bytes,
-                                                height: m.dimensions?.height,
-                                                width: m.dimensions?.width,
-                                                blurHash: m.blurHash,
-                                              ))
-                                          .toList();
-                                    } finally {
-                                      _model.isDataUploading = false;
-                                    }
-                                    if (selectedUploadedFiles.length ==
-                                        selectedMedia.length) {
-                                      safeSetState(() {
-                                        _model.uploadedLocalFile =
-                                            selectedUploadedFiles.first;
-                                      });
-                                    } else {
-                                      safeSetState(() {});
-                                      return;
-                                    }
-                                  }
+                                    builder: (context) {
+                                      return Padding(
+                                        padding:
+                                            MediaQuery.viewInsetsOf(context),
+                                        child: EditProfilePicWidget(
+                                          profilePicture:
+                                              widget.profilePicture,
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) => safeSetState(() {}));
                                 },
                                 text: 'Change Photo',
                                 options: FFButtonOptions(

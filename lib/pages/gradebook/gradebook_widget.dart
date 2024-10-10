@@ -135,16 +135,47 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                         return FlutterFlowDropDown<int>(
                           controller: _model.dropDownValueController ??=
                               FormFieldController<int>(null),
-                          options: List<int>.from(
-                              ModuleGroup.getModuleForDropdownCall.moduleID(
-                            dropDownGetModuleForDropdownResponse.jsonBody,
-                          )!),
-                          optionLabels:
-                              ModuleGroup.getModuleForDropdownCall.moduleCode(
-                            dropDownGetModuleForDropdownResponse.jsonBody,
-                          )!,
-                          onChanged: (val) =>
-                              safeSetState(() => _model.dropDownValue = val),
+                          options: List<int>.from(ModuleGroup
+                                          .getModuleForDropdownCall
+                                          .moduleID(
+                                        dropDownGetModuleForDropdownResponse
+                                            .jsonBody,
+                                      ) !=
+                                      null &&
+                                  (ModuleGroup.getModuleForDropdownCall
+                                          .moduleID(
+                                    dropDownGetModuleForDropdownResponse
+                                        .jsonBody,
+                                  ))!
+                                      .isNotEmpty
+                              ? ModuleGroup.getModuleForDropdownCall.moduleID(
+                                  dropDownGetModuleForDropdownResponse.jsonBody,
+                                )!
+                              : ([0])),
+                          optionLabels: ModuleGroup.getModuleForDropdownCall
+                                          .moduleCode(
+                                        dropDownGetModuleForDropdownResponse
+                                            .jsonBody,
+                                      ) !=
+                                      null &&
+                                  (ModuleGroup.getModuleForDropdownCall
+                                          .moduleCode(
+                                    dropDownGetModuleForDropdownResponse
+                                        .jsonBody,
+                                  ))!
+                                      .isNotEmpty
+                              ? ModuleGroup.getModuleForDropdownCall.moduleCode(
+                                  dropDownGetModuleForDropdownResponse.jsonBody,
+                                )!
+                              : ([
+                                  "You have not been enrolled in any modules yet"
+                                ]),
+                          onChanged: (val) async {
+                            safeSetState(() => _model.dropDownValue = val);
+                            if (_model.dropDownValue == 0) {
+                              context.safePop();
+                            }
+                          },
                           height: 56.0,
                           searchHintTextStyle:
                               FlutterFlowTheme.of(context).labelMedium.override(

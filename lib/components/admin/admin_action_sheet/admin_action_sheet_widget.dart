@@ -1,6 +1,9 @@
 import '/components/admin/delete_user/delete_user_widget.dart';
 import '/components/module/add_module/add_module_widget.dart';
+import '/components/module/delete_module/delete_module_widget.dart';
 import '/components/module/edit_module/edit_module_widget.dart';
+import '/components/user_module/add_user_module/add_user_module_widget.dart';
+import '/components/user_module/delete_user_module/delete_user_module_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -338,6 +341,7 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     enableDrag: false,
+                    useSafeArea: true,
                     context: context,
                     builder: (context) {
                       return Padding(
@@ -410,6 +414,7 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     enableDrag: false,
+                    useSafeArea: true,
                     context: context,
                     builder: (context) {
                       return Padding(
@@ -487,7 +492,7 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
                     builder: (context) {
                       return Padding(
                         padding: MediaQuery.viewInsetsOf(context),
-                        child: const DeleteUserWidget(),
+                        child: const DeleteModuleWidget(),
                       );
                     },
                   ).then((value) => safeSetState(() {}));
@@ -567,7 +572,19 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
-                  context.pushNamed('addUser');
+                  await showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    enableDrag: false,
+                    useSafeArea: true,
+                    context: context,
+                    builder: (context) {
+                      return Padding(
+                        padding: MediaQuery.viewInsetsOf(context),
+                        child: const AddUserModuleWidget(),
+                      );
+                    },
+                  ).then((value) => safeSetState(() {}));
                 },
                 child: Container(
                   width: double.infinity,
@@ -637,7 +654,7 @@ class _AdminActionSheetWidgetState extends State<AdminActionSheetWidget> {
                     builder: (context) {
                       return Padding(
                         padding: MediaQuery.viewInsetsOf(context),
-                        child: const DeleteUserWidget(),
+                        child: const DeleteUserModuleWidget(),
                       );
                     },
                   ).then((value) => safeSetState(() {}));

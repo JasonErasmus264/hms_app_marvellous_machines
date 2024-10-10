@@ -1579,6 +1579,11 @@ class UpdateModuleCall {
       ModuleGroup.interceptors,
     );
   }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
 }
 
 class DeleteModuleCall {
@@ -1609,6 +1614,11 @@ class DeleteModuleCall {
       ModuleGroup.interceptors,
     );
   }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
 }
 
 class GetModuleCall {
@@ -1773,6 +1783,213 @@ class DeleteNotificationCall {
 }
 
 /// End Notification Group Code
+
+/// Start UserModule Group Code
+
+class UserModuleGroup {
+  static String getBaseUrl({
+    String? token = '',
+  }) =>
+      'http://localhost:3000';
+  static Map<String, String> headers = {
+    'Authorization': 'Bearer [token]',
+  };
+  static AddUserModuleCall addUserModuleCall = AddUserModuleCall();
+  static DeleteUserModuleCall deleteUserModuleCall = DeleteUserModuleCall();
+  static GetNotEnrolledCall getNotEnrolledCall = GetNotEnrolledCall();
+  static GetEnrolledCall getEnrolledCall = GetEnrolledCall();
+
+  static final interceptors = [
+    RefreshToken(),
+  ];
+}
+
+class AddUserModuleCall {
+  Future<ApiCallResponse> call({
+    String? userID = '',
+    String? moduleID = '',
+    String? token = '',
+  }) async {
+    final baseUrl = UserModuleGroup.getBaseUrl(
+      token: token,
+    );
+
+    final ffApiRequestBody = '''
+{
+  "userID": "$userID",
+  "moduleID": "$moduleID"
+}''';
+    return FFApiInterceptor.makeApiCall(
+      ApiCallOptions(
+        callName: 'Add User Module',
+        apiUrl: '$baseUrl/v1/user-module',
+        callType: ApiCallType.POST,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        params: const {},
+        body: ffApiRequestBody,
+        bodyType: BodyType.JSON,
+        returnBody: true,
+        encodeBodyUtf8: false,
+        decodeUtf8: false,
+        cache: false,
+        isStreamingApi: false,
+        alwaysAllowBody: false,
+      ),
+      UserModuleGroup.interceptors,
+    );
+  }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+}
+
+class DeleteUserModuleCall {
+  Future<ApiCallResponse> call({
+    String? moduleID = '',
+    String? userID = '',
+    String? token = '',
+  }) async {
+    final baseUrl = UserModuleGroup.getBaseUrl(
+      token: token,
+    );
+
+    return FFApiInterceptor.makeApiCall(
+      ApiCallOptions(
+        callName: 'Delete User Module',
+        apiUrl: '$baseUrl/v1/user-module/$moduleID/$userID',
+        callType: ApiCallType.DELETE,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        params: const {},
+        returnBody: true,
+        encodeBodyUtf8: false,
+        decodeUtf8: false,
+        cache: false,
+        isStreamingApi: false,
+        alwaysAllowBody: false,
+      ),
+      UserModuleGroup.interceptors,
+    );
+  }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+}
+
+class GetNotEnrolledCall {
+  Future<ApiCallResponse> call({
+    String? moduleID = '',
+    String? token = '',
+  }) async {
+    final baseUrl = UserModuleGroup.getBaseUrl(
+      token: token,
+    );
+
+    return FFApiInterceptor.makeApiCall(
+      ApiCallOptions(
+        callName: 'Get Not Enrolled',
+        apiUrl: '$baseUrl/v1/user-module/not-enrolled/$moduleID',
+        callType: ApiCallType.GET,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        params: const {},
+        returnBody: true,
+        encodeBodyUtf8: false,
+        decodeUtf8: false,
+        cache: false,
+        isStreamingApi: false,
+        alwaysAllowBody: false,
+      ),
+      UserModuleGroup.interceptors,
+    );
+  }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  List<int>? userID(dynamic response) => (getJsonField(
+        response,
+        r'''$.notEnrolledUsers[:].userID''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<int>(x))
+          .withoutNulls
+          .toList();
+  List<String>? user(dynamic response) => (getJsonField(
+        response,
+        r'''$.notEnrolledUsers[:].user''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+}
+
+class GetEnrolledCall {
+  Future<ApiCallResponse> call({
+    String? moduleID = '',
+    String? token = '',
+  }) async {
+    final baseUrl = UserModuleGroup.getBaseUrl(
+      token: token,
+    );
+
+    return FFApiInterceptor.makeApiCall(
+      ApiCallOptions(
+        callName: 'Get Enrolled',
+        apiUrl: '$baseUrl/v1/user-module/enrolled/$moduleID',
+        callType: ApiCallType.GET,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        params: const {},
+        returnBody: true,
+        encodeBodyUtf8: false,
+        decodeUtf8: false,
+        cache: false,
+        isStreamingApi: false,
+        alwaysAllowBody: false,
+      ),
+      UserModuleGroup.interceptors,
+    );
+  }
+
+  String? errorMessage(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  List<int>? userID(dynamic response) => (getJsonField(
+        response,
+        r'''$.enrolledUsers[:].userID''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<int>(x))
+          .withoutNulls
+          .toList();
+  List<String>? user(dynamic response) => (getJsonField(
+        response,
+        r'''$.enrolledUsers[:].user''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+}
+
+/// End UserModule Group Code
 
 class ApiPagingParams {
   int nextPageNumber = 0;

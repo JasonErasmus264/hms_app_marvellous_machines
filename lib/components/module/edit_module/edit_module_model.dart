@@ -37,7 +37,7 @@ class EditModuleModel extends FlutterFlowModel<EditModuleWidget> {
     return null;
   }
 
-  // Stores action output result for [Backend Call - API (Add Module)] action in Button widget.
+  // Stores action output result for [Backend Call - API (Update Module)] action in Button widget.
   ApiCallResponse? apiResult;
 
   @override

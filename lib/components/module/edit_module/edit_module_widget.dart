@@ -121,6 +121,11 @@ class _EditModuleWidgetState extends State<EditModuleWidget> {
                       ].divide(const SizedBox(width: 8.0)),
                     ),
                   ),
+                  Divider(
+                    height: 1.0,
+                    thickness: 2.0,
+                    color: FlutterFlowTheme.of(context).alternate,
+                  ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -508,11 +513,13 @@ class _EditModuleWidgetState extends State<EditModuleWidget> {
                                       return;
                                     }
                                     _model.apiResult =
-                                        await ModuleGroup.addModuleCall.call(
-                                      moduleName:
-                                          _model.txtNameTextController.text,
+                                        await ModuleGroup.updateModuleCall.call(
+                                      moduleID:
+                                          _model.dropDownValue?.toString(),
                                       moduleCode:
                                           _model.txtCodeTextController.text,
+                                      moduleName:
+                                          _model.txtNameTextController.text,
                                       token: currentAuthenticationToken,
                                     );
 
@@ -523,7 +530,7 @@ class _EditModuleWidgetState extends State<EditModuleWidget> {
                                           return AlertDialog(
                                             title: const Text('Success'),
                                             content: Text(ModuleGroup
-                                                .addModuleCall
+                                                .updateModuleCall
                                                 .errorMessage(
                                               (_model.apiResult?.jsonBody ??
                                                   ''),
@@ -546,7 +553,7 @@ class _EditModuleWidgetState extends State<EditModuleWidget> {
                                           return AlertDialog(
                                             title: const Text('Error'),
                                             content: Text(ModuleGroup
-                                                .addModuleCall
+                                                .updateModuleCall
                                                 .errorMessage(
                                               (_model.apiResult?.jsonBody ??
                                                   ''),
@@ -592,11 +599,6 @@ class _EditModuleWidgetState extends State<EditModuleWidget> {
                           ),
                         ),
                     ],
-                  ),
-                  Divider(
-                    height: 1.0,
-                    thickness: 2.0,
-                    color: FlutterFlowTheme.of(context).alternate,
                   ),
                 ].divide(const SizedBox(height: 4.0)),
               ),

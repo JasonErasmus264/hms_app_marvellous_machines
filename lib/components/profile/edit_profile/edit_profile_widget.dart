@@ -203,9 +203,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF101213),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Padding(

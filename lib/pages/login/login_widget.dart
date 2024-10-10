@@ -217,6 +217,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                           autofillHints: const [
                                             AutofillHints.username
                                           ],
+                                          textInputAction: TextInputAction.next,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText: 'Username',
@@ -311,6 +312,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                           autofillHints: const [
                                             AutofillHints.password
                                           ],
+                                          textInputAction: TextInputAction.next,
                                           obscureText:
                                               !_model.passwordVisibility,
                                           decoration: InputDecoration(

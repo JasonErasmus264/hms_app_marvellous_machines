@@ -1,23 +1,23 @@
-# Use Node.js LTS version
+# Use the Node.js LTS version (20.16.0) as the base image
 FROM node:20.16.0
 
-# Install FFmpeg
-RUN apt-get update && apt-get install -y ffmpeg
-
-# Create and set the working directory inside the backend folder
+# Set the working directory inside the container to /app
 WORKDIR /app
 
 # Install FFmpeg and GraphicsMagick in one RUN command
-RUN apt-get update && apt-get install -y ffmpeg graphicsmagick && apt-get clean
+RUN apt-get update && apt-get install -y ffmpeg graphicsmagick
 
 # Copy package.json to the working directory
 COPY package.json ./
 
-# Install dependencies
+# Install Node.js dependencies
 RUN npm install
 
 # Copy the rest of the backend application code
 COPY . .
 
-# Run the application from the backend folder
+# Expose the application port (optional, depending on your app)
+# EXPOSE 3000
+
+# Command to run the application
 CMD ["npm", "run", "dev"]

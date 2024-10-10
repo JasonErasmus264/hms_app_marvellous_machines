@@ -13,6 +13,7 @@ import assignmentRoute from './routes/assignmentRouter.js';
 import submissionRoute from './routes/submissionRouter.js';
 import feedbackRoute from './routes/feedbackRouter.js';
 import notificationRoute from './routes/notificationRouter.js';
+import userModuleRoute from './routes/userModuleRouter.js';
 
 // Load Environment Variables
 dotenv.config();
@@ -36,6 +37,7 @@ app.use(assignmentRoute);
 app.use(submissionRoute);
 app.use(feedbackRoute);
 app.use(notificationRoute);
+app.use(userModuleRoute);
 
 // Start Server
 app.listen(PORT, "0.0.0.0", () => {

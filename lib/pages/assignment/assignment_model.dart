@@ -9,17 +9,10 @@ class AssignmentModel extends FlutterFlowModel<AssignmentWidget> {
   // State field(s) for DropDown widget.
   int? dropDownValue;
   FormFieldController<int>? dropDownValueController;
-  // State field(s) for searchBar widget.
-  FocusNode? searchBarFocusNode;
-  TextEditingController? searchBarTextController;
-  String? Function(BuildContext, String?)? searchBarTextControllerValidator;
 
   @override
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    searchBarFocusNode?.dispose();
-    searchBarTextController?.dispose();
-  }
+  void dispose() {}
 }

@@ -101,11 +101,16 @@ DateTime? convertDate(String? formattedDate) {
   }
 }
 
-int convertStringToInt(String assignID) {
-  return int.tryParse(assignID) ?? 0;
-}
-
 String getVideoName(String vidPath) {
   final parts = vidPath.split('/');
   return parts.isNotEmpty ? parts.last : '';
+}
+
+String hasSubmittedText(String submitVal) {
+  if (submitVal == 'f') {
+    return 'View Details';
+  } else if (submitVal == 't') {
+    return 'Submitted';
+  }
+  return ''; // Return an empty string or handle invalid cases if needed
 }

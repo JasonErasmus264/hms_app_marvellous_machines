@@ -34,7 +34,7 @@ CREATE TABLE `submission` (
   KEY `userID_idx` (`userID`),
   CONSTRAINT `subAssignID` FOREIGN KEY (`assignmentID`) REFERENCES `assignment` (`assignmentID`) ON DELETE CASCADE,
   CONSTRAINT `subuserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,6 @@ CREATE TABLE `submission` (
 
 LOCK TABLES `submission` WRITE;
 /*!40000 ALTER TABLE `submission` DISABLE KEYS */;
-INSERT INTO `submission` VALUES (1,1,2,'1727389386005-test1.mp4','https://mia.nl.tab.digital/s/JgwXr2Sr8WdyDFa/download/1727389386005-test1.mp4','2024-09-09 20:34:52'),(2,2,2,'1727389386005-test1.mp4','https://mia.nl.tab.digital/s/JgwXr2Sr8WdyDFa/download/1727389386005-test1.mp4','2024-09-09 21:20:11'),(5,2,2,'1727389386005-test1.mp4','https://mia.nl.tab.digital/s/JgwXr2Sr8WdyDFa/download/1727389386005-test1.mp4','2024-09-24 12:41:27'),(6,1,1,'1727389386005-test1.mp4','https://mia.nl.tab.digital/s/JgwXr2Sr8WdyDFa/download/1727389386005-test1.mp4','2024-09-26 22:20:10'),(7,11,2,'1727389386005-test1.mp4','https://mia.nl.tab.digital/s/JgwXr2Sr8WdyDFa/download/1727389386005-test1.mp4','2024-09-27 10:52:30');
 /*!40000 ALTER TABLE `submission` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-27 13:02:56
+-- Dump completed on 2024-10-10 14:14:21

@@ -161,18 +161,23 @@ const storage = multer.diskStorage({
       cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-      const timestamp = Date.now();
-      const randomString = Math.random().toString(36).substring(7);
-      // Extract vidName from request body
-      const { vidName } = req.body; // Ensure this name is sanitized for file safety
-      const sanitizedVidName = vidName.replace(/[^a-zA-Z0-9-_]/g, ''); // Remove invalid characters
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(7);
+    
+    // Extract vidName from request body
+    const { vidName } = req.body; 
 
-      // Use vidName in the filename, appending timestamp and random string
-      const newFileName = `${timestamp}-${randomString}-${sanitizedVidName}.mp4`; 
-      
-      // Log file received for upload (information log)
-      submissionLogger.info(`File received for upload: ${file.originalname}`);
-      cb(null, newFileName);
+    if (!vidName) {
+        // Log a warning if vidName is missing and use a default name
+        submissionLogger.warn('vidName not provided in request, using default value.');
+        const sanitizedVidName = 'defaultVidName'; // Fallback if vidName is missing
+        const newFileName = `${timestamp}-${randomString}-${sanitizedVidName}.mp4`;
+        cb(null, newFileName);
+    } else {
+        const sanitizedVidName = vidName.replace(/[^a-zA-Z0-9-_]/g, ''); // Remove invalid characters
+        const newFileName = `${timestamp}-${randomString}-${sanitizedVidName}.mp4`;
+        cb(null, newFileName);
+    }
   },
 });
 

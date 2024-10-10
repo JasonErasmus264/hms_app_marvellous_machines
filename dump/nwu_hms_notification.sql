@@ -16,34 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `feedback`
+-- Table structure for table `notification`
 --
 
-DROP TABLE IF EXISTS `feedback`;
+DROP TABLE IF EXISTS `notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `feedback` (
-  `feedbackID` int NOT NULL AUTO_INCREMENT,
-  `submissionID` int NOT NULL,
-  `userID` int DEFAULT NULL,
-  `comment` varchar(10000) DEFAULT NULL,
-  `mark` decimal(5,2) NOT NULL,
+CREATE TABLE `notification` (
+  `notificationID` int NOT NULL AUTO_INCREMENT,
+  `userID` int NOT NULL,
+  `message` varchar(250) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`feedbackID`),
-  KEY `feedSubmissionID_idx` (`submissionID`),
-  KEY `feedUserID_idx` (`userID`),
-  CONSTRAINT `feedSubmissionID` FOREIGN KEY (`submissionID`) REFERENCES `submission` (`submissionID`) ON DELETE CASCADE,
-  CONSTRAINT `feedUserID` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`notificationID`),
+  KEY `userIDNotif_idx` (`userID`),
+  CONSTRAINT `userIDNotif` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `feedback`
+-- Dumping data for table `notification`
 --
 
-LOCK TABLES `feedback` WRITE;
-/*!40000 ALTER TABLE `feedback` DISABLE KEYS */;
-/*!40000 ALTER TABLE `feedback` ENABLE KEYS */;
+LOCK TABLES `notification` WRITE;
+/*!40000 ALTER TABLE `notification` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -55,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-10 14:14:20
+-- Dump completed on 2024-10-10 14:14:21

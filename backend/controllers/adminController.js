@@ -133,6 +133,7 @@ export const createUser = async (req, res) => {
 
 
 
+
 // Update a user
 export const updateUser = async (req, res) => {
   const { userID } = req.params; // Extract userID from the route

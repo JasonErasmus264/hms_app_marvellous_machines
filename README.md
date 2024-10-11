@@ -103,10 +103,7 @@ If you prefer to build the backend locally:
    LOGIN_RATE_LIMIT_MAX=5       # Max login attempts
    LOGIN_RATE_LIMIT_WINDOW=15    # Window for login attempts in minutes
 
-   # Email Service (Outlook)
-   EMAIL_USER=put_your_email_here
-   EMAIL_PASS=put_your_email_password_here
-   EMAIL_SERVICE=Outlook
+
    # Email Service (Gmail)
    EMAIL_SERVICE=gmail
    EMAIL_USER=put_your_email_here

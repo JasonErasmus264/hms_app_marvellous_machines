@@ -222,11 +222,9 @@ export const requestPasswordReset = async (req, res) => {
     // Store reset code and expiry in the database
     await pool.execute('UPDATE users SET resetCode = ?, codeExpiry = ? WHERE userID = ?', [resetCode, codeExpiry, userID]);
 
-    // Setup email transporter (Outlook configuration)
+    // Setup email transporter (Gmail configuration)
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: process.env.EMAIL_SECURE === 'true', // Use TLS
+      service: process.env.EMAIL_SERVICE,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,

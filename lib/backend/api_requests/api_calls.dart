@@ -16,7 +16,7 @@ class UserGroup {
   static String getBaseUrl({
     String? token = '',
   }) =>
-      'http://localhost:3000';
+      'http://localhost:3000';  // Replace localhost with your actual IP, e.g., 'http://192.168.1.100:3000'
   static Map<String, String> headers = {
     'Authorization': 'Bearer [token]',
   };
@@ -103,20 +103,8 @@ class GetUserCall {
 
 /// End User Group Code
 
-/// Start Assignment Group Code
 
-/*class AssignmentGroup {
-  static String getBaseUrl() => 'http://localhost:3000'; //static String getBaseUrl() => 'http://192.168.1.96:3000/api';
-  static Map<String, String> headers = {};
-  static GetModuleCall getModuleCall = GetModuleCall();
-  static GetAssignmentCall getAssignmentCall = GetAssignmentCall();
 
-  static final interceptors = [
-    RefreshToken(),
-  ];
-}
-
-class GetModuleCall {*/
 class UpdateUserCall {
   Future<ApiCallResponse> call({
     String? firstName = '',

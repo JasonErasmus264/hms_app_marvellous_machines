@@ -1,20 +1,34 @@
- HMS App - Marvellous Machines 🤖 
+# HMS App - Marvellous Machines 🤖
 
 ## Table of Contents 📚
-
-1. [Backend](#backend)
+1. [Backend](#backend-💻)
+   - [Prerequisites](#prerequisites-⚙️)
+   - [Important Note](#important-note-⚠️)
+   - [Getting Started](#getting-started-🚀)
+   - [Running the Application](#running-the-application-🏃‍♂️)
+     - [Option 1: Use Docker (Recommended)](#option-1-use-docker-recommended-🐋)
+     - [Option 2: Build Locally](#option-2-build-locally-🖥️)
+   - [Database Setup](#database-setup-🗄️)
+2. [Frontend (Flutter)](#frontend-flutter-🐦)
    - [Prerequisites](#prerequisites)
-   - [Getting Started](#getting-started)
-   - [Running the Backend](#running-the-backend)
-     - [Option 1: Use Docker](#option-1-use-docker-recommended)
-     - [Option 2: Build Locally](#option-2-build-locally)
-   - [Database Setup](#database-setup)
-2. [Frontend (Flutter)](#frontend)
-   - [Prerequisites](#frontend-prerequisites)
-   - [Running the Frontend](#running-the-frontend)
-3. [Additional Assistance](#additional-assistance)
-
-## Backend
+   - [Setting Up Flutter on Your PC](#setting-up-flutter-on-your-pc-🛠️)
+     - [Install Flutter SDK](#1-install-flutter-sdk-📥)
+     - [Set Environment Variables](#2-set-environment-variables-🌐)
+          - [Install Git](#3-install-git-🔧)
+     - [Install the Flutter Plugin for Visual Studio Code](#4-install-the-flutter-plugin-for-visual-studio-code-🔌)
+     - [Set up Android Emulator (Optional)](#5-set-up-android-emulator-optional-📱)
+     - [Install Chrome (for Web Development)](#6-install-chrome-for-web-development-🌍)
+     - [Enable Developer Options on Your Android Device](#7-enable-developer-options-on-your-android-device-for-mobile-development-🔓)
+     - [Install Java Development Kit (JDK)](#8-install-java-development-kit-jdk-☕)
+     - [Install Xcode (for macOS/iOS Development, if applicable)](#9-install-xcode-for-macos-ios-development-if-applicable-🍏)
+     - [Run flutter doctor](#10-run-flutter-doctor-🩺)
+   - [Running the Frontend](#running-the-frontend-🏃‍♀️)
+3. [API URL Setup for Mobile Devices (Emulator & Physical)](#api-url-setup-for-mobile-devices-emulator--physical-🚀)
+   - [Modify the api_calls.dart file](#1-modify-the-api_callsdart-file-📝)
+   - [For Physical Devices, Replace localhost with Your Machine's IP Address](#2-for-physical-devices-replace-localhost-with-your-machines-ip-address-🌐)
+   - [Update All Instances of localhost](#3-update-all-instances-of-localhost-🔄)
+4. [Additional Assistance](#additional-assistance-🆘)
+## Backend 💻
 
 ### Prerequisites ⚙️
 
@@ -91,9 +105,11 @@ If you prefer to build the backend locally:
    EMAIL_USER=put_your_email_here
    EMAIL_PASS=put_your_email_password_here
    EMAIL_SERVICE=Outlook
-   EMAIL_HOST=smtp.office365.com
-   EMAIL_PORT=587
-   EMAIL_SECURE=false
+   # Email Service (Gmail)
+   EMAIL_SERVICE=gmail
+   EMAIL_USER=put_your_email_here
+   EMAIL_PASS=put_your_app_password_here (must turn on 2FA on account)
+
 
    # Nextcloud Configuration 
    NEXTCLOUD_URL=https://your_nextcloud_url_here 
@@ -126,18 +142,18 @@ If you are running the application locally, you must have MySQL Workbench set up
 
 ## Frontend (Flutter) 🐦
 
-### Prerequisites ⚙️
+### Prerequisites
 
 - Install Flutter SDK. You can download it from [Flutter's official website](https://flutter.dev/docs/get-started/install).
 - A code editor such as [Visual Studio Code](https://code.visualstudio.com/) with Flutter plugins enabled.
 
-## Setting Up Flutter on Your PC
+## Setting Up Flutter on Your PC 🛠️
 
-### 1. Install Flutter SDK
+### 1. Install Flutter SDK 📥
 - Download Flutter SDK from the [Flutter official website](https://flutter.dev/docs/get-started/install).
 - Extract the ZIP file and place the `flutter` folder in a desired location (e.g., `C:\src\flutter`).
 
-### 2. Set Environment Variables
+### 2. Set Environment Variables 🌐
 - Add the `flutter/bin` directory to your system `PATH` environment variable. This allows you to run `flutter` commands globally.
 
 **Steps:**
@@ -147,18 +163,18 @@ If you are running the application locally, you must have MySQL Workbench set up
 4. Click **New** and add the path to the Flutter bin directory (e.g., `C:\src\flutter\bin`).
 5. Click **OK**.
 
-### 3. Install Git
+### 3. Install Git 🔧
 - Flutter requires Git for version control. Download and install Git from the official site: [Git Download](https://git-scm.com/downloads).
 - After installation, ensure that `git` is added to your system `PATH` so it can be accessed from any command line.
 
-### 4. Install the Flutter Plugin for Visual Studio Code
+### 4. Install the Flutter Plugin for Visual Studio Code 🔌
 - Visual Studio Code is the preferred IDE for Flutter development due to its lightweight nature and fast performance.
 
 **Steps to Install the Flutter Plugin:**
 1. Open VS Code and go to **Extensions** (or press `Ctrl+Shift+X`).
 2. Search for `Flutter` and install the Flutter extension (this will install Dart as well).
 
-### 5. Set up Android Emulator (Optional)
+### 5. Set up Android Emulator (Optional) 📱
 To run your Flutter app on an Android emulator:
 1. Download and install [Android Studio](https://developer.android.com/studio).
 2. During installation, ensure that the following components are selected:
@@ -174,23 +190,23 @@ To run your Flutter app on an Android emulator:
    - Click **Create Virtual Device**, choose a device model, and download the desired system image (ensure it's for x86 architecture).
    - Start the emulator by clicking the play button.
 
-### 6. Install Chrome (for Web Development)
+### 6. Install Chrome (for Web Development) 🌍
 - Flutter supports web development. To use this feature, install the latest version of [Google Chrome](https://www.google.com/chrome/).
 
-### 7. Enable Developer Options on Your Android Device (for Mobile Development)
+### 7. Enable Developer Options on Your Android Device (for Mobile Development) 🔓
 1. Go to **Settings** on your Android phone.
 2. Tap on **About phone** and then tap **Build number** 7 times to enable developer mode.
 3. Go to **Developer options** and enable **USB debugging**.
 4. Connect your device to your PC using a USB cable and allow debugging permissions.
 
-### 8. Install Java Development Kit (JDK)
+### 8. Install Java Development Kit (JDK) ☕
 - Android development requires a JDK. Download and install [JDK 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
 
-### 9. Install Xcode (for macOS/iOS Development, if applicable)
+### 9. Install Xcode (for macOS/iOS Development, if applicable) 🍏
 - If you're on macOS and want to develop for iOS, install [Xcode](https://developer.apple.com/xcode/).
   - After installation, open Xcode, go to **Preferences** > **Locations**, and set the **Command Line Tools** to the latest Xcode version.
 
-### 10. Run `flutter doctor`
+### 10. Run `flutter doctor` 🩺
 - Open a terminal or command prompt and run:
   ```bash
    flutter doctor
@@ -239,15 +255,74 @@ Doctor summary (to see all details, run flutter doctor -v):
    ```
    Choose the browser you'd like to run the application on by typing the corresponding number.
 
-4. For mobile (Android), you can enable Developer Options on your device and allow USB Debugging. Then, connect your phone to your PC via a USB cable and run:
+### API URL Setup for Mobile Devices (Emulator & Physical) 🚀
 
-   ```bash
-   flutter run
-   ```
+When running your Flutter app on an **Android emulator** or **physical device**, you need to adjust the base URL in your API calls. By default, the `localhost` address will not work because the mobile environment doesn't see the local development server directly.
+
+### 1. Modify the `api_calls.dart` file 📝
+
+Go to the `lib/backend/api_requests/api_calls.dart` file. Replace the current `localhost` with the appropriate IP address depending on your setup:
+
+- For **Android emulators**, use `10.0.2.2` instead of `localhost`.
+- For **physical devices**, replace `localhost` with your PC's local IP address.
+
+### 2. For Physical Devices, Replace `localhost` with Your Machine's IP Address 🌐
+
+Open a terminal or command prompt and find your IP address by running:
+
+#### Windows:
+```bash
+ipconfig
+```
+
+Look for your local IPv4 address (usually something like 192.168.x.x).
+
+#### macOS/Linux:
+```bash
+ifconfig
+```
 
 
+Your IP will typically be under `inet`.
+
+### 3. Update All Instances of `localhost` 🔄
+Once you have your IP address, go to the `api_calls.dart` file and replace `localhost` with your machine's IP.
+
+Use `Ctrl + F` in your code editor to search for `localhost` and replace it with either `10.0.2.2` (for emulator) or your local IP (for physical devices).
 
 
+```dart
+class UserGroup {
+  static String getBaseUrl({
+    String? token = '',
+  }) =>
+      'http://YOUR_LOCAL_IP:3000';  // Replace with your actual IP, e.g., 'http://192.168.1.100:3000'
+
+  static Map<String, String> headers = {
+    'Authorization': 'Bearer [token]',
+  };
+
+  static GetUserCall getUserCall = GetUserCall();
+  static UpdateUserCall updateUserCall = UpdateUserCall();
+  static UpdatePasswordCall updatePasswordCall = UpdatePasswordCall();
+  static UploadProfilePictureCall uploadProfilePictureCall =
+      UploadProfilePictureCall();
+
+  static final interceptors = [
+    RefreshToken(),
+  ];
+}
+```
+
+Now, the mobile application will communicate with the backend server running on your local machine!
+
+If you're running the app on an emulator, simply use:
+
+```bash
+flutter run
+```
+
+However, if you're running the app on a physical device, make sure your device is connected via USB, and USB debugging is enabled. The device needs to stay plugged in during development.
 
 ## Additional Assistance 🆘
 If you encounter any issues or need further assistance, here are some resources:

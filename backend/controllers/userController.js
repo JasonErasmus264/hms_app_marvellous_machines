@@ -7,6 +7,7 @@ import pool from '../db.js';  // Importing database connection pool
 import 'dotenv/config';  // Load environment variables
 
 import { userLogger } from '../middleware/logger.js'; // Import user logger
+import { DEFAULT_PROFILE_PIC } from '../constants.js';
 
 // Get current user's info
 export const getUser = async (req, res) => {
@@ -26,7 +27,11 @@ export const getUser = async (req, res) => {
     }
 
     const user = rows[0];
-    
+
+    // Check if profilePicture is null and set a default profile picture base64 if it is 
+    //(We had to do it this way as because it is so long we had to use the TEXT datatype and that does not support the default command)
+    const profilePic = user.profilePicture || DEFAULT_PROFILE_PIC; // Use the imported constant (Like this because it is very long)
+
     // Format the createdAt field to the desired format (e.g., "July 12th, 2023")
     const formattedCreatedAt = formatDate(new Date(user.createdAt));
 
@@ -45,6 +50,7 @@ export const getUser = async (req, res) => {
     res.json({
       user: {
         ...user,
+        profilePicture: profilePic, // Use the modified profilePic value
         createdAt: formattedCreatedAt, // Include the formatted createdAt
         notificationCount: notificationCount, // Include notification count
       },
@@ -55,7 +61,6 @@ export const getUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 // Function to format dates to 'July 12th, 2023'

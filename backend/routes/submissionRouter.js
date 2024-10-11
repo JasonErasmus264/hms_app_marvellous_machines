@@ -22,4 +22,7 @@ submissionRoute.post('/v1/submissions', uploadVideo);
 // Update submission
 submissionRoute.put('/v1/submissions', updateVideo);
 
+// Delete submission
+//submissionRoute.delete('/v1/submissions', removeVideo);
+
 export default submissionRoute;

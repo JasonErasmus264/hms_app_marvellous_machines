@@ -4,7 +4,6 @@ import verifyToken from '../middleware/verifyToken.js';
 
 const authRouter = express.Router();
 
-
 // Apply Login route
 authRouter.post('/v1/login', login);
 

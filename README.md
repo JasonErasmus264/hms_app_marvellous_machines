@@ -12,21 +12,21 @@
 2. [Frontend (Flutter)](#frontend-flutter)
    - [Frontend Prerequisites](#frontend-prerequisites)
    - [Setting Up Flutter on Your PC](#setting-up-flutter-on-your-pc)
-     - [Install Flutter SDK](#install-flutter-sdk)
-     - [Set Environment Variables](#set-environment-variables)
-     - [Install Git](#install-git)
-     - [Install the Flutter Plugin for Visual Studio Code](#install-the-flutter-plugin-for-visual-studio-code)
-     - [Set up Android Emulator (Optional)](#set-up-android-emulator-optional)
-     - [Install Chrome (for Web Development)](#install-chrome-for-web-development)
-     - [Enable Developer Options on Your Android Device](#enable-developer-options-on-your-android-device)
-     - [Install Java Development Kit (JDK)](#install-java-development-kit-jdk)
-     - [Install Xcode (for macOS/iOS Development, if applicable)](#install-xcode-for-macos-ios-development-if-applicable)
-     - [Run flutter doctor](#run-flutter-doctor)
+     - [Install Flutter SDK](#1-install-flutter-sdk)
+     - [Set Environment Variables](#2-set-environment-variables)
+     - [Install Git](#3-install-git)
+     - [Install the Flutter Plugin for Visual Studio Code](#4-install-the-flutter-plugin-for-visual-studio-code)
+     - [Set up Android Emulator (Optional)](#5-set-up-android-emulator-optional)
+     - [Install Chrome (for Web Development)](#6-install-chrome-for-web-development)
+     - [Enable Developer Options on Your Android Device](#7-enable-developer-options-on-your-android-device-for-mobile-development)
+     - [Install Java Development Kit (JDK)](#8-install-java-development-kit-jdk)
+     - [Install Xcode (for macOS/iOS Development, if applicable)](#9-install-xcode-for-macosios-development-if-applicable)
+     - [Run flutter doctor](#10-run-flutter-doctor)
    - [Running the Frontend](#running-the-frontend)
 3. [API URL Setup for Mobile Devices (Emulator & Physical)](#api-url-setup-for-mobile-devices-emulator--physical)
-   - [Modify the api_calls.dart file](#modify-the-apicallsdart-file)
-   - [For Physical Devices, Replace localhost with Your Machine's IP Address](#for-physical-devices-replace-localhost-with-your-machines-ip-address)
-   - [Update All Instances of localhost](#update-all-instances-of-localhost)
+   - [Modify the api_calls.dart file](#1-modify-the-api_callsdart-file)
+   - [For Physical Devices, Replace localhost with Your Machine's IP Address](#2-for-physical-devices-replace-localhost-with-your-machines-ip-address)
+   - [Update All Instances of localhost](#3-update-all-instances-of-localhost)
 4. [Additional Assistance](#additional-assistance)
 
 
@@ -232,7 +232,7 @@ Doctor summary (to see all details, run flutter doctor -v):
 
 
 
-### Running the Frontend🏃‍♀️
+### Running the Frontend🏃‍♀
 
 1. In the root directory of the project, run the following command to get all required dependencies:
    ```bash

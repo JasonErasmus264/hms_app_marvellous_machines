@@ -206,17 +206,23 @@ class _EditProfilePicWidgetState extends State<EditProfilePicWidget>
                                           color: Color(0xFF101213),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50.0),
-                                            child: Image.memory(
-                                              _model.uploadedLocalFile.bytes ??
-                                                  Uint8List.fromList([]),
-                                              width: 100.0,
-                                              height: 100.0,
-                                              fit: BoxFit.cover,
+                                        child: Visibility(
+                                          visible: (_model.uploadedLocalFile.bytes
+                                                      ?.isNotEmpty ??
+                                                  false),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              child: Image.memory(
+                                                _model.uploadedLocalFile
+                                                        .bytes ??
+                                                    Uint8List.fromList([]),
+                                                width: 100.0,
+                                                height: 100.0,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
                                         ),

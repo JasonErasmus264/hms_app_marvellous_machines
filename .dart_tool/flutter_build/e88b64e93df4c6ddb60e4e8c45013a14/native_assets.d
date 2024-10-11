@@ -1,0 +1,1 @@
+ C:\\hms_app_marvellous_machines\\.dart_tool\\flutter_build\\e88b64e93df4c6ddb60e4e8c45013a14\\native_assets.yaml: 

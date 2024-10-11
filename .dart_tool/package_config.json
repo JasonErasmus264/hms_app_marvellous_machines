@@ -26,6 +26,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "badges",
+      "rootUri": "file:///C:/Users/arnoc/AppData/Local/Pub/Cache/hosted/pub.dev/badges-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "boolean_selector",
       "rootUri": "file:///C:/Users/arnoc/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
@@ -608,6 +614,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "simple_gradient_text",
+      "rootUri": "file:///C:/Users/arnoc/AppData/Local/Pub/Cache/hosted/pub.dev/simple_gradient_text-1.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/FlutterSDK/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -830,7 +842,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-10T14:15:44.907994Z",
+  "generated": "2024-10-10T14:42:21.753191Z",
   "generator": "pub",
   "generatorVersion": "3.5.1",
   "flutterRoot": "file:///C:/FlutterSDK/flutter",

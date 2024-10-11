@@ -195,7 +195,7 @@ const compressVideo = (filePath, outputFilePath, maxFileSize) => {
       .size('?x360') // Rezize the height but maintain aspect ratio
       .videoBitrate('800k')
       .audioBitrate('128k')
-      .outputOptions('-crf 28')  // Medium compression
+      .outputOptions('-crf 23')  // Medium compression
       .on('end', async () => {
         try {
           // Check if the compressed file size exceeds the maximum allowed size because very large files might need to be compressed more than once

@@ -120,12 +120,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: '/updateUser',
           requireAuth: true,
           builder: (context, params) => const UpdateUserWidget(),
-        ),
-        FFRoute(
-          name: 'profileff',
-          path: '/profileff',
-          requireAuth: true,
-          builder: (context, params) => const ProfileffWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
       observers: [routeObserver],

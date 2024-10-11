@@ -244,6 +244,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                       );
                                     },
                                   ).then((value) => safeSetState(() {}));
+
+                                  Navigator.pop(context);
                                 },
                                 text: 'Change Photo',
                                 options: FFButtonOptions(

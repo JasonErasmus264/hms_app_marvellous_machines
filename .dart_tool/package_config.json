@@ -614,12 +614,6 @@
       "languageVersion": "2.19"
     },
     {
-      "name": "simple_gradient_text",
-      "rootUri": "file:///C:/Users/jason/AppData/Local/Pub/Cache/hosted/pub.dev/simple_gradient_text-1.2.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "sky_engine",
       "rootUri": "file:///C:/dev/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -842,7 +836,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-11T13:09:31.738884Z",
+  "generated": "2024-10-11T19:52:49.199713Z",
   "generator": "pub",
   "generatorVersion": "3.5.0",
   "flutterRoot": "file:///C:/dev/flutter",

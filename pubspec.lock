@@ -805,14 +805,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  simple_gradient_text:
-    dependency: "direct main"
-    description:
-      name: simple_gradient_text
-      sha256: "0eac61abb431c3c61ec1ea852eb0923e983371737079a9d949310217e13c8c20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.3"
   sky_engine:
     dependency: transitive
     description: flutter

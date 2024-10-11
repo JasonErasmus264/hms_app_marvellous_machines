@@ -1,6 +1,6 @@
 # HMS App - Marvellous Machines 🤖
 
-## Table of Contents 📚
+## Table of Contents 📖
 1. [Backend](#backend)
    - [Backend Prerequisites](#backend-prerequisites)
    - [Important Note](#important-note)

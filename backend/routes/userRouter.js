@@ -16,6 +16,7 @@ userRoute.put('/v1/users', updateUser);
 // Add route for changing password (available to all users)
 userRoute.put('/v1/users/change-password', changePassword);
 
+// Apply CORS middleware to Nextcloud picture upload route
 userRoute.post('/v1/upload-profile-picture', uploadProfilePicture);
 
 export default userRoute;

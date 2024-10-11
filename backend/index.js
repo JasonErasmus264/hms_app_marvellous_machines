@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
 
 // Imports from other files
 import authRoute from './routes/authRouter.js';
@@ -24,6 +25,8 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+app.use(bodyParser.json()); // Parse incoming request bodies as JSON
 
 // Routes
 app.use(authRoute);

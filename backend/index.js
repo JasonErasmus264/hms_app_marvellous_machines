@@ -14,6 +14,7 @@ import submissionRoute from './routes/submissionRouter.js';
 import feedbackRoute from './routes/feedbackRouter.js';
 import notificationRoute from './routes/notificationRouter.js';
 import userModuleRoute from './routes/userModuleRouter.js';
+import { logPerformance } from './middleware/logger.js';
 
 // Load Environment Variables
 dotenv.config();
@@ -26,7 +27,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(bodyParser.json()); // Parse incoming request bodies as JSON
+// Middleware for logging request and response performance
+app.use(logPerformance);
 
 // Routes
 app.use(authRoute);

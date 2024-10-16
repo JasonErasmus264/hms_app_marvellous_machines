@@ -202,8 +202,9 @@ class _EditProfilePicWidgetState extends State<EditProfilePicWidget>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFF101213),
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
                                           shape: BoxShape.circle,
                                         ),
                                         child: Visibility(

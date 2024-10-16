@@ -324,7 +324,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                       autofocus: true,
                                       textCapitalization:
                                           TextCapitalization.none,
-                                      textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.next,
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'Phone Number',

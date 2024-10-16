@@ -30,7 +30,7 @@ class RefreshToken extends FFApiInterceptor {
         if (refreshToken != null) {
           
           // Define the API endpoint for refreshing the token
-          final url = Uri.parse('http://192.168.3.66:3000/v1/refresh-token');
+          final url = Uri.parse('http://localhost:3000/v1/refresh-token'); // Change localhost to your IP for mobile
 
           // Send a POST request to refresh the token using the refresh token
           final response = await http.post(

@@ -203,8 +203,9 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFF101213),
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
                                           shape: BoxShape.circle,
                                         ),
                                         child: Padding(
@@ -473,7 +474,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                   focusNode: _model.txtPhoneNumFocusNode,
                                   autofocus: true,
                                   textCapitalization: TextCapitalization.none,
-                                  textInputAction: TextInputAction.done,
+                                  textInputAction: TextInputAction.next,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     labelText: 'Phone Number',

@@ -28,11 +28,20 @@ const logFormat = winston.format.combine(
 // Configure rotating file transport for log rotation
 const rotatingFileTransport = (filename) => new winston.transports.DailyRotateFile({
   filename: path.join(logDirectory, filename),
-  datePattern: 'YYYY-MM-DD',      // Rotate daily based on date
+  datePattern: 'YYYY-ww',      // Rotate weekly based on date
   zippedArchive: true,            // Compress old logs
   maxSize: '20m',                 // Rotate when log reaches 20MB
-  maxFiles: '14d'                 // Keep logs for 14 days
+  maxFiles: '1w'                 // Keep logs for 7 days
 });
+
+// Performance Format
+const performanceLogFormat = winston.format.combine(
+  winston.format.timestamp(),
+  winston.format.printf(({ timestamp, level, message }) => {
+    return `Time Stamp: ${timestamp}\nLevel: ${level}\n${JSON.stringify(message, null, 2)}`;
+  })
+);
+
 
 // auth logger 
 export const authLogger = winston.createLogger({
@@ -120,7 +129,7 @@ export const notificationLogger = winston.createLogger({
 // Performance logger
 export const performanceLogger = winston.createLogger({
   level: 'info',
-  format: logFormat,
+  format: performanceLogFormat,
   transports: [
     rotatingFileTransport('performance-%DATE%.log')
   ]

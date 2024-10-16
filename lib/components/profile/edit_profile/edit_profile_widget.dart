@@ -474,7 +474,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                   focusNode: _model.txtPhoneNumFocusNode,
                                   autofocus: true,
                                   textCapitalization: TextCapitalization.none,
-                                  textInputAction: TextInputAction.done,
+                                  textInputAction: TextInputAction.next,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     labelText: 'Phone Number',

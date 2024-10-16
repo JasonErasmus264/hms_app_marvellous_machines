@@ -180,7 +180,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget>
                                       focusNode: _model.emailFocusNode,
                                       autofocus: true,
                                       autofillHints: const [AutofillHints.email],
-                                      textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.next,
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'NWU Email',

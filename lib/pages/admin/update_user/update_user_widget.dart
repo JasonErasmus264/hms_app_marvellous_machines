@@ -525,7 +525,7 @@ class _UpdateUserWidgetState extends State<UpdateUserWidget> {
                                         autofocus: true,
                                         textCapitalization:
                                             TextCapitalization.none,
-                                        textInputAction: TextInputAction.done,
+                                        textInputAction: TextInputAction.next,
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           labelText: 'Phone Number',

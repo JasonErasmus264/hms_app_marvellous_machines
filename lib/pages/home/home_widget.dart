@@ -169,7 +169,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                           child: Icon(
                                             Icons.notifications_rounded,
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                                .secondaryText,
                                             size: 40.0,
                                           ),
                                         ),
@@ -203,8 +203,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     child: Container(
                                       width: 100.0,
                                       height: 100.0,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFF101213),
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
                                         shape: BoxShape.circle,
                                       ),
                                       child: Padding(
@@ -300,7 +301,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       'Switch to Dark Mode',

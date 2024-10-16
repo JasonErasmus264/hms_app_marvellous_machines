@@ -24,7 +24,7 @@
      - [Run flutter doctor](#10-run-flutter-doctor)
    - [Running the Frontend](#running-the-frontend)
 3. [API URL Setup for Mobile Devices (Emulator & Physical)](#api-url-setup-for-mobile-devices-emulator--physical)
-   - [Modify the api_calls.dart file](#1-modify-the-api_callsdart-file)
+   - [Modify the api_calls.dart & refresh_token.dart file](#1-modify-the-api_callsdart--refresh_tokendart-file)
    - [For Physical Devices, Replace localhost with Your Machine's IP Address](#2-for-physical-devices-replace-localhost-with-your-machines-ip-address)
    - [Update All Instances of localhost](#3-update-all-instances-of-localhost)
 4. [Additional Assistance](#additional-assistance)
@@ -258,9 +258,9 @@ Doctor summary (to see all details, run flutter doctor -v):
 
 When running your Flutter app on an **Android emulator** or **physical device**, you need to adjust the base URL in your API calls. By default, the `localhost` address will not work because the mobile environment doesn't see the local development server directly.
 
-### 1. Modify the `api_calls.dart` file📝
+### 1. Modify the `api_calls.dart` & `refresh_token.dart` file📝
 
-Go to the `lib/backend/api_requests/api_calls.dart` file. Replace the current `localhost` with the appropriate IP address depending on your setup:
+Go to the `lib/backend/api_requests/api_calls.dart` & `lib/custom_code/refresh_token.dart` files. Replace the current `localhost` with the appropriate IP address depending on your setup:
 
 - For **Android emulators**, use `10.0.2.2` instead of `localhost`.
 - For **physical devices**, replace `localhost` with your PC's local IP address.

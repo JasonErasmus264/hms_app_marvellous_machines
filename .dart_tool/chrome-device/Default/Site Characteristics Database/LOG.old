@@ -1,0 +1,43 @@
+2024/10/16-16:00:53.671 5838 Reusing MANIFEST C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.9ca76e55\flutter_tools_chrome_device.62ed50a6\Default\Site Characteristics Database/MANIFEST-000001
+2024/10/16-16:00:53.680 5838 Recovering log #3
+2024/10/16-16:00:53.681 5838 Level-0 table #54: started
+2024/10/16-16:00:53.769 5838 Level-0 table #54: 191 bytes OK
+2024/10/16-16:00:53.769 5838 Recovering log #6
+2024/10/16-16:00:53.770 5838 Level-0 table #55: started
+2024/10/16-16:00:53.774 5838 Level-0 table #55: 190 bytes OK
+2024/10/16-16:00:53.775 5838 Recovering log #10
+2024/10/16-16:00:53.775 5838 Level-0 table #56: started
+2024/10/16-16:00:53.778 5838 Level-0 table #56: 296 bytes OK
+2024/10/16-16:00:53.778 5838 Recovering log #19
+2024/10/16-16:00:53.778 5838 Level-0 table #57: started
+2024/10/16-16:00:53.784 5838 Level-0 table #57: 162 bytes OK
+2024/10/16-16:00:53.784 5838 Recovering log #26
+2024/10/16-16:00:53.784 5838 Level-0 table #58: started
+2024/10/16-16:00:53.787 5838 Level-0 table #58: 162 bytes OK
+2024/10/16-16:00:53.788 5838 Recovering log #34
+2024/10/16-16:00:53.788 5838 Level-0 table #59: started
+2024/10/16-16:00:53.790 5838 Level-0 table #59: 851 bytes OK
+2024/10/16-16:00:53.790 5838 Recovering log #42
+2024/10/16-16:00:53.790 5838 Level-0 table #60: started
+2024/10/16-16:00:53.793 5838 Level-0 table #60: 165 bytes OK
+2024/10/16-16:00:53.793 5838 Recovering log #51
+2024/10/16-16:00:53.794 5838 Reusing old log C:\Users\Dale Blumrick\AppData\Local\Temp\flutter_tools.9ca76e55\flutter_tools_chrome_device.62ed50a6\Default\Site Characteristics Database/000051.log 
+2024/10/16-16:00:53.797 5838 Delete type=0 #3
+2024/10/16-16:00:53.797 5838 Delete type=0 #6
+2024/10/16-16:00:53.797 5838 Delete type=0 #10
+2024/10/16-16:00:53.798 5838 Delete type=0 #19
+2024/10/16-16:00:53.798 5838 Delete type=0 #26
+2024/10/16-16:00:53.798 5838 Delete type=0 #34
+2024/10/16-16:00:53.798 5838 Delete type=0 #42
+2024/10/16-16:00:53.801 4930 Compacting 7@0 + 1@1 files
+2024/10/16-16:00:53.804 4930 Generated table #61@0: 2 keys, 194 bytes
+2024/10/16-16:00:53.804 4930 Compacted 7@0 + 1@1 files => 194 bytes
+2024/10/16-16:00:53.806 4930 compacted to: files[ 0 1 0 0 0 0 0 ]
+2024/10/16-16:00:53.806 4930 Delete type=2 #52
+2024/10/16-16:00:53.806 4930 Delete type=2 #54
+2024/10/16-16:00:53.807 4930 Delete type=2 #55
+2024/10/16-16:00:53.807 4930 Delete type=2 #56
+2024/10/16-16:00:53.807 4930 Delete type=2 #57
+2024/10/16-16:00:53.807 4930 Delete type=2 #58
+2024/10/16-16:00:53.807 4930 Delete type=2 #59
+2024/10/16-16:00:53.807 4930 Delete type=2 #60

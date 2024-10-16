@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "archive",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "args",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/args-2.5.0",
       "packageUri": "lib/",
@@ -16,6 +22,12 @@
     {
       "name": "auto_size_text",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/auto_size_text-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "badges",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/badges-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -50,10 +62,22 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "checked_yaml",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/checked_yaml-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "chewie",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/chewie-1.8.1",
       "packageUri": "lib/",
       "languageVersion": "3.3"
+    },
+    {
+      "name": "cli_util",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/cli_util-0.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "clock",
@@ -102,6 +126,12 @@
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/dbus-0.7.10",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "download",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/download-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "dropdown_button2",
@@ -194,6 +224,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_launcher_icons-0.13.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-4.0.0",
       "packageUri": "lib/",
@@ -237,7 +273,7 @@
     },
     {
       "name": "font_awesome_flutter",
-      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/font_awesome_flutter-10.6.0",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/font_awesome_flutter-10.7.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -276,6 +312,12 @@
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "image",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/image-4.0.17",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "image_picker",
@@ -334,6 +376,12 @@
     {
       "name": "iregexp",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/iregexp-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -566,6 +614,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "simple_gradient_text",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/simple_gradient_text-1.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/Users/Dale%20Blumrick/Desktop/NWU/Programs/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -776,13 +830,19 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "yaml",
+      "rootUri": "file:///C:/Users/Dale%20Blumrick/AppData/Local/Pub/Cache/hosted/pub.dev/yaml-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "nwu_hms",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-09-27T13:34:17.702842Z",
+  "generated": "2024-10-16T13:46:21.784230Z",
   "generator": "pub",
   "generatorVersion": "3.4.4",
   "flutterRoot": "file:///C:/Users/Dale%20Blumrick/Desktop/NWU/Programs/flutter",

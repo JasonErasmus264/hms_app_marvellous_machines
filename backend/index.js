@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-
+import { logPerformance } from './middleware/logger.js';
 // Imports from other files
 import authRoute from './routes/authRouter.js';
 import adminRoute from './routes/adminRouter.js';
@@ -20,6 +20,9 @@ dotenv.config();
 // Initialize
 const PORT = process.env.PORT || 3000;
 const app = express();
+
+// Log Performance
+app.use(logPerformance);
 
 // Middleware
 app.use(cors());

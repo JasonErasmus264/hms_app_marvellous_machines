@@ -34,6 +34,15 @@ const rotatingFileTransport = (filename) => new winston.transports.DailyRotateFi
   maxFiles: '1w'                 // Keep logs for 7 days
 });
 
+// Performance Format
+const performanceLogFormat = winston.format.combine(
+  winston.format.timestamp(),
+  winston.format.printf(({ timestamp, level, message }) => {
+    return `Time Stamp: ${timestamp}\nLevel: ${level}\n${JSON.stringify(message, null, 2)}`;
+  })
+);
+
+
 // auth logger 
 export const authLogger = winston.createLogger({
   level: 'info',
@@ -120,7 +129,7 @@ export const notificationLogger = winston.createLogger({
 // Performance logger
 export const performanceLogger = winston.createLogger({
   level: 'info',
-  format: logFormat,
+  format: performanceLogFormat,
   transports: [
     rotatingFileTransport('performance-%DATE%.log')
   ]
@@ -164,6 +173,7 @@ export const logPerformance = (req, res, next) => {
 
   next();
 };
+
 
 
 

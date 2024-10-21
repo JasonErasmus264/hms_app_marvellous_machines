@@ -400,7 +400,6 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                                     paginated: false,
                                     selectable: false,
                                     headingRowHeight: 56.0,
-                                    dataRowHeight: 48.0,
                                     columnSpacing: 20.0,
                                     headingRowColor:
                                         FlutterFlowTheme.of(context).tertiary,

@@ -159,115 +159,122 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: const AlignmentDirectional(-1.0, 0.0),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 5.0, 0.0, 0.0),
-                              child: FlutterFlowIconButton(
-                                borderColor: Colors.transparent,
-                                borderRadius: 10.0,
-                                borderWidth: 1.0,
-                                buttonSize: 40.0,
-                                fillColor: FlutterFlowTheme.of(context).error,
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: FlutterFlowTheme.of(context).info,
-                                  size: 24.0,
-                                ),
-                                onPressed: () async {
-                                  var confirmDialogResponse =
-                                      await showDialog<bool>(
-                                            context: context,
-                                            builder: (alertDialogContext) {
-                                              return AlertDialog(
-                                                title: const Text('Warning'),
-                                                content: const Text(
-                                                    'Are you sure you would like to delete this feedback? This cannot be undone'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            alertDialogContext,
-                                                            false),
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            alertDialogContext,
-                                                            true),
-                                                    child: const Text('Confirm'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ) ??
-                                          false;
-                                  if (confirmDialogResponse) {
-                                    _model.delete = await FeedbackGroup
-                                        .deleteFeedbackCall
-                                        .call(
-                                      feedbackID: FeedbackGroup.getFeedbackCall
-                                          .feedbackID(
-                                            containerGetFeedbackResponse
-                                                .jsonBody,
-                                          )
-                                          ?.toString(),
-                                      token: currentAuthenticationToken,
-                                    );
+                          if (FeedbackGroup.getFeedbackCall.feedbackExists(
+                                containerGetFeedbackResponse.jsonBody,
+                              ) ==
+                              't')
+                            Align(
+                              alignment: const AlignmentDirectional(-1.0, 0.0),
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 5.0, 0.0, 0.0),
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 10.0,
+                                  borderWidth: 1.0,
+                                  buttonSize: 40.0,
+                                  fillColor: FlutterFlowTheme.of(context).error,
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: FlutterFlowTheme.of(context).info,
+                                    size: 24.0,
+                                  ),
+                                  onPressed: () async {
+                                    var confirmDialogResponse =
+                                        await showDialog<bool>(
+                                              context: context,
+                                              builder: (alertDialogContext) {
+                                                return AlertDialog(
+                                                  title: const Text('Warning'),
+                                                  content: const Text(
+                                                      'Are you sure you would like to delete this feedback? This cannot be undone'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              alertDialogContext,
+                                                              false),
+                                                      child: const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              alertDialogContext,
+                                                              true),
+                                                      child: const Text('Confirm'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ) ??
+                                            false;
+                                    if (confirmDialogResponse) {
+                                      _model.delete = await FeedbackGroup
+                                          .deleteFeedbackCall
+                                          .call(
+                                        feedbackID:
+                                            FeedbackGroup.getFeedbackCall
+                                                .feedbackID(
+                                                  containerGetFeedbackResponse
+                                                      .jsonBody,
+                                                )
+                                                ?.toString(),
+                                        token: currentAuthenticationToken,
+                                      );
 
-                                    if ((_model.delete?.succeeded ?? true)) {
-                                      await showDialog(
-                                        context: context,
-                                        builder: (alertDialogContext) {
-                                          return AlertDialog(
-                                            title: const Text('Success'),
-                                            content: Text(FeedbackGroup
-                                                .deleteFeedbackCall
-                                                .errorMessage(
-                                              (_model.delete?.jsonBody ?? ''),
-                                            )!),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    alertDialogContext),
-                                                child: const Text('Ok'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                      Navigator.pop(context);
-                                    } else {
-                                      await showDialog(
-                                        context: context,
-                                        builder: (alertDialogContext) {
-                                          return AlertDialog(
-                                            title: const Text('Error'),
-                                            content: Text(FeedbackGroup
-                                                .deleteFeedbackCall
-                                                .errorMessage(
-                                              (_model.delete?.jsonBody ?? ''),
-                                            )!),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    alertDialogContext),
-                                                child: const Text('Ok'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                      if ((_model.delete?.succeeded ?? true)) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Success'),
+                                              content: Text(FeedbackGroup
+                                                  .deleteFeedbackCall
+                                                  .errorMessage(
+                                                (_model.delete?.jsonBody ?? ''),
+                                              )!),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                        Navigator.pop(context);
+                                      } else {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (alertDialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Error'),
+                                              content: Text(FeedbackGroup
+                                                  .deleteFeedbackCall
+                                                  .errorMessage(
+                                                (_model.delete?.jsonBody ?? ''),
+                                              )!),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          alertDialogContext),
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
                                     }
-                                  }
 
-                                  safeSetState(() {});
-                                },
+                                    safeSetState(() {});
+                                  },
+                                ),
                               ),
                             ),
-                          ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

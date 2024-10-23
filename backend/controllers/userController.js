@@ -224,7 +224,7 @@ export const changePassword = async (req, res) => {
 
 
 
-// Ensure 'uploads' directory exists
+/*// Ensure 'uploads' directory exists
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
   // Log creation of directory (information log)
@@ -291,6 +291,7 @@ const storeMetadata = async (req, res, pictureLink) => {
 
 
 // Main function to handle profile picture upload and conversion to base64
+// Main function to handle profile picture upload and conversion to base64
 export const uploadProfilePicture = (req, res) => {
   upload.single('profilePicture')(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
@@ -316,8 +317,11 @@ export const uploadProfilePicture = (req, res) => {
       // Step 2: Read the converted JPEG file and convert to base64
       const base64String = await fsExtra.readFile(jpegFilePath, { encoding: 'base64' });
 
-      // Step 3: Store the base64 string in the database as metadata
-      await storeMetadata(req, res, `data:image/jpeg;base64,${base64String}`);
+      // Step 3: Ensure that the base64 string is properly prefixed
+      const base64Image = `data:image/jpeg;base64,${base64String}`;
+
+      // Step 4: Store the base64 string in the database as metadata
+      await storeMetadata(req, res, base64Image);
 
       // Optionally: Clean up the uploaded file after converting
       fs.unlinkSync(jpegFilePath); // Delete the converted JPEG file
@@ -327,7 +331,132 @@ export const uploadProfilePicture = (req, res) => {
         userLogger.info('Profile picture uploaded and converted to base64 successfully');
         res.status(200).json({
           message: 'Profile picture uploaded successfully',
-          base64String: `data:image/jpeg;base64,${base64String}`,
+          base64String: base64Image, // Send the properly formatted base64 string back to the client
+        });
+      }
+    } catch (error) {
+      userLogger.error(`Error during profile picture upload: ${error.message}`, { error });
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Failed to upload profile picture', details: error.message });
+      }
+    } finally {
+      // Clean up the original uploaded file
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        userLogger.info(`Cleaned up original uploaded file: ${filePath}`);
+      }
+
+      // Clean up the converted JPEG file (if not already deleted)
+      if (fs.existsSync(jpegFilePath)) {
+        fs.unlinkSync(jpegFilePath);
+        userLogger.info(`Cleaned up converted JPEG file: ${jpegFilePath}`);
+      }
+    }
+  });
+};*/
+
+
+
+
+
+
+import { exec } from 'child_process'; // Add this import at the top
+
+import imagemagick from 'imagemagick';
+
+// Ensure 'uploads' directory exists
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+  userLogger.info('Uploads directory created');
+}
+
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    userLogger.info(`File received for upload: ${file.originalname}`);
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+// Check image type and convert to .jpeg if necessary
+const convertToJpeg = async (filePath, outputFilePath) => {
+  return new Promise((resolve, reject) => {
+    const command = `magick convert ${filePath} -quality 80 ${outputFilePath}`;
+    
+    exec(command, (err) => {
+      if (err) {
+        return reject(new Error(`Image conversion failed: ${err.message}`));
+      }
+      resolve(outputFilePath);
+    });
+  });
+};
+
+// Store picture metadata (public picture link) in MySQL
+const storeMetadata = async (req, res, pictureLink) => {
+  try {
+    const { userID } = req.user;
+
+    if (!userID) {
+      userLogger.warn(`Invalid userID: ${userID}`);
+      throw new Error('Invalid user ID');
+    }
+
+    const query = 'UPDATE users SET profilePicture = ? WHERE userID = ?';
+    await pool.execute(query, [pictureLink, userID]);
+    userLogger.info(`Updated profile picture for userID: ${userID}`);
+  } catch (error) {
+    userLogger.error(`Error during metadata storing: ${error.message}`, { error });
+    if (!res.headersSent) { return res.status(500).json({ message: 'Failed to store metadata', details: error.message }); }
+  }
+};
+
+// Main function to handle profile picture upload and conversion to base64
+export const uploadProfilePicture = (req, res) => {
+  upload.single('profilePicture')(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      userLogger.error(`Multer error during file upload: ${err.message}`, { err });
+      return res.status(500).json({ message: 'File upload error', details: err.message });
+    } else if (err) {
+      userLogger.error(`Unexpected error during file upload: ${err.message}`, { err });
+      return res.status(500).json({ message: 'Unexpected error during file upload', details: err.message });
+    }
+
+    if (!req.file) {
+      userLogger.warn('No file uploaded');
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const filePath = req.file.path;
+    const jpegFilePath = `uploads/${Date.now()}.jpeg`; // Define path for the converted JPEG file
+
+    try {
+      // Step 1: Convert uploaded image to JPEG
+      await convertToJpeg(filePath, jpegFilePath);
+
+      // Step 2: Read the converted JPEG file and convert to base64
+      const base64String = await fsExtra.readFile(jpegFilePath, { encoding: 'base64' });
+
+      // Step 3: Ensure that the base64 string is properly prefixed
+      const base64Image = `data:image/jpeg;base64,${base64String}`;
+
+      // Step 4: Store the base64 string in the database as metadata
+      await storeMetadata(req, res, base64Image);
+
+      // Optionally: Clean up the uploaded file after converting
+      fs.unlinkSync(jpegFilePath); // Delete the converted JPEG file
+      userLogger.info(`Deleted local JPEG file after base64 conversion: ${jpegFilePath}`);
+
+      if (!res.headersSent) {
+        userLogger.info('Profile picture uploaded and converted to base64 successfully');
+        res.status(200).json({
+          message: 'Profile picture uploaded successfully',
+          base64String: base64Image, // Send the properly formatted base64 string back to the client
         });
       }
     } catch (error) {

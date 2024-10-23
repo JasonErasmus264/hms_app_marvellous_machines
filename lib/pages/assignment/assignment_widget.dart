@@ -262,6 +262,7 @@ class _AssignmentWidgetState extends State<AssignmentWidget> {
                                       .override(
                                         fontFamily: 'Manrope',
                                         color: Colors.white,
+                                        fontSize: 17.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.bold,
                                       ),

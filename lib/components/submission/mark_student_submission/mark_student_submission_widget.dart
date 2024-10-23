@@ -128,7 +128,7 @@ class _MarkStudentSubmissionWidgetState
                         unselectedLabelStyle: const TextStyle(),
                         labelColor: FlutterFlowTheme.of(context).primary,
                         unselectedLabelColor:
-                            FlutterFlowTheme.of(context).primary,
+                            FlutterFlowTheme.of(context).secondaryText,
                         backgroundColor:
                             FlutterFlowTheme.of(context).secondaryBackground,
                         unselectedBackgroundColor:

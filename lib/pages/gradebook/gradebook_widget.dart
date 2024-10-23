@@ -359,7 +359,7 @@ class _GradebookWidgetState extends State<GradebookWidget> {
                                               Icons.feedback,
                                               color:
                                                   FlutterFlowTheme.of(context)
-                                                      .info,
+                                                      .primaryText,
                                               size: 24.0,
                                             ),
                                             onPressed: () async {

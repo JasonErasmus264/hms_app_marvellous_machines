@@ -299,6 +299,10 @@ export const verifyResetCode = async (req, res) => {
 
     // Log success for verified reset code (information log)
     authLogger.info(`Reset code verified successfully for email: ${email}`);
+     
+    // Send success response
+    return res.status(200).json({ message: 'Reset code verified successfully.' });
+    
   } catch (error) {
     // Log error when verifying reset code fails (error log)
     authLogger.error(`Error verifying reset code: ${error.message}`, { error });

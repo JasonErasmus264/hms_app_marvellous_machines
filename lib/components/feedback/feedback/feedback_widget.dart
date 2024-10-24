@@ -177,7 +177,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                                   icon: Icon(
                                     Icons.delete,
                                     color: FlutterFlowTheme.of(context).info,
-                                    size: 24.0,
+                                    size: 25.0,
                                   ),
                                   onPressed: () async {
                                     var confirmDialogResponse =

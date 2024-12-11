@@ -179,24 +179,30 @@ class _EditModuleWidgetState extends State<EditModuleWidget> {
                                         ModuleGroup.getModuleCall.moduleCode(
                                       (_model.getModule?.jsonBody ?? ''),
                                     )!;
-                                    _model.txtCodeTextController?.selection =
-                                        TextSelection.collapsed(
-                                            offset: _model
-                                                .txtCodeTextController!
-                                                .text
-                                                .length);
+                                    _model.txtCodeFocusNode?.requestFocus();
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      _model.txtCodeTextController?.selection =
+                                          TextSelection.collapsed(
+                                        offset: _model
+                                            .txtCodeTextController!.text.length,
+                                      );
+                                    });
                                   });
                                   safeSetState(() {
                                     _model.txtNameTextController?.text =
                                         ModuleGroup.getModuleCall.moduleName(
                                       (_model.getModule?.jsonBody ?? ''),
                                     )!;
-                                    _model.txtNameTextController?.selection =
-                                        TextSelection.collapsed(
-                                            offset: _model
-                                                .txtNameTextController!
-                                                .text
-                                                .length);
+                                    _model.txtNameFocusNode?.requestFocus();
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      _model.txtNameTextController?.selection =
+                                          TextSelection.collapsed(
+                                        offset: _model
+                                            .txtNameTextController!.text.length,
+                                      );
+                                    });
                                   });
                                 } else {
                                   await showDialog(

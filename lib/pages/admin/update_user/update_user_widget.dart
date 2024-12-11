@@ -51,7 +51,10 @@ class _UpdateUserWidgetState extends State<UpdateUserWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -175,13 +178,19 @@ class _UpdateUserWidgetState extends State<UpdateUserWidget> {
                                                           ?.jsonBody ??
                                                       ''),
                                                 )!;
-                                                _model.txtFirstNameTextController
-                                                        ?.selection =
-                                                    TextSelection.collapsed(
-                                                        offset: _model
-                                                            .txtFirstNameTextController!
-                                                            .text
-                                                            .length);
+                                                _model.txtFirstNameFocusNode
+                                                    ?.requestFocus();
+                                                WidgetsBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  _model.txtFirstNameTextController
+                                                          ?.selection =
+                                                      TextSelection.collapsed(
+                                                    offset: _model
+                                                        .txtFirstNameTextController!
+                                                        .text
+                                                        .length,
+                                                  );
+                                                });
                                               });
                                               safeSetState(() {
                                                 _model.txtLastNameTextController
@@ -192,13 +201,19 @@ class _UpdateUserWidgetState extends State<UpdateUserWidget> {
                                                           ?.jsonBody ??
                                                       ''),
                                                 )!;
-                                                _model.txtLastNameTextController
-                                                        ?.selection =
-                                                    TextSelection.collapsed(
-                                                        offset: _model
-                                                            .txtLastNameTextController!
-                                                            .text
-                                                            .length);
+                                                _model.txtLastNameFocusNode
+                                                    ?.requestFocus();
+                                                WidgetsBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  _model.txtLastNameTextController
+                                                          ?.selection =
+                                                      TextSelection.collapsed(
+                                                    offset: _model
+                                                        .txtLastNameTextController!
+                                                        .text
+                                                        .length,
+                                                  );
+                                                });
                                               });
                                               safeSetState(() {
                                                 _model.txtPhoneNumTextController
@@ -209,13 +224,19 @@ class _UpdateUserWidgetState extends State<UpdateUserWidget> {
                                                           ?.jsonBody ??
                                                       ''),
                                                 )!;
-                                                _model.txtPhoneNumTextController
-                                                        ?.selection =
-                                                    TextSelection.collapsed(
-                                                        offset: _model
-                                                            .txtPhoneNumTextController!
-                                                            .text
-                                                            .length);
+                                                _model.txtPhoneNumFocusNode
+                                                    ?.requestFocus();
+                                                WidgetsBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  _model.txtPhoneNumTextController
+                                                          ?.selection =
+                                                      TextSelection.collapsed(
+                                                    offset: _model
+                                                        .txtPhoneNumTextController!
+                                                        .text
+                                                        .length,
+                                                  );
+                                                });
                                               });
                                               safeSetState(() {
                                                 _model.dropDownValueController2

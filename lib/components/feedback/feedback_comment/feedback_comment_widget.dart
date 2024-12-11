@@ -128,7 +128,7 @@ class _FeedbackCommentWidgetState extends State<FeedbackCommentWidget> {
                         ),
                         style: FlutterFlowTheme.of(context).labelLarge.override(
                               fontFamily: 'Manrope',
-                              fontSize: 16.0,
+                              fontSize: 17.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.bold,
                             ),

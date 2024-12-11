@@ -266,7 +266,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .error,
-                                                  size: 25.0,
+                                                  size: 26.0,
                                                 ),
                                               ),
                                             ),

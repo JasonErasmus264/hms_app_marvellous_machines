@@ -525,9 +525,9 @@
     },
     {
       "name": "path_provider_windows",
-      "rootUri": "file:///C:/Users/jason/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.2.1",
+      "rootUri": "file:///C:/Users/jason/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "petitparser",
@@ -836,7 +836,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-12-11T20:32:02.364314Z",
+  "generated": "2024-12-11T21:58:10.447678Z",
   "generator": "pub",
   "generatorVersion": "3.5.4",
   "flutterRoot": "file:///C:/dev/flutter/flutter",
